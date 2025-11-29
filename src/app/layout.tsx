@@ -1,8 +1,9 @@
-import NavBar from "@/components/shared/NavBar/NavBar";
-import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import NavBar from "@/components/shared/NavBar/NavBar";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import Footer from "@/components/shared/Footer/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <NavBar />
         {children}
         <Toaster />
+        <Footer />
       </body>
     </html>
   );
