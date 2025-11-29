@@ -3,9 +3,9 @@ import { parse as parseCookie } from "cookie";
 import { redirect } from "next/navigation";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zod-validator";
+import { registerZodSchema } from "@/utils/zod-schema";
 import { deleteCookie, getCookie, setCookie } from "./cookie.service";
 import { verifyAccessToken } from "./token.service";
-import { registerZodSchema } from "@/utils/zod-schema";
 
 export async function registerUser(_currentState: unknown, formData: FormData) {
   const payload = {
@@ -99,10 +99,10 @@ export async function getNewAccessToken() {
       setCookieHeaders.forEach((cookie: string) => {
         const parsedCookie = parseCookie(cookie);
 
-        if (parsedCookie["accessToken"]) {
+        if (parsedCookie?.accessToken) {
           accessTokenObject = parsedCookie;
         }
-        if (parsedCookie["refreshToken"]) {
+        if (parsedCookie?.refreshToken) {
           refreshTokenObject = parsedCookie;
         }
       });
@@ -124,7 +124,7 @@ export async function getNewAccessToken() {
       httpOnly: true,
       maxAge: parseInt(accessTokenObject["Max-Age"]) || 1000 * 60 * 60,
       path: accessTokenObject.Path || "/",
-      sameSite: accessTokenObject["SameSite"] || "none",
+      sameSite: accessTokenObject?.SameSite || "none",
     });
 
     await deleteCookie("refreshToken");
@@ -134,7 +134,7 @@ export async function getNewAccessToken() {
       maxAge:
         parseInt(refreshTokenObject["Max-Age"]) || 1000 * 60 * 60 * 24 * 90,
       path: refreshTokenObject.Path || "/",
-      sameSite: refreshTokenObject["SameSite"] || "none",
+      sameSite: refreshTokenObject?.SameSite || "none",
     });
 
     if (!result.success) {

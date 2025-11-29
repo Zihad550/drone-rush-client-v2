@@ -2,11 +2,11 @@
 import { Key, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { registerUser } from "@/services/auth/auth.service";
-import { toast } from "sonner";
 export default function RegisterForm() {
   const [state, formAction, isPending] = useActionState(registerUser, null);
 
