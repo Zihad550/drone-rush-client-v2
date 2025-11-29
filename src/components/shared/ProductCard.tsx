@@ -1,0 +1,105 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import type IProduct from "@/types/product.type";
+import { Heart, ShoppingCart } from "lucide-react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+interface ProductCardProps {
+  product: IProduct;
+}
+
+const ProductCard = ({ product }: ProductCardProps) => {
+  const { name, description, price, img, _id } = product;
+  const router = useRouter();
+  const [inCart, setInCart] = useState(false);
+  const [inWishlist, setInWishlist] = useState(false);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setInCart(true);
+    // TODO: Implement cart functionality
+  };
+
+  const handleAddToWishlist = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setInWishlist(!inWishlist);
+    // TODO: Implement wishlist functionality
+  };
+
+  const handleCardClick = () => {
+    router.push(`/product/${_id}`);
+  };
+
+  return (
+    <Card
+      onClick={handleCardClick}
+      className="group h-full cursor-pointer overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+    >
+      {/* Product Image */}
+      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20">
+        <Image
+          src={img}
+          alt={name}
+          fill
+          className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+        />
+
+        {/* Overlay Actions */}
+        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <Button
+            size="sm"
+            variant={inCart ? "default" : "secondary"}
+            onClick={handleAddToCart}
+            disabled={inCart}
+            className="shadow-lg"
+          >
+            <ShoppingCart className="h-4 w-4" />
+          </Button>
+          <Button
+            size="sm"
+            variant={inWishlist ? "default" : "secondary"}
+            onClick={handleAddToWishlist}
+            className="shadow-lg"
+          >
+            <Heart
+              className={`h-4 w-4 ${inWishlist ? "fill-current" : ""}`}
+            />
+          </Button>
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <CardContent className="flex flex-col p-4">
+        <h3 className="mb-2 line-clamp-2 min-h-[3rem] text-lg font-semibold text-gray-900 dark:text-gray-100">
+          {name}
+        </h3>
+
+        <p className="mb-3 line-clamp-3 min-h-[4.5rem] text-sm text-gray-600 dark:text-gray-400">
+          {description}
+        </p>
+
+        <div className="mt-auto flex items-center justify-between gap-2">
+          <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-xl font-bold text-transparent">
+            ${price.toFixed(2)}
+          </span>
+
+          <span
+            className={`rounded-lg px-2 py-1 text-xs font-semibold uppercase tracking-wide ${
+              inCart
+                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                : "text-gray-500 dark:text-gray-400"
+            }`}
+          >
+            {inCart ? "In Cart" : "Free Shipping"}
+          </span>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default ProductCard;
