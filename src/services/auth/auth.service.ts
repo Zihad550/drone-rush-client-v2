@@ -1,9 +1,9 @@
 "use server";
-import { parse as parseCookie } from "cookie";
-import { redirect } from "next/navigation";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zod-validator";
-import { registerZodSchema } from "@/utils/zod-schema";
+import { loginZodSchema, registerZodSchema } from "@/utils/zod-schema";
+import { parse as parseCookie } from "cookie";
+import { redirect } from "next/navigation";
 import { deleteCookie, getCookie, setCookie } from "./cookie.service";
 import { verifyAccessToken } from "./token.service";
 
@@ -40,6 +40,72 @@ export async function registerUser(_currentState: unknown, formData: FormData) {
     return {
       success: false,
       message: `${process.env.NODE_ENV === "development" ? error?.message : "Something went wrong"}`,
+    };
+  }
+}
+
+export async function loginUser(_currentState: unknown, formData: FormData) {
+  const payload = {
+    email: formData.get("email") as string,
+    password: formData.get("password") as string,
+  };
+
+  const validator = zodValidator(payload, loginZodSchema);
+  if (!validator.success) return validator;
+
+  try {
+    const res = await serverFetch.post("/auth/login", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validator.data),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: data?.message || "Something went wrong",
+      };
+    }
+
+    const setCookieHeaders = res.headers.getSetCookie();
+    if (setCookieHeaders && setCookieHeaders.length > 0) {
+      setCookieHeaders.forEach(async (cookie: string) => {
+        const parsedCookie = parseCookie(cookie);
+        if (parsedCookie?.accessToken) {
+          await setCookie("accessToken", parsedCookie.accessToken, {
+            secure: true,
+            httpOnly: true,
+            maxAge: parseInt(parsedCookie["Max-Age"] || "0") || 1000 * 60 * 60,
+            path: parsedCookie.Path || "/",
+            sameSite: (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
+          });
+        }
+        if (parsedCookie?.refreshToken) {
+          await setCookie("refreshToken", parsedCookie.refreshToken, {
+            secure: true,
+            httpOnly: true,
+            maxAge:
+              parseInt(parsedCookie["Max-Age"] || "0") || 1000 * 60 * 60 * 24 * 90,
+            path: parsedCookie.Path || "/",
+            sameSite: (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
+          });
+        }
+      });
+    }
+
+    if (data?.success) {
+      redirect("/");
+    }
+
+    return data;
+  } catch (error: any) {
+    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+    return {
+      success: false,
+      message: error?.message || "Something went wrong",
     };
   }
 }
