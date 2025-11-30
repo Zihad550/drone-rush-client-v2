@@ -5,9 +5,9 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import CartLink from "../cart-link";
+// import CartLink from "../cart-link";
 import Logo from "../logo";
-import UserMenu from "../user-menu";
+import UserMenu from "./user-menu";
 
 interface NavBarClientProps {
   user: any; // Type this properly if possible, e.g., IUser from types
@@ -81,8 +81,8 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
             <div className="flex items-center gap-2">
               {user ? (
                 <>
-                  {user.role !== "admin" && <CartLink />}
-                  <UserMenu />
+                  {/*{user.role !== "admin" && <CartLink />}*/}
+                  <UserMenu user={user} />
                 </>
               ) : (
                 <Link
@@ -104,7 +104,8 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
       {/* Mobile Drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex sm:hidden">
-          <div
+          <button
+            type="button"
             className="fixed inset-0 bg-black/50 backdrop-blur-sm"
             onClick={handleMobileMenuToggle}
           />
@@ -112,6 +113,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
             <div className="flex justify-between items-center mb-6">
               <Logo />
               <button
+                type="button"
                 onClick={handleMobileMenuToggle}
                 className="text-white hover:bg-white/10 p-1 rounded"
               >
