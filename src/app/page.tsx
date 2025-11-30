@@ -1,9 +1,9 @@
-import Banner from "@/components/shared/Banner";
-import ContactUs from "@/components/shared/ContactUs";
-import FAQ from "@/components/shared/FAQ";
-import Features from "@/components/shared/Features";
-import Newsletter from "@/components/shared/Newsletter";
-import Products from "@/components/shared/Products";
+import Banner from "@/components/shared/banner";
+import ContactUs from "@/components/shared/contact-us";
+import FAQ from "@/components/shared/faq";
+import Features from "@/components/shared/features";
+import Newsletter from "@/components/shared/newsletter";
+import Products from "@/components/shared/products";
 import { getProducts } from "@/services/product/product.service";
 
 export default async function Home() {

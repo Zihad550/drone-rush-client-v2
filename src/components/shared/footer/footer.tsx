@@ -1,9 +1,9 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import Address from "./Address";
-import FooterNav from "./FooterNav";
+import { Facebook, Instagram, Twitter } from "lucide-react";
+import Link from "next/link";
+import Address from "./address";
+import FooterNav from "./footer-nav";
 
 const Footer = () => {
   // quick navs

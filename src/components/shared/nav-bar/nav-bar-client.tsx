@@ -1,13 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import CartLink from "../CartLink";
-import Logo from "../Logo";
-import UserMenu from "../UserMenu";
+import CartLink from "../cart-link";
+import Logo from "../logo";
+import UserMenu from "../user-menu";
 
 interface NavBarClientProps {
   user: any; // Type this properly if possible, e.g., IUser from types

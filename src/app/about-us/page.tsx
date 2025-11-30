@@ -1,7 +1,7 @@
-import AboutUsBanner from "@/components/pages/about-us/AboutUsBanner";
-import OurTeam from "@/components/pages/about-us/OurTeam";
-import WhyUs from "@/components/pages/about-us/WhyUs";
-import Title from "@/components/Title";
+import AboutUsBanner from "@/components/pages/about-us/about-us-banner";
+import OurTeam from "@/components/pages/about-us/our-team";
+import WhyUs from "@/components/pages/about-us/why-us";
+import Title from "@/components/title";
 
 export default function AboutUsPage() {
   return (

@@ -1,6 +1,6 @@
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
-import NavBarClient from "./NavBarClient";
+import NavBarClient from "./nav-bar-client";
 
 const NavBar = async () => {
   const accessToken = await getCookie("accessToken");

@@ -1,5 +1,5 @@
 import type IProduct from "@/types/product.type";
-import Product from "./Product";
+import Product from "./product";
 
 const Products = ({ products }: { products: IProduct[] }) => (
   <div className="mt-10">

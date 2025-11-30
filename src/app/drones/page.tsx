@@ -1,6 +1,6 @@
-import Drones from "@/components/Drones";
-import FAQ from "@/components/FAQ";
-import Features from "@/components/Features";
+import Drones from "@/components/drones";
+import FAQ from "@/components/faq";
+import Features from "@/components/features";
 import ScrollAnimation from "@/components/ui/scroll-animation";
 import { getBrands } from "@/services/brand/brand.service";
 import { getCategories } from "@/services/category/category.service";

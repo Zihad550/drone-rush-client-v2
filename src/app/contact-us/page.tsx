@@ -1,6 +1,6 @@
-import ContactForm from "@/components/pages/contact-us/ContactForm";
-import ContactUsBanner from "@/components/pages/contact-us/ContactUsBanner";
-import Title from "@/components/Title";
+import ContactForm from "@/components/pages/contact-us/contact-form";
+import ContactUsBanner from "@/components/pages/contact-us/contact-us-banner";
+import Title from "@/components/title";
 
 export default function ContactUsPage() {
   return (
