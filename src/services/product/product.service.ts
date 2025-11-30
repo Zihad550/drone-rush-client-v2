@@ -23,7 +23,7 @@ interface IProductResponse {
 }
 
 export const getProducts = async (
-  params?: IQueryParams
+  params?: IQueryParams,
 ): Promise<IProductResponse> => {
   const queryString = params
     ? "?" +

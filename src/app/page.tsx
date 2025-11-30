@@ -26,7 +26,7 @@ export default async function Home() {
             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
               {title}
             </h2>
-            <Products products={products} />
+            <Products products={products.data} />
           </section>
 
           {/* Features Section */}

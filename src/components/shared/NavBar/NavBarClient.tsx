@@ -1,10 +1,10 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import CartLink from "../CartLink";
 import Logo from "../Logo";
 import UserMenu from "../UserMenu";
@@ -23,13 +23,13 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "All Drones", path: "/all-drones" },
+    { name: "All Drones", path: "/drones" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
   ];
 
   if (user && user.role === "user") {
-     // Add user specific paths if needed, or handle dynamically
+    // Add user specific paths if needed, or handle dynamically
   }
 
   return (
@@ -68,7 +68,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                       "hover:shadow-[0_8px_25px_-5px_rgba(59,130,246,0.4)] hover:-translate-y-0.5",
                       isActive
                         ? "bg-gradient-to-r from-blue-500 to-cyan-500 shadow-[0_8px_25px_-5px_rgba(59,130,246,0.5)]"
-                        : "hover:bg-white/10"
+                        : "hover:bg-white/10",
                     )}
                   >
                     {item.name}
@@ -90,7 +90,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                   className={cn(
                     "text-white font-semibold text-base block mx-3 px-6 py-2 rounded-lg",
                     "bg-white/15 backdrop-blur-md border border-white/10 shadow-sm",
-                    "transition-all duration-300 hover:bg-white/25 hover:-translate-y-0.5 hover:shadow-md"
+                    "transition-all duration-300 hover:bg-white/25 hover:-translate-y-0.5 hover:shadow-md",
                   )}
                 >
                   Login
@@ -130,7 +130,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                       "text-white font-semibold text-base px-4 py-3 rounded-lg transition-all duration-300",
                       isActive
                         ? "bg-gradient-to-r from-blue-500 to-cyan-500"
-                        : "hover:bg-white/10"
+                        : "hover:bg-white/10",
                     )}
                   >
                     {item.name}
@@ -139,7 +139,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
               })}
             </nav>
             <div className="mt-auto border-t border-white/10 pt-4 flex justify-center gap-4">
-               {/* Social icons placeholder */}
+              {/* Social icons placeholder */}
             </div>
           </div>
         </div>

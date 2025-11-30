@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 const Banner = () => {
   return (
-    <section className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-12 md:py-16 before:content-[''] before:absolute before:top-[-50px] before:right-[-50px] before:w-[200px] before:h-[200px] before:rounded-full before:bg-[radial-gradient(circle,_rgba(59,130,246,0.13)_0%,_transparent_70%)] before:z-0 after:content-[''] after:absolute after:bottom-[-80px] after:left-[45%] after:w-[300px] after:h-[300px] after:rounded-full after:bg-[radial-gradient(circle,_rgba(59,130,246,0.08)_0%,_transparent_60%)] after:z-0"
+    <section
+      className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-12 md:py-16 before:content-[''] before:absolute before:top-[-50px] before:right-[-50px] before:w-[200px] before:h-[200px] before:rounded-full before:bg-[radial-gradient(circle,_rgba(59,130,246,0.13)_0%,_transparent_70%)] before:z-0 after:content-[''] after:absolute after:bottom-[-80px] after:left-[45%] after:w-[300px] after:h-[300px] after:rounded-full after:bg-[radial-gradient(circle,_rgba(59,130,246,0.08)_0%,_transparent_60%)] after:z-0"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(/assets/banner-bg.jpg)`,
       }}
@@ -19,7 +20,8 @@ const Banner = () => {
             </div>
 
             {/* Main Heading */}
-            <h1 className="mt-4 mb-6 font-semibold text-4xl md:text-6xl relative inline-block after:content-[''] after:absolute after:bottom-[-8px] after:left-[25%] md:after:left-0 after:w-[50%] md:after:w-[40%] after:h-1 after:bg-blue-500 after:rounded"
+            <h1
+              className="mt-4 mb-6 font-semibold text-4xl md:text-6xl relative inline-block after:content-[''] after:absolute after:bottom-[-8px] after:left-[25%] md:after:left-0 after:w-[50%] md:after:w-[40%] after:h-1 after:bg-blue-500 after:rounded"
               style={{ textShadow: "0 2px 10px rgba(0,0,0,0.3)" }}
             >
               Professional <br />
@@ -28,7 +30,8 @@ const Banner = () => {
             </h1>
 
             {/* Description */}
-            <p className="mb-8 text-base md:text-lg opacity-90 max-w-[90%] mx-auto md:mx-0"
+            <p
+              className="mb-8 text-base md:text-lg opacity-90 max-w-[90%] mx-auto md:mx-0"
               style={{ textShadow: "0 1px 3px rgba(0,0,0,0.2)" }}
             >
               Welcome to the best drone website in the world. We have the most
@@ -37,9 +40,7 @@ const Banner = () => {
             </p>
 
             {/* CTA Button */}
-            <Button
-              className="mt-4 px-6 py-3 rounded-lg text-base font-medium shadow-[0_4px_14px_rgba(79,196,207,0.4)] bg-gradient-to-r from-blue-500 to-cyan-500 hover:shadow-[0_6px_18px_rgba(79,196,207,0.6)] hover:-translate-y-0.5 transition-all duration-300"
-            >
+            <Button className="mt-4 px-6 py-3 rounded-lg text-base font-medium shadow-[0_4px_14px_rgba(79,196,207,0.4)] bg-gradient-to-r from-blue-500 to-cyan-500 hover:shadow-[0_6px_18px_rgba(79,196,207,0.6)] hover:-translate-y-0.5 transition-all duration-300">
               Shop Now
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>

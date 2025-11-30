@@ -1,12 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { loginUser } from "@/services/auth/auth.service";
 import { Key, Mail } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { loginUser } from "@/services/auth/auth.service";
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(loginUser, null);

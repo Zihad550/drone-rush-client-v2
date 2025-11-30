@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import type IProduct from "@/types/product.type";
 import { Heart, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import type IProduct from "@/types/product.type";
 
 interface ProductCardProps {
   product: IProduct;
@@ -65,9 +65,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
             onClick={handleAddToWishlist}
             className="shadow-lg"
           >
-            <Heart
-              className={`h-4 w-4 ${inWishlist ? "fill-current" : ""}`}
-            />
+            <Heart className={`h-4 w-4 ${inWishlist ? "fill-current" : ""}`} />
           </Button>
         </div>
       </div>

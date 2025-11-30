@@ -52,12 +52,7 @@ const FAQ = () => {
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/* Left - Video */}
         <div className="overflow-hidden rounded-2xl">
-          <video
-            width="100%"
-            height="auto"
-            controls
-            className="rounded-2xl"
-          >
+          <video width="100%" height="auto" controls className="rounded-2xl">
             <source src="/assets/faq.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>

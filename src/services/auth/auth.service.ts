@@ -1,9 +1,9 @@
 "use server";
+import { parse as parseCookie } from "cookie";
+import { redirect } from "next/navigation";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zod-validator";
 import { loginZodSchema, registerZodSchema } from "@/utils/zod-schema";
-import { parse as parseCookie } from "cookie";
-import { redirect } from "next/navigation";
 import { deleteCookie, getCookie, setCookie } from "./cookie.service";
 import { verifyAccessToken } from "./token.service";
 
@@ -80,7 +80,8 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
             httpOnly: true,
             maxAge: parseInt(parsedCookie["Max-Age"] || "0") || 1000 * 60 * 60,
             path: parsedCookie.Path || "/",
-            sameSite: (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
+            sameSite:
+              (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
           });
         }
         if (parsedCookie?.refreshToken) {
@@ -88,9 +89,11 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
             secure: true,
             httpOnly: true,
             maxAge:
-              parseInt(parsedCookie["Max-Age"] || "0") || 1000 * 60 * 60 * 24 * 90,
+              parseInt(parsedCookie["Max-Age"] || "0") ||
+              1000 * 60 * 60 * 24 * 90,
             path: parsedCookie.Path || "/",
-            sameSite: (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
+            sameSite:
+              (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
           });
         }
       });
