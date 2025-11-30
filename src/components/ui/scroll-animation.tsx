@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface ScrollAnimationProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -33,7 +33,7 @@ export default function ScrollAnimation({
       {
         threshold: 0.1,
         rootMargin: "0px 0px -50px 0px",
-      }
+      },
     );
 
     if (ref.current) {
@@ -53,7 +53,7 @@ export default function ScrollAnimation({
       className={cn(
         "transition-all duration-700 ease-out",
         isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10",
-        className
+        className,
       )}
       {...props}
     >

@@ -1,10 +1,4 @@
-import {
-    Archive,
-    Headset,
-    PiggyBank,
-    ShoppingBag,
-    Truck,
-} from "lucide-react";
+import { Archive, Headset, PiggyBank, ShoppingBag, Truck } from "lucide-react";
 
 export default function WhyUs() {
   const services = [

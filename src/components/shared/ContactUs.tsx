@@ -1,6 +1,6 @@
 import { Mail, Phone } from "lucide-react";
 
-const ContactUs = () => {
+export default function ContactUs() {
   return (
     <section className="mb-16 mt-8">
       <div className="rounded-3xl bg-white p-8 text-center shadow-md dark:bg-gray-800 md:p-12">
@@ -32,6 +32,4 @@ const ContactUs = () => {
       </div>
     </section>
   );
-};
-
-export default ContactUs;
+}
