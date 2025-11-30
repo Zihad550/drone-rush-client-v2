@@ -1,5 +1,3 @@
-import type { BaseQueryApi } from "@reduxjs/toolkit/query";
-
 export interface IOption {
   value: string | number;
   label: string;
@@ -28,8 +26,6 @@ export interface IResponse<T> {
   success: boolean;
   message: string;
 }
-
-export interface IResponseRedux<T> extends IResponse<T>, BaseQueryApi {}
 
 export interface IQueryParam {
   name: string;
