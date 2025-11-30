@@ -52,16 +52,16 @@ const Footer = () => {
       name: "Sign In",
       link: "",
     },
-    {
-      id: 2,
-      name: "View Cart",
-      link: "",
-    },
-    {
-      id: 3,
-      name: "My Wishlist",
-      link: "",
-    },
+    // {
+    //   id: 2,
+    //   name: "View Cart",
+    //   link: "",
+    // },
+    // {
+    //   id: 3,
+    //   name: "My Wishlist",
+    //   link: "",
+    // },
     {
       id: 4,
       name: "Track My Order",
@@ -81,16 +81,6 @@ const Footer = () => {
 
   // corporate related navs
   const corporateNavs = [
-    {
-      id: 1,
-      name: "Become a Vendor",
-      link: "",
-    },
-    {
-      id: 2,
-      name: "Our Suppliers",
-      link: "",
-    },
     {
       id: 3,
       name: "Accessibility",
