@@ -1,21 +1,21 @@
 "use client";
 
+import { Filter, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import Products from "@/components/products";
 import Spinner from "@/components/spinner";
 import Title from "@/components/title";
 import { Button } from "@/components/ui/button";
 import ScrollAnimation from "@/components/ui/scroll-animation";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { getProducts } from "@/services/product/product.service";
 import type IProduct from "@/types/product.type";
-import { Filter, X } from "lucide-react";
-import { useEffect, useState } from "react";
 
 const PRODUCTS_PER_PAGE = 8;
 

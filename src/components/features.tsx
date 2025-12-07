@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const Features = () => {
   const features = [
     {
@@ -27,14 +29,20 @@ const Features = () => {
     <div className="my-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div>
-          <img className="w-full h-auto" src="/assets/feature-img.jpg" alt="" />
+          <Image
+            src="/assets/feature-img.jpg"
+            alt=""
+            width={600}
+            height={400}
+            className="w-full h-auto"
+          />
         </div>
         <div className="flex flex-col justify-center">
           <h1 className="text-4xl font-bold mb-8">Features</h1>
           {features.map((feature) => (
             <div key={feature.id} className="flex items-center mb-6">
               <div className="mr-4">
-                <img src={feature.src} alt="" />
+                <Image src={feature.src} alt="" width={50} height={50} />
               </div>
               <div>
                 <h5 className="text-xl font-semibold mb-2">{feature.title}</h5>

@@ -52,6 +52,7 @@ export default function WhyUs() {
                 />
                 {/* SVG Gradient Definition for Lucide Icons */}
                 <svg width="0" height="0">
+                  <title>Gradient definition</title>
                   <linearGradient
                     id="blue-cyan-gradient"
                     x1="0%"

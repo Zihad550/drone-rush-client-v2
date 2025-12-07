@@ -31,3 +31,7 @@ export interface IQueryParam {
   name: string;
   value: boolean | React.Key;
 }
+
+export interface IUser {
+  role: string;
+}

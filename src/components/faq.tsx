@@ -42,6 +42,12 @@ const FAQ = () => {
         <div>
           <video width="100%" height="auto" controls>
             <source src="/assets/faq.mp4" type="video/mp4" />
+            <track
+              kind="captions"
+              src="/assets/faq-captions.vtt"
+              srcLang="en"
+              label="English"
+            />
           </video>
         </div>
         <div className="flex flex-col justify-center">

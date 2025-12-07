@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Facebook, Instagram, Twitter } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Address from "./address";
 import FooterNav from "./footer-nav";
 
@@ -109,19 +109,19 @@ const Footer = () => {
             <Address />
             <div className="flex gap-2 mt-4">
               <a
-                href="#"
+                href="/"
                 className="p-2 rounded-lg text-blue-500 bg-white/10 backdrop-blur-sm border border-white/5 shadow-md transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(59,130,246,0.3)]"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="/"
                 className="p-2 rounded-lg text-cyan-500 bg-white/10 backdrop-blur-sm border border-white/5 shadow-md transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(6,182,212,0.3)]"
               >
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="/"
                 className="p-2 rounded-lg text-pink-500 bg-white/10 backdrop-blur-sm border border-white/5 shadow-md transition-all duration-300 hover:bg-white/20 hover:-translate-y-0.5 hover:shadow-[0_8px_16px_rgba(225,48,108,0.3)]"
               >
                 <Instagram className="w-5 h-5" />

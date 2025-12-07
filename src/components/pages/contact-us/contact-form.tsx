@@ -18,7 +18,7 @@ export default function ContactForm() {
   useEffect(() => {
     if (state && !state.success && "message" in state && state.message) {
       toast.error(state.message);
-    } else if (state && state.success && "message" in state && state.message) {
+    } else if (state?.success && "message" in state && state.message) {
       toast.success(state.message);
     }
   }, [state]);

@@ -18,6 +18,7 @@ const serverFetchHelper = async (
   const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
     headers: {
       Cookie: accessToken ? `accessToken=${accessToken}` : "",
+      authorization: accessToken ? accessToken : "",
       ...headers,
     },
     ...restOptions,

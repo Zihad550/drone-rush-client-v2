@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useWishlist } from "@/lib/wishlist-context";
 import type IProduct from "@/types/product.type";
 
 interface ProductCardProps {
@@ -16,7 +17,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { name, description, price, img, _id } = product;
   const router = useRouter();
   const [inCart, setInCart] = useState(false);
-  const [inWishlist, setInWishlist] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+  const {
+    isInWishlist,
+    addToWishlist: addToWishlistContext,
+    removeFromWishlist: removeFromWishlistContext,
+  } = useWishlist();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -24,14 +30,26 @@ const ProductCard = ({ product }: ProductCardProps) => {
     // TODO: Implement cart functionality
   };
 
-  const handleAddToWishlist = (e: React.MouseEvent) => {
+  const handleAddToWishlist = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setInWishlist(!inWishlist);
-    // TODO: Implement wishlist functionality
+    if (wishlistLoading) return;
+
+    setWishlistLoading(true);
+    try {
+      if (isInWishlist(_id)) {
+        await removeFromWishlistContext(_id);
+      } else {
+        await addToWishlistContext(_id);
+      }
+    } catch (_error) {
+      // Error handling is done in context
+    } finally {
+      setWishlistLoading(false);
+    }
   };
 
   const handleCardClick = () => {
-    router.push(`/product/${_id}`);
+    router.push(`/drones/${_id}`);
   };
 
   return (
@@ -40,7 +58,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       className="group h-full cursor-pointer overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
     >
       {/* Product Image */}
-      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20">
+      <div className="relative h-56 overflow-hidden  from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20">
         <Image
           src={img}
           alt={name}
@@ -61,11 +79,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </Button>
           <Button
             size="sm"
-            variant={inWishlist ? "default" : "secondary"}
+            variant={isInWishlist(_id) ? "default" : "secondary"}
             onClick={handleAddToWishlist}
+            disabled={wishlistLoading}
             className="shadow-lg"
           >
-            <Heart className={`h-4 w-4 ${inWishlist ? "fill-current" : ""}`} />
+            <Heart
+              className={`h-4 w-4 ${isInWishlist(_id) ? "fill-current" : ""}`}
+            />
           </Button>
         </div>
       </div>

@@ -33,13 +33,20 @@ export async function registerUser(_currentState: unknown, formData: FormData) {
     }
 
     redirect("/");
-  } catch (error: any) {
+  } catch (error: unknown) {
     // Re-throw NEXT_REDIRECT errors so Next.js can handle them
-    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+    if (
+      error &&
+      typeof error === "object" &&
+      "digest" in error &&
+      typeof (error as { digest: unknown }).digest === "string" &&
+      (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+    )
+      throw error;
 
     return {
       success: false,
-      message: `${process.env.NODE_ENV === "development" ? error?.message : "Something went wrong"}`,
+      message: `${process.env.NODE_ENV === "development" ? (error as Error)?.message : "Something went wrong"}`,
     };
   }
 }
@@ -78,7 +85,8 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
           await setCookie("accessToken", parsedCookie.accessToken, {
             secure: true,
             httpOnly: true,
-            maxAge: parseInt(parsedCookie["Max-Age"] || "0") || 1000 * 60 * 60,
+            maxAge:
+              parseInt(parsedCookie["Max-Age"] || "0", 10) || 1000 * 60 * 60,
             path: parsedCookie.Path || "/",
             sameSite:
               (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
@@ -89,7 +97,7 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
             secure: true,
             httpOnly: true,
             maxAge:
-              parseInt(parsedCookie["Max-Age"] || "0") ||
+              parseInt(parsedCookie["Max-Age"] || "0", 10) ||
               1000 * 60 * 60 * 24 * 90,
             path: parsedCookie.Path || "/",
             sameSite:
@@ -104,11 +112,18 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
     }
 
     return data;
-  } catch (error: any) {
-    if (error?.digest?.startsWith("NEXT_REDIRECT")) throw error;
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === "object" &&
+      "digest" in error &&
+      typeof (error as { digest: unknown }).digest === "string" &&
+      (error as { digest: string }).digest.startsWith("NEXT_REDIRECT")
+    )
+      throw error;
     return {
       success: false,
-      message: error?.message || "Something went wrong",
+      message: error instanceof Error ? error.message : "Something went wrong",
     };
   }
 }
@@ -148,8 +163,8 @@ export async function getNewAccessToken() {
 
     // Now we know: accessToken is invalid/missing AND refreshToken exists
     // Safe to call the API
-    let accessTokenObject: null | any = null;
-    let refreshTokenObject: null | any = null;
+    let accessTokenObject: null | Record<string, string | undefined> = null;
+    let refreshTokenObject: null | Record<string, string | undefined> = null;
 
     // API Call - serverFetch will skip getNewAccessToken for /auth/refresh-token endpoint
     const response = await serverFetch.post("/auth/refresh-token", {
@@ -159,8 +174,6 @@ export async function getNewAccessToken() {
     });
 
     const result = await response.json();
-
-    console.log("access token refreshed!!");
 
     const setCookieHeaders = response.headers.getSetCookie();
 
@@ -187,23 +200,43 @@ export async function getNewAccessToken() {
       throw new Error("Tokens not found in cookies");
     }
 
+    const atObj = accessTokenObject as Record<string, string | undefined>;
+    const rtObj = refreshTokenObject as Record<string, string | undefined>;
+
     await deleteCookie("accessToken");
-    await setCookie("accessToken", accessTokenObject.accessToken, {
+    await setCookie("accessToken", atObj.accessToken!, {
       secure: true,
       httpOnly: true,
-      maxAge: parseInt(accessTokenObject["Max-Age"]) || 1000 * 60 * 60,
-      path: accessTokenObject.Path || "/",
-      sameSite: accessTokenObject?.SameSite || "none",
+      maxAge: parseInt(atObj["Max-Age"]!, 10) || 1000 * 60 * 60,
+      path: atObj.Path! || "/",
+      sameSite: (atObj.SameSite || "none") as "none" | "lax" | "strict",
     });
 
     await deleteCookie("refreshToken");
-    await setCookie("refreshToken", refreshTokenObject.refreshToken, {
+    await setCookie("refreshToken", rtObj.refreshToken!, {
       secure: true,
       httpOnly: true,
-      maxAge:
-        parseInt(refreshTokenObject["Max-Age"]) || 1000 * 60 * 60 * 24 * 90,
-      path: refreshTokenObject.Path || "/",
-      sameSite: refreshTokenObject?.SameSite || "none",
+      maxAge: parseInt(rtObj["Max-Age"]!, 10) || 1000 * 60 * 60 * 24 * 90,
+      path: rtObj.Path! || "/",
+      sameSite: (rtObj.SameSite as "none" | "lax" | "strict") || "none",
+    });
+
+    await deleteCookie("refreshToken");
+    await setCookie("refreshToken", rtObj.refreshToken!, {
+      secure: true,
+      httpOnly: true,
+      maxAge: parseInt(rtObj["Max-Age"]!, 10) || 1000 * 60 * 60 * 24 * 90,
+      path: rtObj.Path! || "/",
+      sameSite: (rtObj.SameSite || "none") as "none" | "lax" | "strict",
+    });
+
+    await deleteCookie("refreshToken");
+    await setCookie("refreshToken", rtObj.refreshToken!, {
+      secure: true,
+      httpOnly: true,
+      maxAge: parseInt(rtObj["Max-Age"]!, 10) || 1000 * 60 * 60 * 24 * 90,
+      path: rtObj.Path! || "/",
+      sameSite: (rtObj.SameSite || "none") as "none" | "lax" | "strict",
     });
 
     if (!result.success) {
@@ -215,11 +248,11 @@ export async function getNewAccessToken() {
       success: true,
       message: "Token refreshed successfully",
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       tokenRefreshed: false,
       success: false,
-      message: error?.message || "Something went wrong",
+      message: error instanceof Error ? error.message : "Token refresh failed",
     };
   }
 }

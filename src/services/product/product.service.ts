@@ -52,3 +52,51 @@ export const getProductById = async (id: string): Promise<IProduct> => {
   const data = await response.json();
   return data.data;
 };
+
+export const createProduct = async (
+  payload: Record<string, unknown>,
+): Promise<IProductResponse> => {
+  const response = await serverFetch.post("/products", {
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to create product");
+  }
+
+  return response.json();
+};
+
+export const updateProduct = async (
+  id: string,
+  payload: Record<string, unknown>,
+): Promise<IProductResponse> => {
+  const response = await serverFetch.patch(`/products/${id}`, {
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to update product");
+  }
+
+  return response.json();
+};
+
+export const deleteProduct = async (id: string): Promise<IProductResponse> => {
+  const response = await serverFetch.delete(`/products/${id}`);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to delete product");
+  }
+
+  return response.json();
+};

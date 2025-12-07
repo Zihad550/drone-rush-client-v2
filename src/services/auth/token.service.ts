@@ -16,10 +16,10 @@ export const verifyAccessToken = async (token: string) => {
       message: "Token is valid",
       payload: verifiedAccessToken,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       success: false,
-      message: error?.message || "Invalid token",
+      message: error instanceof Error ? error.message : "Invalid token",
     };
   }
 };

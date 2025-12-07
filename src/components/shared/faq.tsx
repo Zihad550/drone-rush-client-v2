@@ -54,6 +54,12 @@ const FAQ = () => {
         <div className="overflow-hidden rounded-2xl">
           <video width="100%" height="auto" controls className="rounded-2xl">
             <source src="/assets/faq.mp4" type="video/mp4" />
+            <track
+              kind="captions"
+              src="/assets/faq-captions.vtt"
+              srcLang="en"
+              label="English"
+            />
             Your browser does not support the video tag.
           </video>
         </div>
@@ -66,6 +72,7 @@ const FAQ = () => {
               className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
             >
               <button
+                type="button"
                 onClick={() => toggleAccordion(faq.id)}
                 className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
               >

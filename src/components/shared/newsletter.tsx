@@ -10,7 +10,6 @@ const Newsletter = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // TODO: Implement newsletter subscription
-    console.log("Subscribe email:", email);
     setEmail("");
   };
 

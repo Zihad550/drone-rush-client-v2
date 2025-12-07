@@ -7,7 +7,7 @@ const Product = ({ drone }: { drone: IProduct }) => {
 
   return (
     <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 flex">
-      <Link href={`/product/${_id}`} className="w-full">
+      <Link href={`/drones/${_id}`} className="w-full">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden h-full flex flex-col transition-transform hover:scale-105 cursor-pointer">
           <div className="relative w-full h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center p-4">
             <Image

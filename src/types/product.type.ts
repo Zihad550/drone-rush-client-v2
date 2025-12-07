@@ -8,6 +8,7 @@ export default interface IProduct {
   reviews: string[];
   brand: string;
   quantity?: number;
+  isInWishlist?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { Heart, LayoutDashboard, LogOut, User } from "lucide-react";
+import Link from "next/link";
 import { logoutUser } from "@/app/actions/auth.actions";
 import {
   DropdownMenu,
@@ -7,8 +9,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Heart, LayoutDashboard, LogOut, User } from "lucide-react";
-import Link from "next/link";
 
 interface UserMenuProps {
   user?: {
@@ -43,20 +43,23 @@ const UserMenu = ({ user }: UserMenuProps) => {
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem asChild>
-            <Link href="/user/dashboard" className="cursor-pointer w-full">
+            <Link href="/dashboard" className="cursor-pointer w-full">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Dashboard</span>
             </Link>
           </DropdownMenuItem>
         )}
-        {/*{user?.role !== "admin" && (
+        {user?.role !== "admin" && (
           <DropdownMenuItem asChild>
-            <Link href="/user/wishlist" className="cursor-pointer w-full">
+            <Link
+              href="/dashboard/user/wishlist"
+              className="cursor-pointer w-full"
+            >
               <Heart className="mr-2 h-4 w-4" />
               <span>Wishlist</span>
             </Link>
           </DropdownMenuItem>
-        )}*/}
+        )}
         <DropdownMenuItem
           onClick={handleLogout}
           className="cursor-pointer text-red-600 focus:text-red-600"

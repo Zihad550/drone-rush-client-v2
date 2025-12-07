@@ -11,7 +11,6 @@ export default function RegisterForm() {
   const [state, formAction, isPending] = useActionState(registerUser, null);
 
   useEffect(() => {
-    console.log("state -", state);
     if (state && !state.success && state.message) {
       toast.error(state.message);
     }
