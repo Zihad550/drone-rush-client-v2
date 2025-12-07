@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
 import type IProduct from "@/types/product.type";
 
@@ -16,18 +17,27 @@ interface ProductCardProps {
 const ProductCard = ({ product }: ProductCardProps) => {
   const { name, description, price, img, _id } = product;
   const router = useRouter();
-  const [inCart, setInCart] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
   const {
     isInWishlist,
     addToWishlist: addToWishlistContext,
     removeFromWishlist: removeFromWishlistContext,
   } = useWishlist();
+  const { isInCart, addToCart: addToCartContext } = useCart();
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setInCart(true);
-    // TODO: Implement cart functionality
+    if (cartLoading) return;
+
+    setCartLoading(true);
+    try {
+      await addToCartContext(_id);
+    } catch (_error) {
+      // Error handling is done in context
+    } finally {
+      setCartLoading(false);
+    }
   };
 
   const handleAddToWishlist = async (e: React.MouseEvent) => {
@@ -70,9 +80,9 @@ const ProductCard = ({ product }: ProductCardProps) => {
         <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <Button
             size="sm"
-            variant={inCart ? "default" : "secondary"}
+            variant={isInCart(_id) ? "default" : "secondary"}
             onClick={handleAddToCart}
-            disabled={inCart}
+            disabled={cartLoading}
             className="shadow-lg"
           >
             <ShoppingCart className="h-4 w-4" />
@@ -108,12 +118,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
 
           <span
             className={`rounded-lg px-2 py-1 text-xs font-semibold uppercase tracking-wide ${
-              inCart
+              isInCart(_id)
                 ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                 : "text-gray-500 dark:text-gray-400"
             }`}
           >
-            {inCart ? "In Cart" : "Free Shipping"}
+            {isInCart(_id) ? "In Cart" : "Free Shipping"}
           </span>
         </div>
       </CardContent>

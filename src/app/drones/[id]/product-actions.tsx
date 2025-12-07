@@ -2,8 +2,9 @@
 
 import { Heart, Share2, ShoppingCart } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
 
 interface ProductActionsProps {
@@ -12,11 +13,13 @@ interface ProductActionsProps {
 
 export function ProductActions({ productId }: ProductActionsProps) {
   const [wishlistLoading, setWishlistLoading] = useState(false);
+  const [cartLoading, setCartLoading] = useState(false);
   const {
     isInWishlist,
     addToWishlist: addToWishlistContext,
     removeFromWishlist: removeFromWishlistContext,
   } = useWishlist();
+  const { isInCart, addToCart: addToCartContext, removeFromCart } = useCart();
 
   const handleAddToWishlist = async () => {
     if (wishlistLoading) return;
@@ -32,6 +35,23 @@ export function ProductActions({ productId }: ProductActionsProps) {
       // Error handling is done in context
     } finally {
       setWishlistLoading(false);
+    }
+  };
+
+  const handleCartAction = async () => {
+    if (cartLoading) return;
+
+    setCartLoading(true);
+    try {
+      if (isInCart(productId)) {
+        await removeFromCart(productId);
+      } else {
+        await addToCartContext(productId);
+      }
+    } catch (_error) {
+      // Error handling is done in context
+    } finally {
+      setCartLoading(false);
     }
   };
 
@@ -52,10 +72,12 @@ export function ProductActions({ productId }: ProductActionsProps) {
       <Button
         size="lg"
         className="flex-1"
-        disabled // TODO: Implement cart functionality
+        onClick={handleCartAction}
+        disabled={cartLoading}
+        variant={isInCart(productId) ? "destructive" : "default"}
       >
         <ShoppingCart className="w-5 h-5 mr-2" />
-        Add to Cart
+        {isInCart(productId) ? "Remove from Cart" : "Add to Cart"}
       </Button>
 
       <Button

@@ -5,8 +5,8 @@ import {
   Plane,
   PlusCircle,
   ShieldCheck,
-  ShoppingCart,
   ShoppingBag,
+  ShoppingCart,
 } from "lucide-react";
 
 export type UserRole = "ADMIN" | "USER";
@@ -56,7 +56,7 @@ export const userNavItems: NavItem[] = [
 export const commonNavItems: NavItem[] = [
   {
     title: "Cart",
-    href: "/cart",
+    href: "/dashboard/user/cart",
     icon: ShoppingCart,
   },
   {
@@ -71,7 +71,7 @@ export function getNavItems(role: UserRole): NavItem[] {
     case "ADMIN":
       return adminNavItems;
     case "USER":
-      return userNavItems;
+      return [...userNavItems, ...commonNavItems];
     default:
       return [];
   }

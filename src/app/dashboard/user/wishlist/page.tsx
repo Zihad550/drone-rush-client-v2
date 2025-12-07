@@ -3,14 +3,14 @@
 import { Heart, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { toast } from "sonner";
-import type IWishlist from "@/types/wishlist.type";
 import {
   getWishlist,
   removeFromWishlist,
 } from "@/services/wishlist/wishlist.service";
+import type IWishlist from "@/types/wishlist.type";
 
 export default function WishlistPage() {
   const [wishlist, setWishlist] = useState<IWishlist[]>([]);

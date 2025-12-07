@@ -4,7 +4,7 @@ import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import UserMenu from "@/components/shared/nav-bar/user-menu";
 import { Button } from "@/components/ui/button";
-import { adminNavItems, userNavItems } from "@/lib/nav-config";
+import { adminNavItems, commonNavItems, userNavItems } from "@/lib/nav-config";
 
 interface DashboardHeaderProps {
   onMenuClick: () => void;
@@ -13,7 +13,7 @@ interface DashboardHeaderProps {
 export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const pathname = usePathname();
 
-  const allNavItems = [...adminNavItems, ...userNavItems];
+  const allNavItems = [...adminNavItems, ...userNavItems, ...commonNavItems];
   const currentItem = allNavItems.find((item) => item.href === pathname);
   const pageTitle = currentItem ? currentItem.title : "Dashboard";
 

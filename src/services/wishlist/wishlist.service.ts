@@ -1,9 +1,9 @@
 import { serverFetch } from "@/lib/server-fetch";
 import type {
-  IWishlistResponse,
+  IWishlistAddPayload,
   IWishlistAddResponse,
   IWishlistRemoveResponse,
-  IWishlistAddPayload,
+  IWishlistResponse,
 } from "@/types/wishlist.type";
 
 export const addToWishlist = async (

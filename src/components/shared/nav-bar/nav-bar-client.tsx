@@ -5,9 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import type { IUser } from "@/types/global";
-// import CartLink from "../cart-link";
 import { useWishlist } from "@/lib/wishlist-context";
+import type { IUser } from "@/types/global";
+import CartLink from "../cart-link";
 import Logo from "../logo";
 import UserMenu from "./user-menu";
 
@@ -84,23 +84,26 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
             <div className="flex items-center gap-2">
               {user ? (
                 <>
-                  {/*{user.role !== "admin" && <CartLink />}*/}
-                  <Link
-                    href="/dashboard/user/wishlist"
-                    className={cn(
-                      "relative text-white hover:text-blue-300 transition-colors p-2 rounded-lg hover:bg-white/10",
-                      pathname === "/dashboard/user/wishlist" &&
-                        "text-blue-300 bg-white/10",
-                    )}
-                    title="Wishlist"
-                  >
-                    <Heart className="w-5 h-5" />
-                    {wishlist.length > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {wishlist.length}
-                      </span>
-                    )}
-                  </Link>
+                  {user.role !== "admin" && <CartLink />}
+                  {user.role !== "admin" && (
+                    <Link
+                      href="/dashboard/user/wishlist"
+                      className={cn(
+                        "relative text-white hover:text-blue-300 transition-colors p-2 rounded-lg hover:bg-white/10",
+                        pathname === "/dashboard/user/wishlist" &&
+                          "text-blue-300 bg-white/10",
+                      )}
+                      title="Wishlist"
+                    >
+                      <Heart className="w-5 h-5" />
+                      {wishlist.length > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                          {wishlist.length}
+                        </span>
+                      )}
+                    </Link>
+                  )}
+
                   <UserMenu user={user} />
                 </>
               ) : (
