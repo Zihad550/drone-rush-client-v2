@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/lib/cart-context";
+import { serverFetch } from "@/lib/server-fetch";
 
 export default function CartPage() {
   const {
@@ -16,6 +17,37 @@ export default function CartPage() {
     updateQuantity,
     removeFromCart,
   } = useCart();
+
+  interface ICheckoutProducts {
+    _id: string;
+    quantity: number;
+  }
+
+  async function handleCheckout() {
+    try {
+      const products: ICheckoutProducts[] = cart.map((item) => ({
+        _id: item.product._id,
+        quantity: item.quantity,
+      }));
+      console.log("products", products);
+      const response = await serverFetch.post("/orders", {
+        body: JSON.stringify({ products }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const {
+        data: { paymentUrl },
+      } = await response.json();
+
+      if (!response.ok) throw new Error("Failed to create checkout session");
+
+      window.location.href = paymentUrl;
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   if (loading) {
     return (
@@ -136,7 +168,7 @@ export default function CartPage() {
                   <span>${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
-              <Button className="w-full" size="lg">
+              <Button className="w-full" size="lg" onClick={handleCheckout}>
                 Proceed to Checkout
               </Button>
             </CardContent>
