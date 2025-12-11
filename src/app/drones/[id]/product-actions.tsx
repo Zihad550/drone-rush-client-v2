@@ -3,15 +3,16 @@
 import { Heart, Share2, ShoppingCart } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ErrorBoundary } from "@/components/error-boundary";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
 
 interface ProductActionsProps {
-  productId: string;
+  droneId: string;
 }
 
-export function ProductActions({ productId }: ProductActionsProps) {
+export function ProductActions({ droneId }: ProductActionsProps) {
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
   const {
@@ -26,10 +27,10 @@ export function ProductActions({ productId }: ProductActionsProps) {
 
     setWishlistLoading(true);
     try {
-      if (isInWishlist(productId)) {
-        await removeFromWishlistContext(productId);
+      if (isInWishlist(droneId)) {
+        await removeFromWishlistContext(droneId);
       } else {
-        await addToWishlistContext(productId);
+        await addToWishlistContext(droneId);
       }
     } catch (_error) {
       // Error handling is done in context
@@ -43,10 +44,10 @@ export function ProductActions({ productId }: ProductActionsProps) {
 
     setCartLoading(true);
     try {
-      if (isInCart(productId)) {
-        await removeFromCart(productId);
+      if (isInCart(droneId)) {
+        await removeFromCart(droneId);
       } else {
-        await addToCartContext(productId);
+        await addToCartContext(droneId);
       }
     } catch (_error) {
       // Error handling is done in context
@@ -68,34 +69,44 @@ export function ProductActions({ productId }: ProductActionsProps) {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 pt-4">
-      <Button
-        size="lg"
-        className="flex-1"
-        onClick={handleCartAction}
-        disabled={cartLoading}
-        variant={isInCart(productId) ? "destructive" : "default"}
-      >
-        <ShoppingCart className="w-5 h-5 mr-2" />
-        {isInCart(productId) ? "Remove from Cart" : "Add to Cart"}
-      </Button>
+    <ErrorBoundary
+      fallback={
+        <div className="p-4 text-center border rounded-lg bg-muted/50">
+          <p className="text-sm text-muted-foreground mb-2">
+            Product actions are temporarily unavailable.
+          </p>
+        </div>
+      }
+    >
+      <div className="flex flex-col sm:flex-row gap-4 pt-4">
+        <Button
+          size="lg"
+          className="flex-1"
+          onClick={handleCartAction}
+          disabled={cartLoading}
+          variant={isInCart(droneId) ? "destructive" : "default"}
+        >
+          <ShoppingCart className="w-5 h-5 mr-2" />
+          {isInCart(droneId) ? "Remove from Cart" : "Add to Cart"}
+        </Button>
 
-      <Button
-        variant={isInWishlist(productId) ? "default" : "outline"}
-        size="lg"
-        onClick={handleAddToWishlist}
-        disabled={wishlistLoading}
-      >
-        <Heart
-          className={`w-5 h-5 mr-2 ${isInWishlist(productId) ? "fill-current" : ""}`}
-        />
-        {isInWishlist(productId) ? "In Wishlist" : "Add to Wishlist"}
-      </Button>
+        <Button
+          variant={isInWishlist(droneId) ? "default" : "outline"}
+          size="lg"
+          onClick={handleAddToWishlist}
+          disabled={wishlistLoading}
+        >
+          <Heart
+            className={`w-5 h-5 mr-2 ${isInWishlist(droneId) ? "fill-current" : ""}`}
+          />
+          {isInWishlist(droneId) ? "In Wishlist" : "Add to Wishlist"}
+        </Button>
 
-      <Button variant="outline" size="lg" onClick={handleShare}>
-        <Share2 className="w-5 h-5 mr-2" />
-        Share
-      </Button>
-    </div>
+        <Button variant="outline" size="lg" onClick={handleShare}>
+          <Share2 className="w-5 h-5 mr-2" />
+          Share
+        </Button>
+      </div>
+    </ErrorBoundary>
   );
 }

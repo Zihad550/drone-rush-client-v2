@@ -20,3 +20,21 @@ export const getBrands = async (): Promise<IBrandResponse> => {
 
   return response.json();
 };
+
+export const createBrand = async (
+  payload: Record<string, unknown>,
+): Promise<IBrandResponse> => {
+  const response = await serverFetch.post("/brands", {
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to create brand");
+  }
+
+  return response.json();
+};

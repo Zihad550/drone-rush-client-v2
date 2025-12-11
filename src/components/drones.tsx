@@ -14,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { getProducts } from "@/services/product/product.service";
-import type IProduct from "@/types/product.type";
+import { getDrones } from "@/services/drone/drone.service";
+import type IDrone from "@/types/drone.type";
 
 const PRODUCTS_PER_PAGE = 8;
 
@@ -28,7 +28,7 @@ function Drones({ categories, brands }: DronesProps) {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
-  const [products, setProducts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<IDrone[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function Drones({ categories, brands }: DronesProps) {
         ...(category && { category }),
         ...(brand && { brand }),
       };
-      const data = await getProducts(params);
+      const data = await getDrones(params);
       setProducts(data.data);
       setLoading(false);
     };

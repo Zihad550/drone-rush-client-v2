@@ -12,17 +12,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { deleteProduct, getProducts } from "@/services/product/product.service";
-import type IProduct from "@/types/product.type";
+import { deleteDrone, getDrones } from "@/services/drone/drone.service";
+import type IDrone from "@/types/drone.type";
 
 const ManageDrones = () => {
-  const [drones, setDrones] = useState<IProduct[]>([]);
+  const [drones, setDrones] = useState<IDrone[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchDrones = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await getProducts();
+      const res = await getDrones();
       if (res.success) {
         setDrones(res.data);
       } else {
@@ -46,7 +46,7 @@ const ManageDrones = () => {
     if (!confirmation) return;
 
     try {
-      const res = await deleteProduct(id);
+      const res = await deleteDrone(id);
       if (res.success) {
         toast.success("Drone deleted successfully");
         fetchDrones();

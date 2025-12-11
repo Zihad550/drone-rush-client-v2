@@ -1,53 +1,75 @@
 "use client";
 
-import { Minus, Plus, ShoppingCart, Trash2 } from "lucide-react";
+import { Heart, Minus, Plus, RefreshCw, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/lib/cart-context";
 import { serverFetch } from "@/lib/server-fetch";
+import { useWishlist } from "@/lib/wishlist-context";
+
 
 export default function CartPage() {
   const {
     cart,
     loading,
-    totalItems,
-    totalPrice,
     updateQuantity,
-    removeFromCart,
+    moveToWishlist: moveToWishlistContext,
+    refreshCart,
+    getTotalItems,
+    getTotalPrice,
   } = useCart();
+  const { refreshWishlist } = useWishlist();
 
-  interface ICheckoutProducts {
-    _id: string;
-    quantity: number;
-  }
+  const totalItems = getTotalItems();
+  const totalPrice = getTotalPrice();
 
-  async function handleCheckout() {
+  const handleMoveToWishlist = async (droneId: string) => {
     try {
-      const products: ICheckoutProducts[] = cart.map((item) => ({
-        _id: item.product._id,
+      await moveToWishlistContext(droneId);
+      await refreshWishlist();
+    } catch (_error) {
+      // Error handling is done in context
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      const drones = cart.map((item) => ({
+        _id: item.drone._id,
         quantity: item.quantity,
       }));
-      console.log("products", products);
+
       const response = await serverFetch.post("/orders", {
-        body: JSON.stringify({ products }),
+        body: JSON.stringify({ drones }),
         headers: {
           "Content-Type": "application/json",
         },
       });
 
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || "Failed to create checkout session",
+        );
+      }
+
       const {
         data: { paymentUrl },
       } = await response.json();
 
-      if (!response.ok) throw new Error("Failed to create checkout session");
-
       window.location.href = paymentUrl;
     } catch (error) {
-      console.error(error);
+      console.error("Checkout error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to process checkout. Please try again.",
+      );
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -78,11 +100,23 @@ export default function CartPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">My Cart</h1>
-        <p className="text-muted-foreground">
-          {totalItems} item{totalItems !== 1 ? "s" : ""} in your cart
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">My Cart</h1>
+          <p className="text-muted-foreground">
+            {totalItems} item{totalItems !== 1 ? "s" : ""} in your cart
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => refreshCart()}
+          disabled={loading}
+          className="flex items-center gap-2"
+        >
+          <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
+          Refresh
+        </Button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -93,29 +127,29 @@ export default function CartPage() {
                 <div className="flex gap-4">
                   <div className="relative h-24 w-24 flex-shrink-0">
                     <Image
-                      src={item.product.img}
-                      alt={item.product.name}
+                      src={item.drone.img}
+                      alt={item.drone.name}
                       fill
                       className="object-cover rounded"
                     />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-semibold line-clamp-2">
-                      {item.product.name}
+                      {item.drone.name}
                     </h3>
                     <p className="text-sm text-muted-foreground line-clamp-1">
-                      {item.product.description}
+                      {item.drone.description}
                     </p>
                     <div className="flex items-center justify-between mt-2">
                       <span className="text-lg font-bold text-primary">
-                        ${item.product.price.toFixed(2)}
+                        ${item.drone.price.toFixed(2)}
                       </span>
                       <div className="flex items-center gap-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            updateQuantity(item.product._id, item.quantity - 1)
+                            updateQuantity(item.drone._id, item.quantity - 1)
                           }
                           disabled={item.quantity <= 1}
                         >
@@ -126,18 +160,19 @@ export default function CartPage() {
                           variant="outline"
                           size="sm"
                           onClick={() =>
-                            updateQuantity(item.product._id, item.quantity + 1)
+                            updateQuantity(item.drone._id, item.quantity + 1)
                           }
                         >
                           <Plus className="h-4 w-4" />
                         </Button>
+
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => removeFromCart(item.product._id)}
-                          className="text-destructive hover:text-destructive"
+                          onClick={() => handleMoveToWishlist(item.drone._id)}
+                          className="text-red-500 hover:text-red-600"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Heart className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>

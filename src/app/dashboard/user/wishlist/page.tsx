@@ -1,63 +1,39 @@
 "use client";
 
-import { Heart, Trash2 } from "lucide-react";
+import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  getWishlist,
-  removeFromWishlist,
-} from "@/services/wishlist/wishlist.service";
-import type IWishlist from "@/types/wishlist.type";
+import { useCart } from "@/lib/cart-context";
+import { useWishlist } from "@/lib/wishlist-context";
 
 export default function WishlistPage() {
-  const [wishlist, setWishlist] = useState<IWishlist[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { addToCartAndRemoveFromWishlist } = useCart();
+  const { wishlist, loading, removeFromWishlist, refreshWishlist } =
+    useWishlist();
 
-  const fetchWishlist = useCallback(async () => {
+  const handleAddToCart = async (droneId: string) => {
     try {
-      setLoading(true);
-      const response = await getWishlist();
-      setWishlist(response.data || []);
-    } catch (_err) {
-      setError("Failed to load wishlist");
-      toast.error("Failed to load wishlist");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const handleRemoveFromWishlist = async (productId: string) => {
-    try {
-      await removeFromWishlist(productId);
-      setWishlist((prev) =>
-        prev.filter((item) => item.product._id !== productId),
-      );
-      toast.success("Removed from wishlist");
-    } catch (_err) {
-      toast.error("Failed to remove from wishlist");
+      await addToCartAndRemoveFromWishlist(droneId);
+      await refreshWishlist();
+    } catch (_error) {
+      // Error handling is done in context
     }
   };
 
-  useEffect(() => {
-    fetchWishlist();
-  }, [fetchWishlist]);
+  const handleRemoveFromWishlist = async (droneId: string) => {
+    try {
+      await removeFromWishlist(droneId);
+    } catch (_err) {
+      // Error handling is done in context
+    }
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-96">
-        <p className="text-lg text-muted-foreground">{error}</p>
       </div>
     );
   }
@@ -91,8 +67,8 @@ export default function WishlistPage() {
             <CardHeader className="p-0">
               <div className="relative h-48">
                 <Image
-                  src={item.product.img}
-                  alt={item.product.name}
+                  src={item.drone.img}
+                  alt={item.drone.name}
                   fill
                   className="object-cover"
                 />
@@ -100,23 +76,32 @@ export default function WishlistPage() {
             </CardHeader>
             <CardContent className="p-4">
               <CardTitle className="line-clamp-2 mb-2">
-                {item.product.name}
+                {item.drone.name}
               </CardTitle>
               <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                {item.product.description}
+                {item.drone.description}
               </p>
               <div className="flex items-center justify-between">
                 <span className="text-lg font-bold text-primary">
-                  ${item.product.price.toFixed(2)}
+                  ${item.drone.price.toFixed(2)}
                 </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleRemoveFromWishlist(item.product._id)}
-                  className="text-destructive hover:text-destructive"
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleAddToCart(item.drone._id)}
+                  >
+                    <ShoppingCart className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleRemoveFromWishlist(item.drone._id)}
+                    className="text-destructive hover:text-destructive"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>

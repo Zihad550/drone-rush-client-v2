@@ -1,17 +1,22 @@
-import type IProduct from "@/types/product.type";
-import ProductCard from "./product-card";
+import type IDrone from "@/types/drone.type";
+import DroneCard from "./drone-card";
 
 interface ProductsProps {
-  products: IProduct[];
+  products: IDrone[];
+  isLoggedIn?: boolean;
 }
 
-const Products = ({ products }: ProductsProps) => {
+const Products = ({ products, isLoggedIn }: ProductsProps) => {
   return (
     <div className="mt-10">
       {products && products.length > 0 ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4">
           {products.map((product) => (
-            <ProductCard key={product._id} product={product} />
+            <DroneCard
+              key={product._id}
+              product={product}
+              isLoggedIn={isLoggedIn}
+            />
           ))}
         </div>
       ) : (

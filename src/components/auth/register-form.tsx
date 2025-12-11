@@ -3,6 +3,7 @@ import { Key, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
+import InlineSpinner from "@/components/inline-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,6 +16,10 @@ export default function RegisterForm() {
       toast.error(state.message);
     }
   }, [state]);
+
+  // Extract field-specific errors if available
+  const fieldErrors = state?.errors || {};
+  const hasErrors = state && !state.success;
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-2">
@@ -26,9 +31,16 @@ export default function RegisterForm() {
             name="name"
             placeholder="John Doe"
             required
-            className="pl-8"
+            className={`pl-8 ${fieldErrors.name ? "border-destructive focus:border-destructive" : ""}`}
+            aria-invalid={!!fieldErrors.name}
+            aria-describedby={fieldErrors.name ? "name-error" : undefined}
           />
         </div>
+        {fieldErrors.name && (
+          <p id="name-error" className="text-sm text-destructive" role="alert">
+            {fieldErrors.name}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="email">Your Email</Label>
@@ -40,9 +52,16 @@ export default function RegisterForm() {
             type="email"
             placeholder="m@example.com"
             required
-            className="pl-8"
+            className={`pl-8 ${fieldErrors.email ? "border-destructive focus:border-destructive" : ""}`}
+            aria-invalid={!!fieldErrors.email}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
           />
         </div>
+        {fieldErrors.email && (
+          <p id="email-error" className="text-sm text-destructive" role="alert">
+            {fieldErrors.email}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Your Password</Label>
@@ -53,9 +72,22 @@ export default function RegisterForm() {
             name="password"
             type="password"
             required
-            className="pl-8"
+            className={`pl-8 ${fieldErrors.password ? "border-destructive focus:border-destructive" : ""}`}
+            aria-invalid={!!fieldErrors.password}
+            aria-describedby={
+              fieldErrors.password ? "password-error" : undefined
+            }
           />
         </div>
+        {fieldErrors.password && (
+          <p
+            id="password-error"
+            className="text-sm text-destructive"
+            role="alert"
+          >
+            {fieldErrors.password}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="retype_password">Retype Your Password</Label>
@@ -66,9 +98,22 @@ export default function RegisterForm() {
             name="retype_password"
             type="password"
             required
-            className="pl-8"
+            className={`pl-8 ${fieldErrors.retype_password ? "border-destructive focus:border-destructive" : ""}`}
+            aria-invalid={!!fieldErrors.retype_password}
+            aria-describedby={
+              fieldErrors.retype_password ? "retype-password-error" : undefined
+            }
           />
         </div>
+        {fieldErrors.retype_password && (
+          <p
+            id="retype-password-error"
+            className="text-sm text-destructive"
+            role="alert"
+          >
+            {fieldErrors.retype_password}
+          </p>
+        )}
       </div>
 
       <div className="text-center">
@@ -82,12 +127,25 @@ export default function RegisterForm() {
         </Link>
       </div>
 
+      {/* Aria-live region for form status announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {hasErrors && state?.message && `Error: ${state.message}`}
+        {isPending && "Registering..."}
+      </div>
+
       <Button
         type="submit"
         className="w-full cursor-pointer"
         disabled={isPending}
       >
-        Register
+        {isPending ? (
+          <>
+            <InlineSpinner size="sm" />
+            Registering...
+          </>
+        ) : (
+          "Register"
+        )}
       </Button>
     </form>
   );

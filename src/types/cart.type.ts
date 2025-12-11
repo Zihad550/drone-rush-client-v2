@@ -1,42 +1,52 @@
-import type IProduct from "./product.type";
+import type IDrone from "./drone.type";
 
-export default interface ICart {
+export default interface ICartItem {
   _id: string;
-  user: string; // ObjectId as string
-  product: IProduct; // Populated product
+  drone: IDrone;
   quantity: number;
-  addedAt: string; // ISO date string
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface ICartResponse {
   success: boolean;
   message: string;
-  data: ICart[];
+  data: ICartItem[];
+}
+
+export interface ICartAddPayload {
+  droneId: string;
+  quantity?: number;
 }
 
 export interface ICartAddResponse {
   success: boolean;
   message: string;
-  data: ICart;
+  data: ICartItem;
+}
+
+export interface ICartUpdatePayload {
+  quantity: number;
 }
 
 export interface ICartUpdateResponse {
   success: boolean;
   message: string;
-  data: ICart;
+  data: ICartItem;
 }
 
 export interface ICartRemoveResponse {
   success: boolean;
   message: string;
-  data: ICart;
+  data: ICartItem;
 }
 
-export interface ICartAddPayload {
-  productId: string;
-  quantity?: number;
+export interface ICartMoveToWishlistPayload {
+  droneId: string;
 }
 
-export interface ICartUpdatePayload {
-  quantity: number;
+export interface ICartMoveToWishlistResponse {
+  success: boolean;
+  message: string;
+  data: ICartItem;
 }

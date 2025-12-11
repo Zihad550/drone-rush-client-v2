@@ -23,7 +23,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { getBrands } from "@/services/brand/brand.service";
 import { getCategories } from "@/services/category/category.service";
-import { createProduct } from "@/services/product/product.service";
+import { createDrone } from "@/services/drone/drone.service";
 
 const AddDrone = () => {
   const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
@@ -82,7 +82,7 @@ const AddDrone = () => {
         reviews: [],
       };
 
-      const res = await createProduct(payload);
+      const res = await createDrone(payload);
       if (res.success) {
         toast.success("Drone created successfully");
         setFormData({

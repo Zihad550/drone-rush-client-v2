@@ -14,23 +14,26 @@ import type { IOrder } from "@/types/order.type";
 import { cancelOrderAction, getUserOrders } from "../actions";
 
 export default async function OrdersPage() {
-  let orders: IOrder[] = [];
-  let error: string | null = null;
+  const response = await getUserOrders();
 
-  try {
-    const response = await getUserOrders();
-    orders = response.data || [];
-  } catch (_err) {
-    error = "Failed to load orders";
-  }
-
-  if (error) {
+  if (!response.success) {
     return (
       <div className="flex items-center justify-center h-96">
-        <p className="text-lg text-muted-foreground">{error}</p>
+        <div className="text-center space-y-4">
+          <p className="text-lg text-muted-foreground">{response.message}</p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="text-primary hover:underline"
+          >
+            Try Again
+          </button>
+        </div>
       </div>
     );
   }
+
+  const orders: IOrder[] = response.data || [];
 
   if (!orders || orders.length === 0) {
     return (
@@ -56,6 +59,8 @@ export default async function OrdersPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Products</TableHead>
+              <TableHead>Shipping</TableHead>
+              <TableHead>Payment</TableHead>
               <TableHead>Total Price</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-[100px]">Actions</TableHead>
@@ -66,45 +71,50 @@ export default async function OrdersPage() {
               <TableRow key={order._id}>
                 <TableCell>
                   <div className="space-y-2">
-                    {Array.isArray(order.products) &&
-                      order.products.map((product, idx) => {
-                        if (
-                          typeof product.id === "object" &&
-                          product.id !== null
-                        ) {
+                    {Array.isArray(order.drones) &&
+                      order.drones.map((drone, idx) => {
+                        if (typeof drone.id === "object" && drone.id !== null) {
                           return (
                             <div
-                              key={product.id._id ?? idx}
+                              key={drone.id._id ?? idx}
                               className="flex items-center gap-3"
                             >
                               <Image
-                                src={product.id.img ?? ""}
-                                alt={product.id.name ?? ""}
+                                src={drone.id.img ?? ""}
+                                alt={drone.id.name ?? ""}
                                 width={40}
                                 height={40}
                                 className="rounded-md object-cover"
                               />
                               <div>
                                 <p className="font-medium">
-                                  {product.id.name ?? ""}
+                                  {drone.id.name ?? ""}
                                 </p>
                                 <p className="text-sm text-muted-foreground">
-                                  Qty: {product.quantity ?? 1}
+                                  Qty: {drone.quantity ?? 1}
                                 </p>
                               </div>
                             </div>
                           );
                         }
                         return (
-                          <p
-                            key={`fallback-${String(product.id)}`}
-                            className="text-sm"
-                          >
-                            {String(product.id)}
+                          <p key={`fallback-${String(drone.id)}`}>
+                            {String(drone.id)}
                           </p>
                         );
                       })}
                   </div>
+                </TableCell>
+                <TableCell>
+                  {typeof order.shippingInformation === "object" &&
+                  order.shippingInformation
+                    ? `${order.shippingInformation.street}, ${order.shippingInformation.city}`
+                    : "N/A"}
+                </TableCell>
+                <TableCell>
+                  {typeof order.payment === "object" && order.payment
+                    ? order.payment.status
+                    : "N/A"}
                 </TableCell>
                 <TableCell className="font-medium">
                   ${order.totalPrice}
@@ -112,7 +122,7 @@ export default async function OrdersPage() {
                 <TableCell>
                   <Badge
                     variant={
-                      order.status === "completed" ? "default" : "secondary"
+                      order.status === "COMPLETED" ? "default" : "secondary"
                     }
                   >
                     {order.status}

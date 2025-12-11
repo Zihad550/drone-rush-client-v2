@@ -95,7 +95,7 @@ const ManageOrders = () => {
                       >
                         <td className="p-4 align-middle">
                           <div className="flex flex-col gap-2">
-                            {order.products.map((item, idx) => (
+                            {order.drones.map((item, idx) => (
                               <div
                                 key={item.id._id || idx}
                                 className="flex items-center gap-2"

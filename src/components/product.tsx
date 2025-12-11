@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import type IProduct from "@/types/product.type";
+import type IDrone from "@/types/drone.type";
 
-const Product = ({ drone }: { drone: IProduct }) => {
+const Product = ({ drone }: { drone: IDrone }) => {
   const { name, description, price, img, _id } = drone;
 
   return (

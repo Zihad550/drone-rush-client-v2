@@ -65,33 +65,33 @@ export default async function PurchasedPage() {
           </TableHeader>
           <TableBody>
             {orders.map((order) =>
-              Array.isArray(order.products)
-                ? order.products.map((product, idx) => {
-                    if (typeof product.id === "object" && product.id !== null) {
+              Array.isArray(order.drones)
+                ? order.drones.map((drone, idx) => {
+                    if (typeof drone.id === "object" && drone.id !== null) {
                       return (
-                        <TableRow key={product.id._id ?? idx}>
+                        <TableRow key={drone.id._id ?? idx}>
                           <TableCell>
                             <Image
-                              src={product.id.img ?? ""}
-                              alt={product.id.name ?? ""}
+                              src={drone.id.img ?? ""}
+                              alt={drone.id.name ?? ""}
                               width={60}
                               height={60}
                               className="rounded-md object-cover"
                             />
                           </TableCell>
                           <TableCell className="font-medium">
-                            {product.id.name ?? ""}
+                            {drone.id.name ?? ""}
                           </TableCell>
-                          <TableCell>${product.id.price ?? 0}</TableCell>
-                          <TableCell>{product.quantity ?? 1}</TableCell>
+                          <TableCell>${drone.id.price ?? 0}</TableCell>
+                          <TableCell>{drone.quantity ?? 1}</TableCell>
                           <TableCell>
                             <Badge variant="default">{order.status}</Badge>
                           </TableCell>
                           <TableCell>
                             <ReviewModal
                               product={{
-                                productName: product.id.name ?? "",
-                                img: product.id.img ?? "",
+                                productName: drone.id.name ?? "",
+                                img: drone.id.img ?? "",
                               }}
                             >
                               <Button variant="outline" size="sm">

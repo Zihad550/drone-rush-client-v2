@@ -1,10 +1,12 @@
-import type IProduct from "./product.type";
+import type IDrone from "./drone.type";
+import type IUser from "./user.type";
 
 export default interface IWishlist {
   _id: string;
-  user: string; // ObjectId as string
-  product: IProduct; // Populated product
-  addedAt: string; // ISO date string
+  user: string | IUser;
+  drone: IDrone; // Populated drone object
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IWishlistResponse {
@@ -26,5 +28,5 @@ export interface IWishlistRemoveResponse {
 }
 
 export interface IWishlistAddPayload {
-  productId: string;
+  droneId: string;
 }

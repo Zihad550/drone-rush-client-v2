@@ -32,6 +32,37 @@ export async function registerUser(_currentState: unknown, formData: FormData) {
       };
     }
 
+    const setCookieHeaders = res.headers.getSetCookie();
+    if (setCookieHeaders && setCookieHeaders.length > 0) {
+      const cookiePromises = setCookieHeaders.map(async (cookie: string) => {
+        const parsedCookie = parseCookie(cookie);
+        if (parsedCookie?.accessToken) {
+          await setCookie("accessToken", parsedCookie.accessToken, {
+            secure: true,
+            httpOnly: true,
+            maxAge:
+              parseInt(parsedCookie["Max-Age"] || "0", 10) || 1000 * 60 * 60,
+            path: parsedCookie.Path || "/",
+            sameSite:
+              (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
+          });
+        }
+        if (parsedCookie?.refreshToken) {
+          await setCookie("refreshToken", parsedCookie.refreshToken, {
+            secure: true,
+            httpOnly: true,
+            maxAge:
+              parseInt(parsedCookie["Max-Age"] || "0", 10) ||
+              1000 * 60 * 60 * 24 * 90,
+            path: parsedCookie.Path || "/",
+            sameSite:
+              (parsedCookie?.SameSite as "none" | "lax" | "strict") || "none",
+          });
+        }
+      });
+      await Promise.all(cookiePromises);
+    }
+
     redirect("/");
   } catch (error: unknown) {
     // Re-throw NEXT_REDIRECT errors so Next.js can handle them
@@ -79,7 +110,7 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
 
     const setCookieHeaders = res.headers.getSetCookie();
     if (setCookieHeaders && setCookieHeaders.length > 0) {
-      setCookieHeaders.forEach(async (cookie: string) => {
+      const cookiePromises = setCookieHeaders.map(async (cookie: string) => {
         const parsedCookie = parseCookie(cookie);
         if (parsedCookie?.accessToken) {
           await setCookie("accessToken", parsedCookie.accessToken, {
@@ -105,6 +136,7 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
           });
         }
       });
+      await Promise.all(cookiePromises);
     }
 
     if (data?.success) {

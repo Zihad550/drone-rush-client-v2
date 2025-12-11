@@ -6,19 +6,25 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
-import type IProduct from "@/types/product.type";
+import type IDrone from "@/types/drone.type";
 
-interface ProductCardProps {
-  product: IProduct;
+interface DroneCardProps {
+  product: IDrone;
+  isLoggedIn?: boolean; // For server-side rendering
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const DroneCard = ({
+  product,
+  isLoggedIn: serverIsLoggedIn,
+}: DroneCardProps) => {
   const { name, description, price, img, _id } = product;
   const router = useRouter();
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
+  const { isLoggedIn: clientIsLoggedIn, isLoading: authLoading } = useAuth();
   const {
     isInWishlist,
     addToWishlist: addToWishlistContext,
@@ -26,7 +32,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
   } = useWishlist();
   const { isInCart, addToCart: addToCartContext } = useCart();
 
+  // Use server-side prop if available, otherwise use client-side context
+  const isLoggedIn =
+    serverIsLoggedIn !== undefined ? serverIsLoggedIn : clientIsLoggedIn;
+
   const handleAddToCart = async (e: React.MouseEvent) => {
+    console.log("_id -", _id);
     e.stopPropagation();
     if (cartLoading) return;
 
@@ -76,29 +87,31 @@ const ProductCard = ({ product }: ProductCardProps) => {
           className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Overlay Actions */}
-        <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Button
-            size="sm"
-            variant={isInCart(_id) ? "default" : "secondary"}
-            onClick={handleAddToCart}
-            disabled={cartLoading}
-            className="shadow-lg"
-          >
-            <ShoppingCart className="h-4 w-4" />
-          </Button>
-          <Button
-            size="sm"
-            variant={isInWishlist(_id) ? "default" : "secondary"}
-            onClick={handleAddToWishlist}
-            disabled={wishlistLoading}
-            className="shadow-lg"
-          >
-            <Heart
-              className={`h-4 w-4 ${isInWishlist(_id) ? "fill-current" : ""}`}
-            />
-          </Button>
-        </div>
+        {/* Overlay Actions - Only show if user is logged in */}
+        {isLoggedIn && !authLoading && (
+          <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <Button
+              size="sm"
+              variant={isInCart(_id) ? "default" : "secondary"}
+              onClick={handleAddToCart}
+              disabled={cartLoading}
+              className="shadow-lg"
+            >
+              <ShoppingCart className="h-4 w-4" />
+            </Button>
+            <Button
+              size="sm"
+              variant={isInWishlist(_id) ? "default" : "secondary"}
+              onClick={handleAddToWishlist}
+              disabled={wishlistLoading}
+              className="shadow-lg"
+            >
+              <Heart
+                className={`h-4 w-4 ${isInWishlist(_id) ? "fill-current" : ""}`}
+              />
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Product Info */}
@@ -131,4 +144,4 @@ const ProductCard = ({ product }: ProductCardProps) => {
   );
 };
 
-export default ProductCard;
+export default DroneCard;

@@ -9,45 +9,42 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
+import { ErrorBoundary } from "@/components/error-boundary";
 import {
   addToCart,
+  addToCartAndRemoveFromWishlist,
   getCart,
+  moveToWishlist,
   removeFromCart,
   updateCartQuantity,
 } from "@/services/cart/cart.service";
-import type ICart from "@/types/cart.type";
+import type ICartItem from "@/types/cart.type";
 
 interface CartContextType {
-  cart: ICart[];
+  cart: ICartItem[];
   loading: boolean;
-  totalItems: number;
-  totalPrice: number;
-  addToCart: (productId: string, quantity?: number) => Promise<void>;
-  updateQuantity: (productId: string, quantity: number) => Promise<void>;
-  removeFromCart: (productId: string) => Promise<void>;
+  addToCart: (droneId: string, quantity?: number) => Promise<void>;
+  updateQuantity: (droneId: string, quantity: number) => Promise<void>;
+  removeFromCart: (droneId: string) => Promise<void>;
+  addToCartAndRemoveFromWishlist: (droneId: string, quantity?: number) => Promise<void>;
+  moveToWishlist: (droneId: string) => Promise<void>;
   refreshCart: () => Promise<void>;
-  clearCart: () => void;
-  isInCart: (productId: string) => boolean;
+  isInCart: (droneId: string) => boolean;
+  getTotalItems: () => number;
+  getTotalPrice: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cart, setCart] = useState<ICart[]>([]);
+  const [cart, setCart] = useState<ICartItem[]>([]);
   const [loading, setLoading] = useState(false);
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0,
-  );
 
   const refreshCart = useCallback(async () => {
     try {
       setLoading(true);
       const response = await getCart();
-      const items = response.data || [];
-      setCart(items);
+      setCart(response.data || []);
     } catch (error) {
       console.error("Failed to fetch cart:", error);
       toast.error("Failed to load cart");
@@ -56,10 +53,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const addToCartHandler = async (productId: string, quantity: number = 1) => {
+  const addToCartHandler = async (droneId: string, quantity: number = 1) => {
     try {
-      await addToCart({ productId, quantity });
-      await refreshCart(); // Refresh to get updated data
+      await addToCart({ droneId, quantity });
+      await refreshCart();
       toast.success("Added to cart");
     } catch (error) {
       toast.error("Failed to add to cart");
@@ -67,10 +64,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const updateQuantityHandler = async (productId: string, quantity: number) => {
+  const updateQuantityHandler = async (droneId: string, quantity: number) => {
     try {
-      await updateCartQuantity(productId, { quantity });
-      await refreshCart(); // Refresh to get updated data
+      await updateCartQuantity(droneId, { quantity });
+      await refreshCart();
       toast.success("Quantity updated");
     } catch (error) {
       toast.error("Failed to update quantity");
@@ -78,10 +75,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const removeFromCartHandler = async (productId: string) => {
+  const removeFromCartHandler = async (droneId: string) => {
     try {
-      await removeFromCart(productId);
-      await refreshCart(); // Refresh to get updated data
+      await removeFromCart(droneId);
+      await refreshCart();
       toast.success("Removed from cart");
     } catch (error) {
       toast.error("Failed to remove from cart");
@@ -89,12 +86,44 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const clearCart = () => {
-    setCart([]);
+  const addToCartAndRemoveFromWishlistHandler = async (
+    droneId: string,
+    quantity: number = 1,
+  ) => {
+    try {
+      await addToCartAndRemoveFromWishlist({ droneId, quantity });
+      await refreshCart();
+      toast.success("Added to cart and removed from wishlist");
+    } catch (error) {
+      toast.error("Failed to add to cart and remove from wishlist");
+      throw error;
+    }
   };
 
-  const isInCart = (productId: string) => {
-    return cart.some((item) => item.product._id === productId);
+  const moveToWishlistHandler = async (droneId: string) => {
+    try {
+      await moveToWishlist({ droneId });
+      await refreshCart();
+      toast.success("Moved to wishlist");
+    } catch (error) {
+      toast.error("Failed to move to wishlist");
+      throw error;
+    }
+  };
+
+  const isInCart = (droneId: string) => {
+    return cart.some((item) => item.drone._id === droneId);
+  };
+
+  const getTotalItems = () => {
+    return cart.reduce((sum, item) => sum + item.quantity, 0);
+  };
+
+  const getTotalPrice = () => {
+    return cart.reduce(
+      (sum, item) => sum + item.drone.price * item.quantity,
+      0,
+    );
   };
 
   useEffect(() => {
@@ -104,17 +133,37 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value: CartContextType = {
     cart,
     loading,
-    totalItems,
-    totalPrice,
     addToCart: addToCartHandler,
     updateQuantity: updateQuantityHandler,
     removeFromCart: removeFromCartHandler,
+    addToCartAndRemoveFromWishlist: addToCartAndRemoveFromWishlistHandler,
+    moveToWishlist: moveToWishlistHandler,
     refreshCart,
-    clearCart,
     isInCart,
+    getTotalItems,
+    getTotalPrice,
   };
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <ErrorBoundary
+      fallback={
+        <div className="p-4 text-center">
+          <p className="text-muted-foreground mb-2">
+            Cart functionality is temporarily unavailable.
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="text-primary hover:underline"
+          >
+            Refresh page
+          </button>
+        </div>
+      }
+    >
+      <CartContext.Provider value={value}>{children}</CartContext.Provider>
+    </ErrorBoundary>
+  );
 }
 
 export function useCart() {

@@ -1,9 +1,17 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { getProductById } from "@/services/product/product.service";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { getDroneById } from "@/services/drone/drone.service";
 import { ProductActions } from "./product-actions";
 
 interface PageProps {
@@ -13,7 +21,40 @@ interface PageProps {
 export default async function DroneDetailsPage({ params }: PageProps) {
   const { id } = await params;
 
-  const product = await getProductById(id);
+  let product: Awaited<ReturnType<typeof getDroneById>> | null = null;
+  try {
+    product = await getDroneById(id);
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-destructive">
+              Failed to Load Product
+            </CardTitle>
+            <CardDescription>
+              We encountered an error while loading the product details. Please
+              try again.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col gap-2">
+              <Button asChild className="w-full">
+                <Link href={`/drones/${id}`}>Try Again</Link>
+              </Button>
+              <Button variant="outline" asChild className="w-full">
+                <Link href="/drones">Browse All Drones</Link>
+              </Button>
+              <Button variant="outline" asChild className="w-full">
+                <Link href="/">Go Home</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   if (!product) {
     return notFound();
@@ -21,7 +62,7 @@ export default async function DroneDetailsPage({ params }: PageProps) {
 
   const { img, name, description, price, brand, reviews } = product;
 
-  // Since reviews are string[] in the new type, we'll show a simple review count
+  // Since reviews are string[] | IReview[] in the new type, we'll show a simple review count
   const reviewCount = reviews?.length || 0;
 
   return (
@@ -54,7 +95,9 @@ export default async function DroneDetailsPage({ params }: PageProps) {
                     </h1>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <span>Brand:</span>
-                      <Badge variant="secondary">{brand}</Badge>
+                      <Badge variant="secondary">
+                        {typeof brand === "string" ? brand : brand.name}
+                      </Badge>
                     </div>
                   </div>
 
@@ -83,7 +126,7 @@ export default async function DroneDetailsPage({ params }: PageProps) {
                   </div>
 
                   {/* Actions */}
-                  <ProductActions productId={product._id} />
+                  <ProductActions droneId={product._id} />
 
                   <div className="text-sm text-muted-foreground">
                     Free shipping on orders over $50

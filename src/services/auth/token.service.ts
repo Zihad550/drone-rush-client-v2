@@ -3,12 +3,13 @@
 import jwt from "jsonwebtoken";
 
 export const verifyAccessToken = async (token: string) => {
-  if (!process.env?.JWT_SECRET) throw new Error("JWT_SECRET is not defined");
+  if (!process.env?.JWT_ACCESS_SECRET)
+    throw new Error("JWT_ACCESS_SECRET is not defined");
 
   try {
     const verifiedAccessToken = jwt.verify(
       token,
-      process.env.JWT_SECRET,
+      process.env.JWT_ACCESS_SECRET,
     ) as jwt.JwtPayload;
 
     return {

@@ -6,8 +6,13 @@ export async function getUserOrders() {
   try {
     const response = await getOrders({});
     return response;
-  } catch (_error) {
-    throw new Error("Failed to fetch orders");
+  } catch (error) {
+    console.error("Failed to fetch orders:", error);
+    return {
+      success: false,
+      message: "Failed to fetch orders. Please try again.",
+      data: [],
+    };
   }
 }
 
@@ -15,8 +20,13 @@ export async function getCompletedOrders() {
   try {
     const response = await getOrders({ status: "completed" });
     return response;
-  } catch (_error) {
-    throw new Error("Failed to fetch completed orders");
+  } catch (error) {
+    console.error("Failed to fetch completed orders:", error);
+    return {
+      success: false,
+      message: "Failed to fetch completed orders. Please try again.",
+      data: [],
+    };
   }
 }
 
@@ -33,8 +43,9 @@ export async function cancelOrderAction(formData: FormData) {
       cancelReason: "",
     });
     revalidatePath("/dashboard/user/orders");
-  } catch (_error) {
-    throw new Error("Failed to cancel order");
+  } catch (error) {
+    console.error("Failed to cancel order:", error);
+    throw new Error("Failed to cancel order. Please try again.");
   }
 
   redirect("/dashboard/user/orders");

@@ -3,6 +3,7 @@ import { Key, Mail } from "lucide-react";
 import Link from "next/link";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
+import InlineSpinner from "@/components/inline-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,6 +18,10 @@ export default function LoginForm() {
     }
   }, [state]);
 
+  // Extract field-specific errors if available
+  const fieldErrors = state?.errors || {};
+  const hasErrors = state && !state.success;
+
   return (
     <form action={formAction} className="space-y-4">
       <div className="space-y-2">
@@ -29,9 +34,16 @@ export default function LoginForm() {
             type="email"
             placeholder="m@example.com"
             required
-            className="pl-8"
+            className={`pl-8 ${fieldErrors.email ? "border-destructive focus:border-destructive" : ""}`}
+            aria-invalid={!!fieldErrors.email}
+            aria-describedby={fieldErrors.email ? "email-error" : undefined}
           />
         </div>
+        {fieldErrors.email && (
+          <p id="email-error" className="text-sm text-destructive" role="alert">
+            {fieldErrors.email}
+          </p>
+        )}
       </div>
       <div className="space-y-2">
         <Label htmlFor="password">Your Password</Label>
@@ -42,9 +54,22 @@ export default function LoginForm() {
             name="password"
             type="password"
             required
-            className="pl-8"
+            className={`pl-8 ${fieldErrors.password ? "border-destructive focus:border-destructive" : ""}`}
+            aria-invalid={!!fieldErrors.password}
+            aria-describedby={
+              fieldErrors.password ? "password-error" : undefined
+            }
           />
         </div>
+        {fieldErrors.password && (
+          <p
+            id="password-error"
+            className="text-sm text-destructive"
+            role="alert"
+          >
+            {fieldErrors.password}
+          </p>
+        )}
       </div>
 
       <div className="text-center">
@@ -58,12 +83,25 @@ export default function LoginForm() {
         </Link>
       </div>
 
+      {/* Aria-live region for form status announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only">
+        {hasErrors && state?.message && `Error: ${state.message}`}
+        {isPending && "Logging in..."}
+      </div>
+
       <Button
         type="submit"
         className="w-full cursor-pointer"
         disabled={isPending}
       >
-        Login
+        {isPending ? (
+          <>
+            <InlineSpinner size="sm" />
+            Logging in...
+          </>
+        ) : (
+          "Login"
+        )}
       </Button>
     </form>
   );

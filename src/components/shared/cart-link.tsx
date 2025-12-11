@@ -3,7 +3,8 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 
 const CartLink = () => {
-  const { totalItems } = useCart();
+  const { getTotalItems } = useCart();
+  const totalItems = getTotalItems();
 
   return (
     <Link

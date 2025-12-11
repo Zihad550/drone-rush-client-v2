@@ -25,9 +25,9 @@ export const addToWishlist = async (
 };
 
 export const removeFromWishlist = async (
-  productId: string,
+  droneId: string,
 ): Promise<IWishlistRemoveResponse> => {
-  const response = await serverFetch.delete(`/wishlist/remove/${productId}`);
+  const response = await serverFetch.delete(`/wishlist/remove/${droneId}`);
 
   if (!response.ok) {
     const errorData = await response.json();

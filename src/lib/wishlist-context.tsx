@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import { toast } from "sonner";
+import { ErrorBoundary } from "@/components/error-boundary";
 import {
   addToWishlist,
   getWishlist,
@@ -20,10 +21,10 @@ interface WishlistContextType {
   wishlist: IWishlist[];
   wishlistIds: Set<string>;
   loading: boolean;
-  addToWishlist: (productId: string) => Promise<void>;
-  removeFromWishlist: (productId: string) => Promise<void>;
+  addToWishlist: (droneId: string) => Promise<void>;
+  removeFromWishlist: (droneId: string) => Promise<void>;
   refreshWishlist: () => Promise<void>;
-  isInWishlist: (productId: string) => boolean;
+  isInWishlist: (droneId: string) => boolean;
 }
 
 const WishlistContext = createContext<WishlistContextType | undefined>(
@@ -41,7 +42,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
       const response = await getWishlist();
       const items = response.data || [];
       setWishlist(items);
-      setWishlistIds(new Set(items.map((item) => item.product._id)));
+      setWishlistIds(new Set(items.map((item) => item.drone._id)));
     } catch (error) {
       console.error("Failed to fetch wishlist:", error);
       toast.error("Failed to load wishlist");
@@ -50,9 +51,9 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const addToWishlistHandler = async (productId: string) => {
+  const addToWishlistHandler = async (droneId: string) => {
     try {
-      await addToWishlist({ productId });
+      await addToWishlist({ droneId });
       await refreshWishlist(); // Refresh to get updated data
       toast.success("Added to wishlist");
     } catch (error) {
@@ -61,9 +62,9 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const removeFromWishlistHandler = async (productId: string) => {
+  const removeFromWishlistHandler = async (droneId: string) => {
     try {
-      await removeFromWishlist(productId);
+      await removeFromWishlist(droneId);
       await refreshWishlist(); // Refresh to get updated data
       toast.success("Removed from wishlist");
     } catch (error) {
@@ -72,7 +73,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const isInWishlist = (productId: string) => wishlistIds.has(productId);
+  const isInWishlist = (droneId: string) => wishlistIds.has(droneId);
 
   useEffect(() => {
     refreshWishlist();
@@ -89,9 +90,26 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <WishlistContext.Provider value={value}>
-      {children}
-    </WishlistContext.Provider>
+    <ErrorBoundary
+      fallback={
+        <div className="p-4 text-center">
+          <p className="text-muted-foreground mb-2">
+            Wishlist functionality is temporarily unavailable.
+          </p>
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="text-primary hover:underline"
+          >
+            Refresh page
+          </button>
+        </div>
+      }
+    >
+      <WishlistContext.Provider value={value}>
+        {children}
+      </WishlistContext.Provider>
+    </ErrorBoundary>
   );
 }
 

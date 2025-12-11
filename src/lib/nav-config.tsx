@@ -7,6 +7,8 @@ import {
   ShieldCheck,
   ShoppingBag,
   ShoppingCart,
+  Tag,
+  Truck,
 } from "lucide-react";
 
 export type UserRole = "ADMIN" | "USER";
@@ -34,6 +36,16 @@ export const adminNavItems: NavItem[] = [
     icon: Plane,
   },
   {
+    title: "Manage Brands",
+    href: "/dashboard/admin/manage-brands",
+    icon: Tag,
+  },
+  {
+    title: "Manage Categories",
+    href: "/dashboard/admin/manage-categories",
+    icon: Tag,
+  },
+  {
     title: "Manage Orders",
     href: "/dashboard/admin/manage-orders",
     icon: LayoutList,
@@ -50,6 +62,11 @@ export const userNavItems: NavItem[] = [
     title: "Purchased",
     href: "/dashboard/user/purchased",
     icon: ShoppingBag,
+  },
+  {
+    title: "Shipping Info",
+    href: "/dashboard/user/shipping",
+    icon: Truck,
   },
 ];
 
