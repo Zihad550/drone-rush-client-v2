@@ -126,7 +126,7 @@ const DroneCard = ({
 
         <div className="mt-auto flex items-center justify-between gap-2">
           <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-xl font-bold text-transparent">
-            ${price.toFixed(2)}
+            ${price?.toFixed(2)}
           </span>
 
           <span

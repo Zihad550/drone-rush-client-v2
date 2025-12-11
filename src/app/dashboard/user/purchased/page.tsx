@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { IOrder } from "@/types/order.type";
+import type IOrder from "@/types/order.type";
 import { getCompletedOrders } from "../actions";
 
 export default async function PurchasedPage() {

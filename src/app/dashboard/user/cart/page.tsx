@@ -203,9 +203,11 @@ export default function CartPage() {
                   <span>${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
-              <Button className="w-full" size="lg" onClick={handleCheckout}>
-                Proceed to Checkout
-              </Button>
+               <Link href="/dashboard/user/shipping">
+                 <Button className="w-full" size="lg">
+                   Proceed to Checkout
+                 </Button>
+               </Link>
             </CardContent>
           </Card>
         </div>

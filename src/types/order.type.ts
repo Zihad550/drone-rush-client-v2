@@ -1,5 +1,5 @@
 import type IDrone from "./drone.type";
-import type IPayment from "./payment.type";
+import type { IPayment } from "./payment.type";
 import type IShippingInfo from "./shipping.type";
 import type IUser from "./user.type";
 

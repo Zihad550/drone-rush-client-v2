@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+
 import {
   Select,
   SelectContent,
@@ -28,6 +29,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useCart } from "@/lib/cart-context";
+import { serverFetch } from "@/lib/server-fetch";
 import {
   createShippingInfo,
   deleteShippingInfo,
@@ -37,10 +40,13 @@ import {
 import type IShippingInfo from "@/types/shipping.type";
 
 const ShippingPage = () => {
+  const { cart, getTotalPrice } = useCart();
   const [shippingInfo, setShippingInfo] = useState<IShippingInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<IShippingInfo | null>(null);
+  const [selectedShippingId, setSelectedShippingId] = useState<string>("");
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [formData, setFormData] = useState({
     street: "",
     apt: "",
@@ -146,6 +152,53 @@ const ShippingPage = () => {
       }
     } catch (error: unknown) {
       toast.error((error as Error).message || "Something went wrong");
+    }
+  };
+
+  const handleCheckout = async () => {
+    if (!selectedShippingId) {
+      toast.error("Please select a shipping address.");
+      return;
+    }
+    if (!cart || cart.length === 0) {
+      toast.error("Your cart is empty.");
+      return;
+    }
+    setCheckoutLoading(true);
+    try {
+      const drones = cart.map((item) => ({
+        _id: item.drone._id,
+        quantity: item.quantity,
+      }));
+
+      const response = await serverFetch.post("/orders", {
+        body: JSON.stringify({ drones, shippingInformation: selectedShippingId }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(
+          errorData.message || "Failed to create checkout session",
+        );
+      }
+
+      const {
+        data: { paymentUrl },
+      } = await response.json();
+
+      window.location.href = paymentUrl;
+    } catch (error) {
+      console.error("Checkout error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to process checkout. Please try again.",
+      );
+    } finally {
+      setCheckoutLoading(false);
     }
   };
 
@@ -256,6 +309,45 @@ const ShippingPage = () => {
               </form>
             </DialogContent>
           </Dialog>
+
+          {shippingInfo.length > 0 && (
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-4">Select Shipping Address for Checkout</h3>
+              <div className="space-y-2">
+                {shippingInfo.map((info) => (
+                  <div key={info._id} className="flex items-center space-x-2 border rounded p-3">
+                    <input
+                      type="radio"
+                      id={info._id}
+                      name="shipping"
+                      value={info._id}
+                      checked={selectedShippingId === info._id}
+                      onChange={(e) => setSelectedShippingId(e.target.value)}
+                      className="cursor-pointer"
+                    />
+                    <Label htmlFor={info._id} className="flex-1 cursor-pointer">
+                      {info.street}, {info.city}, {info.state}, {info.zipCode}, {info.country} - {info.paymentMethod}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+              <Button
+                className="w-full mt-4"
+                size="lg"
+                onClick={handleCheckout}
+                disabled={!selectedShippingId || checkoutLoading}
+              >
+                {checkoutLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  `Continue to Checkout ($${getTotalPrice().toFixed(2)})`
+                )}
+              </Button>
+            </div>
+          )}
 
           {loading ? (
             <div className="flex justify-center py-8">

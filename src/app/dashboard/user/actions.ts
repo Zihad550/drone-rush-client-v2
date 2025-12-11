@@ -39,7 +39,7 @@ export async function cancelOrderAction(formData: FormData) {
 
   try {
     await updateOrderStatus(orderId, {
-      status: "user-cancelled",
+      status: "USER-CANCELLED",
       cancelReason: "",
     });
     revalidatePath("/dashboard/user/orders");

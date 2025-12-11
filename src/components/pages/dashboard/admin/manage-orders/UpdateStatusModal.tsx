@@ -14,7 +14,8 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { updateOrderStatus } from "@/services/order/order.service";
-import type { IOrder, TOrderStatus } from "@/types/order.type";
+import type IOrder from "@/types/order.type";
+import type { TOrderStatus } from "@/types/order.type";
 
 interface UpdateStatusModalProps {
   order: IOrder;
@@ -22,12 +23,12 @@ interface UpdateStatusModalProps {
 }
 
 const orderStatusOptions: { value: TOrderStatus; label: string }[] = [
-  { value: "pending", label: "Pending" },
-  { value: "processing", label: "Processing" },
-  { value: "packaged", label: "Packaged" },
-  { value: "delivering", label: "Delivering" },
-  { value: "completed", label: "Completed" },
-  { value: "admin-cancelled", label: "Admin Cancelled" },
+  { value: "PENDING", label: "Pending" },
+  { value: "PROCESSING", label: "Processing" },
+  { value: "PACKAGED", label: "Packaged" },
+  { value: "DELIVERING", label: "Delivering" },
+  { value: "COMPLETED", label: "Completed" },
+  { value: "USER-CANCELLED", label: "User Cancelled" },
 ];
 
 const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
@@ -42,7 +43,7 @@ const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
       const payload: { status: TOrderStatus; cancelReason?: string } = {
         status,
       };
-      if (status === "admin-cancelled") {
+      if (status === "USER-CANCELLED") {
         payload.cancelReason = cancelReason;
       }
 
@@ -104,7 +105,7 @@ const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
             </Select>
           </div>
 
-          {status === "admin-cancelled" && (
+          {status === "USER-CANCELLED" && (
             <div className="space-y-2">
               <Label>Cancel Reason</Label>
               <Textarea

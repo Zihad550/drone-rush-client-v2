@@ -13,7 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getOrders } from "@/services/order/order.service";
-import type { IOrder } from "@/types/order.type";
+import type IDrone from "@/types/drone.type";
+import type IOrder from "@/types/order.type";
 import UpdateStatusModal from "./UpdateStatusModal";
 
 const ManageOrders = () => {
@@ -97,18 +98,18 @@ const ManageOrders = () => {
                           <div className="flex flex-col gap-2">
                             {order.drones.map((item, idx) => (
                               <div
-                                key={item.id._id || idx}
+                                key={idx}
                                 className="flex items-center gap-2"
                               >
                                 <Image
-                                  src={item.id.img}
-                                  alt={item.id.name}
+                                  src={(item.id as IDrone).img}
+                                  alt={(item.id as IDrone).name}
                                   width={40}
                                   height={40}
                                   className="h-10 w-10 rounded object-cover"
                                 />
                                 <div>
-                                  <p className="font-medium">{item.id.name}</p>
+                                  <p className="font-medium">{(item.id as IDrone).name}</p>
                                   <p className="text-xs text-muted-foreground">
                                     Qty: {item.quantity}
                                   </p>
@@ -138,9 +139,9 @@ const ManageOrders = () => {
                         <td className="p-4 align-middle">
                           <span
                             className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
-                              order.status === "completed"
+                              order.status === "COMPLETED"
                                 ? "bg-green-100 text-green-800"
-                                : order.status === "pending"
+                                : order.status === "PENDING"
                                   ? "bg-yellow-100 text-yellow-800"
                                   : "bg-gray-100 text-gray-800"
                             }`}
