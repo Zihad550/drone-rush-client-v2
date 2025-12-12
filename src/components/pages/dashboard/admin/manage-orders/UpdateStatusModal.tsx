@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { isOrderStatusImmutable } from "@/lib/utils";
 import { updateOrderStatus } from "@/services/order/order.service";
 import type IOrder from "@/types/order.type";
 import type { TOrderStatus } from "@/types/order.type";
@@ -20,6 +21,7 @@ import type { TOrderStatus } from "@/types/order.type";
 interface UpdateStatusModalProps {
   order: IOrder;
   onSuccess: () => void;
+  disabled?: boolean;
 }
 
 const orderStatusOptions: { value: TOrderStatus; label: string }[] = [
@@ -28,18 +30,25 @@ const orderStatusOptions: { value: TOrderStatus; label: string }[] = [
   { value: "PACKAGED", label: "Packaged" },
   { value: "DELIVERING", label: "Delivering" },
   { value: "COMPLETED", label: "Completed" },
-  { value: "USER-CANCELLED", label: "User Cancelled" },
   { value: "FAILED", label: "Failed" },
   { value: "ADMIN-CANCELLED", label: "Admin Cancelled" },
 ];
 
-const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
+const UpdateStatusModal = ({
+  order,
+  onSuccess,
+  disabled = false,
+}: UpdateStatusModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<TOrderStatus>(order.status);
   const [cancelReason, setCancelReason] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const isImmutable = isOrderStatusImmutable(order.status);
+
   const handleUpdate = async () => {
+    if (isImmutable) return;
+
     setLoading(true);
     try {
       const payload: { status: TOrderStatus; cancelReason?: string } = {
@@ -66,7 +75,17 @@ const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
 
   if (!isOpen) {
     return (
-      <Button variant="outline" size="sm" onClick={() => setIsOpen(true)}>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => setIsOpen(true)}
+        disabled={disabled}
+        title={
+          disabled
+            ? "This order's status is final and cannot be changed"
+            : undefined
+        }
+      >
         Update Status
       </Button>
     );
@@ -88,11 +107,17 @@ const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
         </div>
 
         <div className="space-y-4">
+          {isImmutable && (
+            <div className="rounded-md bg-yellow-50 p-3 text-sm text-yellow-800">
+              This order's status is final and cannot be changed.
+            </div>
+          )}
           <div className="space-y-2">
             <Label>Status</Label>
             <Select
               value={status}
               onValueChange={(value) => setStatus(value as TOrderStatus)}
+              disabled={isImmutable}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select status" />
@@ -127,7 +152,7 @@ const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
             >
               Cancel
             </Button>
-            <Button onClick={handleUpdate} disabled={loading}>
+            <Button onClick={handleUpdate} disabled={loading || isImmutable}>
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Update
             </Button>

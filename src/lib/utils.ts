@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import type IDrone from "@/types/drone.type";
+import type { TOrderStatus } from "@/types/order.type";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -45,4 +46,13 @@ export const calculateRatingBreakdown = (reviews: IDrone["reviews"]) => {
   });
 
   return breakdown;
+};
+
+export const IMMUTABLE_ORDER_STATUSES: TOrderStatus[] = [
+  "COMPLETED",
+  "USER-CANCELLED",
+];
+
+export const isOrderStatusImmutable = (status: TOrderStatus): boolean => {
+  return IMMUTABLE_ORDER_STATUSES.includes(status);
 };

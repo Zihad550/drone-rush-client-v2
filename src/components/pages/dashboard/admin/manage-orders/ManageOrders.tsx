@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2 } from "lucide-react";
+import { Loader2, Lock } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { isOrderStatusImmutable } from "@/lib/utils";
 import { getOrders } from "@/services/order/order.service";
 import type IDrone from "@/types/drone.type";
 import type IOrder from "@/types/order.type";
@@ -140,7 +141,7 @@ const ManageOrders = () => {
                         </td>
                         <td className="p-4 align-middle">
                           <span
-                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
+                            className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
                               order.status === "COMPLETED"
                                 ? "bg-green-100 text-green-800"
                                 : order.status === "PENDING"
@@ -149,12 +150,16 @@ const ManageOrders = () => {
                             }`}
                           >
                             {order.status}
+                            {isOrderStatusImmutable(order.status) && (
+                              <Lock className="h-3 w-3" />
+                            )}
                           </span>
                         </td>
                         <td className="p-4 align-middle">
                           <UpdateStatusModal
                             order={order}
                             onSuccess={handleStatusUpdate}
+                            disabled={isOrderStatusImmutable(order.status)}
                           />
                         </td>
                       </tr>
