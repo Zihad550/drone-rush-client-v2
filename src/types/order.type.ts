@@ -1,5 +1,6 @@
 import type IDrone from "./drone.type";
 import type { IPayment } from "./payment.type";
+import type IReview from "./review.type";
 import type IShippingInfo from "./shipping.type";
 import type IUser from "./user.type";
 
@@ -9,12 +10,15 @@ export default interface IOrder {
   payment: string | IPayment;
   shippingInformation: string | IShippingInfo;
   drones: { id: string | IDrone; quantity: number }[];
+  reviews: { drone: IDrone; review: IReview }[];
   status: TOrderStatus;
   cancelReason?: string;
   totalPrice: number;
   stripeSessionId?: string;
   stripePaymentIntentId?: string;
   stripeChargeId?: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface IOrderDrone {
