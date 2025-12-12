@@ -1,7 +1,9 @@
 "use client";
 
-import { X, Star } from "lucide-react";
+import { Star, X } from "lucide-react";
 import Image from "next/image";
+import { cancelOrderAction } from "@/app/dashboard/user/cancelOrderAction";
+import ReviewModal from "@/components/review/ReviewModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,8 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type IOrder from "@/types/order.type";
-import { cancelOrderAction } from "@/app/dashboard/user/cancelOrderAction";
-import ReviewModal from "@/components/review/ReviewModal";
 
 interface OrdersTableProps {
   orders: IOrder[];
@@ -91,7 +91,11 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                   ? `${order.shippingInformation.street}, ${order.shippingInformation.city}, ${order.shippingInformation.state} ${order.shippingInformation.zipCode}`
                   : "N/A"}
               </TableCell>
-              <TableCell>{typeof order.payment === "object" ? order.payment?.status ?? "N/A" : "N/A"}</TableCell>
+              <TableCell>
+                {typeof order.payment === "object"
+                  ? (order.payment?.status ?? "N/A")
+                  : "N/A"}
+              </TableCell>
               <TableCell className="font-medium">
                 ${order.totalPrice?.toFixed(2) ?? "0.00"}
               </TableCell>
@@ -118,7 +122,9 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
                     onSubmitSuccess={handleSubmitSuccess}
                     trigger={
                       <Button variant="outline" size="sm">
-                        <Star className={`h-4 w-4 mr-1 ${order.reviews?.length > 0 ? "fill-yellow-500 text-yellow-500" : ""}`} />
+                        <Star
+                          className={`h-4 w-4 mr-1 ${order.reviews?.length > 0 ? "fill-yellow-500 text-yellow-500" : ""}`}
+                        />
                         {order.reviews?.length > 0 ? "Reviewed" : "Review"}
                       </Button>
                     }

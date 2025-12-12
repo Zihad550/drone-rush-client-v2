@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import Image from "next/image";
 import { Star } from "lucide-react";
+import Image from "next/image";
+import { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +12,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import type IOrder from "@/types/order.type";
 import { createReview, updateReview } from "@/services/review/review.service";
+import type IOrder from "@/types/order.type";
 
 interface ReviewModalProps {
   order: IOrder;
@@ -22,7 +22,11 @@ interface ReviewModalProps {
   onSubmitSuccess?: (orderId: string) => void;
 }
 
-export default function ReviewModal({ order, trigger, onSubmitSuccess }: ReviewModalProps) {
+export default function ReviewModal({
+  order,
+  trigger,
+  onSubmitSuccess,
+}: ReviewModalProps) {
   const [open, setOpen] = useState(false);
   const [ratings, setRatings] = useState<Record<string, number>>({});
   const [comments, setComments] = useState<Record<string, string>>({});
@@ -77,14 +81,17 @@ export default function ReviewModal({ order, trigger, onSubmitSuccess }: ReviewM
       for (const drone of order.drones) {
         const droneId = typeof drone.id === "string" ? drone.id : drone.id._id;
         const existingOrderReview = (order.reviews || []).find(
-          (r) => r.drone._id === droneId
+          (r) => r.drone._id === droneId,
         );
         const rating = ratings[droneId];
         const comment = comments[droneId];
 
         if (rating && comment) {
           if (existingOrderReview) {
-            await updateReview(existingOrderReview.review._id, { rating, comment });
+            await updateReview(existingOrderReview.review._id, {
+              rating,
+              comment,
+            });
           } else {
             await createReview({
               orderId: order._id,
@@ -118,7 +125,7 @@ export default function ReviewModal({ order, trigger, onSubmitSuccess }: ReviewM
             key={star}
             type="button"
             onClick={() => {
-              setRatings(prev => ({ ...prev, [droneId]: star }));
+              setRatings((prev) => ({ ...prev, [droneId]: star }));
             }}
             className="text-yellow-400"
           >
@@ -143,23 +150,34 @@ export default function ReviewModal({ order, trigger, onSubmitSuccess }: ReviewM
         </DialogHeader>
         <div className="space-y-6">
           {order.drones.map((drone) => {
-            const droneId = typeof drone.id === "string" ? drone.id : drone.id._id;
+            const droneId =
+              typeof drone.id === "string" ? drone.id : drone.id._id;
             const _existingOrderReview = (order.reviews || []).find(
-              (r) => r.drone._id === droneId
+              (r) => r.drone._id === droneId,
             );
             return (
               <div key={droneId} className="border rounded-lg p-4">
                 <div className="flex items-center gap-3 mb-3">
                   <Image
                     src={typeof drone.id === "string" ? "" : drone.id.img || ""}
-                    alt={typeof drone.id === "string" ? "Drone" : drone.id.name || "Drone"}
+                    alt={
+                      typeof drone.id === "string"
+                        ? "Drone"
+                        : drone.id.name || "Drone"
+                    }
                     width={50}
                     height={50}
                     className="rounded-md object-cover"
                   />
                   <div>
-                    <p className="font-medium">{typeof drone.id === "string" ? "Drone" : drone.id.name || "Drone"}</p>
-                    <p className="text-sm text-muted-foreground">Qty: {drone.quantity}</p>
+                    <p className="font-medium">
+                      {typeof drone.id === "string"
+                        ? "Drone"
+                        : drone.id.name || "Drone"}
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Qty: {drone.quantity}
+                    </p>
                   </div>
                 </div>
                 <div className="space-y-3">
@@ -168,29 +186,55 @@ export default function ReviewModal({ order, trigger, onSubmitSuccess }: ReviewM
                     {renderStars(droneId)}
                   </div>
                   <div>
-                    <label htmlFor={`comment-${droneId}`} className="text-sm font-medium">Comment{ratings[droneId] > 0 ? " *" : ""}</label>
-                     <Textarea
-                       id={`comment-${droneId}`}
-                       placeholder="Share your thoughts..."
-                       value={comments[droneId] || ""}
-                       onChange={(e) => setComments(prev => ({ ...prev, [droneId]: e.target.value }))}
-                       rows={3}
-                       className={ratings[droneId] > 0 && (!comments[droneId] || comments[droneId].trim() === "") ? "border-red-500" : ""}
-                     />
-                   </div>
+                    <label
+                      htmlFor={`comment-${droneId}`}
+                      className="text-sm font-medium"
+                    >
+                      Comment{ratings[droneId] > 0 ? " *" : ""}
+                    </label>
+                    <Textarea
+                      id={`comment-${droneId}`}
+                      placeholder="Share your thoughts..."
+                      value={comments[droneId] || ""}
+                      onChange={(e) =>
+                        setComments((prev) => ({
+                          ...prev,
+                          [droneId]: e.target.value,
+                        }))
+                      }
+                      rows={3}
+                      className={
+                        ratings[droneId] > 0 &&
+                        (!comments[droneId] || comments[droneId].trim() === "")
+                          ? "border-red-500"
+                          : ""
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             );
           })}
-         </div>
-         {error && <p className="text-red-500 text-sm">{error}</p>}
-         <div className="flex justify-end gap-2">
+        </div>
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+        <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={() => setOpen(false)}>
             Cancel
           </Button>
-           <Button onClick={handleSubmit} disabled={loading || (order.reviews && order.reviews.length > 0) || !isValidSubmission()}>
-             {loading ? "Submitting..." : (order.reviews && order.reviews.length > 0 ? "Already Reviewed" : "Submit Reviews")}
-           </Button>
+          <Button
+            onClick={handleSubmit}
+            disabled={
+              loading ||
+              (order.reviews && order.reviews.length > 0) ||
+              !isValidSubmission()
+            }
+          >
+            {loading
+              ? "Submitting..."
+              : order.reviews && order.reviews.length > 0
+                ? "Already Reviewed"
+                : "Submit Reviews"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -12,7 +12,10 @@ export const createReview = async (payload: ICreateReview) => {
   return res.json();
 };
 
-export const updateReview = async (reviewId: string, payload: IUpdateReview) => {
+export const updateReview = async (
+  reviewId: string,
+  payload: IUpdateReview,
+) => {
   const res = await serverFetch.patch(`/reviews/${reviewId}`, {
     body: JSON.stringify(payload),
     headers: {
@@ -24,5 +27,11 @@ export const updateReview = async (reviewId: string, payload: IUpdateReview) => 
 
 export const deleteReview = async (reviewId: string) => {
   const res = await serverFetch.delete(`/reviews/${reviewId}`);
+  return res.json();
+};
+
+export const getReviews = async (query?: Record<string, string>) => {
+  const queryString = query ? `?${new URLSearchParams(query).toString()}` : "";
+  const res = await serverFetch.get(`/reviews${queryString}`);
   return res.json();
 };

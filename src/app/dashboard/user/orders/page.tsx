@@ -1,18 +1,18 @@
- import { X } from "lucide-react";
- import Image from "next/image";
- import { Badge } from "@/components/ui/badge";
- import { Button } from "@/components/ui/button";
- import {
-   Table,
-   TableBody,
-   TableCell,
-   TableHead,
-   TableHeader,
-   TableRow,
- } from "@/components/ui/table";
- import type IOrder from "@/types/order.type";
- import { getUserOrders } from "@/services/order/order.service";
- import OrdersTable from "@/components/pages/dashboard/user/orders/OrdersTable";
+import { X } from "lucide-react";
+import Image from "next/image";
+import OrdersTable from "@/components/pages/dashboard/user/orders/OrdersTable";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { getUserOrders } from "@/services/order/order.service";
+import type IOrder from "@/types/order.type";
 
 export default async function OrdersPage() {
   let orders: IOrder[] = [];

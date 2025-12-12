@@ -4,6 +4,7 @@ import FAQ from "@/components/shared/faq";
 import Features from "@/components/shared/features";
 import Newsletter from "@/components/shared/newsletter";
 import Products from "@/components/shared/products";
+import ReviewsCarousel from "@/components/shared/reviews-carousel";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getDrones } from "@/services/drone/drone.service";
@@ -46,6 +47,14 @@ export default async function Home() {
               {title}
             </h2>
             <Products products={products.data} isLoggedIn={isLoggedIn} />
+          </section>
+
+          {/* Reviews Section */}
+          <section>
+            <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+              Customer Reviews
+            </h2>
+            <ReviewsCarousel />
           </section>
 
           {/* Features Section */}
