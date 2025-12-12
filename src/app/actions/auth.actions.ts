@@ -1,9 +1,11 @@
 "use server";
-
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { deleteCookie } from "@/services/auth/cookie.service";
 
 export const logoutUser = async () => {
-  (await cookies()).delete("accessToken");
+  await Promise.all([
+    deleteCookie("refreshToken"),
+    deleteCookie("accessToken"),
+  ]);
   redirect("/login");
 };

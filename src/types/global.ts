@@ -33,5 +33,6 @@ export interface IQueryParam {
 }
 
 export interface IUser {
-  role: string;
+	id: string;
+	role: string;
 }

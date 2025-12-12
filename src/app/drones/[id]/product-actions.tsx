@@ -1,10 +1,12 @@
 "use client";
 
 import { Heart, Share2, ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ErrorBoundary } from "@/components/error-boundary";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth-context";
 import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
 
@@ -13,6 +15,8 @@ interface ProductActionsProps {
 }
 
 export function ProductActions({ droneId }: ProductActionsProps) {
+  const router = useRouter();
+  const { isLoggedIn } = useAuth();
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
   const {
@@ -23,6 +27,10 @@ export function ProductActions({ droneId }: ProductActionsProps) {
   const { isInCart, addToCart: addToCartContext, removeFromCart } = useCart();
 
   const handleAddToWishlist = async () => {
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
     if (wishlistLoading) return;
 
     setWishlistLoading(true);
@@ -40,6 +48,10 @@ export function ProductActions({ droneId }: ProductActionsProps) {
   };
 
   const handleCartAction = async () => {
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
     if (cartLoading) return;
 
     setCartLoading(true);

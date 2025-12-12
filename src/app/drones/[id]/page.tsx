@@ -5,12 +5,14 @@ import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
 } from "@/components/ui/card";
+import { getCookie } from "@/services/auth/cookie.service";
+import { verifyAccessToken } from "@/services/auth/token.service";
 import { getDroneById } from "@/services/drone/drone.service";
 import { ProductActions } from "./product-actions";
 
@@ -19,12 +21,22 @@ interface PageProps {
 }
 
 export default async function DroneDetailsPage({ params }: PageProps) {
-  const { id } = await params;
+	const { id } = await params;
 
-  let product: Awaited<ReturnType<typeof getDroneById>> | null = null;
-  try {
-    product = await getDroneById(id);
-  } catch (error) {
+	// Check authentication status server-side
+	const accessToken = await getCookie("accessToken");
+	let userId: string | undefined;
+	if (accessToken) {
+		const verified = await verifyAccessToken(accessToken);
+		if (verified.success && verified.payload) {
+			userId = verified.payload.id;
+		}
+	}
+
+	let product: Awaited<ReturnType<typeof getDroneById>> | null = null;
+	try {
+		product = await getDroneById(id, userId);
+	} catch (error) {
     console.error("Failed to fetch product:", error);
     return (
       <div className="min-h-screen bg-background flex items-center justify-center px-4">

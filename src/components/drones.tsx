@@ -2,7 +2,7 @@
 
 import { Filter, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import Products from "@/components/products";
+import Products from "@/components/shared/products";
 import Spinner from "@/components/spinner";
 import Title from "@/components/title";
 import { Button } from "@/components/ui/button";
@@ -22,16 +22,31 @@ const PRODUCTS_PER_PAGE = 8;
 interface DronesProps {
   categories: { _id: string; name: string }[];
   brands: { _id: string; name: string; logo: string; description: string }[];
+  userId?: string;
+  isLoggedIn?: boolean;
+  products?: IDrone[];
 }
 
-function Drones({ categories, brands }: DronesProps) {
+function Drones({
+  categories,
+  brands,
+  userId,
+  isLoggedIn,
+  products: initialProducts,
+}: DronesProps) {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState("");
   const [brand, setBrand] = useState("");
-  const [products, setProducts] = useState<IDrone[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<IDrone[]>(initialProducts || []);
+  const [loading, setLoading] = useState(!initialProducts);
 
   useEffect(() => {
+    if (initialProducts) {
+      setProducts(initialProducts);
+      setLoading(false);
+      return;
+    }
+
     const fetchProducts = async () => {
       setLoading(true);
       const params = {
@@ -40,13 +55,14 @@ function Drones({ categories, brands }: DronesProps) {
         limit: PRODUCTS_PER_PAGE,
         ...(category && { category }),
         ...(brand && { brand }),
+        ...(userId && { userId }),
       };
       const data = await getDrones(params);
       setProducts(data.data);
       setLoading(false);
     };
     fetchProducts();
-  }, [page, category, brand]);
+  }, [page, category, brand, userId, initialProducts]);
 
   return (
     <>
@@ -125,7 +141,11 @@ function Drones({ categories, brands }: DronesProps) {
       <ScrollAnimation className="delay-100">
         <div>
           <Title>All Available Drones</Title>
-          {loading ? <Spinner /> : <Products products={products} />}
+          {loading ? (
+            <Spinner />
+          ) : (
+            <Products products={products} isLoggedIn={isLoggedIn} />
+          )}
         </div>
       </ScrollAnimation>
       <ScrollAnimation className="delay-200">

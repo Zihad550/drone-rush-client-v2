@@ -70,7 +70,11 @@ const DroneCard = ({
   };
 
   const handleCardClick = () => {
-    router.push(`/drones/${_id}`);
+    if (!isLoggedIn) {
+      router.push("/login");
+    } else {
+      router.push(`/drones/${_id}`);
+    }
   };
 
   return (

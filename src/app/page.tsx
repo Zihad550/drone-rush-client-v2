@@ -16,15 +16,21 @@ export default async function Home() {
   const accessToken = await getCookie("accessToken");
   let isLoggedIn = false;
 
+  let userId: string | undefined;
   if (accessToken) {
     const verified = await verifyAccessToken(accessToken);
     if (verified.success && verified.payload) {
       isLoggedIn = true;
+      userId = verified.payload.id;
     }
   }
 
   // Fetch drones server-side
-  const products = await getDrones({ sort: "-quantity" });
+  const products = await getDrones({
+    sort: "-quantity",
+    ...(userId && { userId }),
+  });
+  console.log(products);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

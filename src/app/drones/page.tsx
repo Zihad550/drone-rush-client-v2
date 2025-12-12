@@ -9,13 +9,34 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ScrollAnimation from "@/components/ui/scroll-animation";
+import { getCookie } from "@/services/auth/cookie.service";
+import { verifyAccessToken } from "@/services/auth/token.service";
 import { getBrands } from "@/services/brand/brand.service";
 import { getCategories } from "@/services/category/category.service";
+import { getDrones } from "@/services/drone/drone.service";
 
 export default async function DronesPage() {
   let categoriesData: Awaited<ReturnType<typeof getCategories>> | null = null;
   let brandsData: Awaited<ReturnType<typeof getBrands>> | null = null;
   let hasError = false;
+
+  // Check authentication status server-side
+  const accessToken = await getCookie("accessToken");
+  let userId: string | undefined;
+  if (accessToken) {
+    const verified = await verifyAccessToken(accessToken);
+    if (verified.success && verified.payload) {
+      userId = verified.payload.id;
+    }
+  }
+
+  const isLoggedIn = !!userId;
+
+  // Fetch drones server-side
+  const products = await getDrones({
+    sort: "-quantity",
+    ...(userId && { userId }),
+  });
 
   try {
     categoriesData = await getCategories();
@@ -77,6 +98,9 @@ export default async function DronesPage() {
             <Drones
               categories={categoriesData?.data || []}
               brands={brandsData?.data || []}
+              userId={userId}
+              isLoggedIn={isLoggedIn}
+              products={products.data}
             />
             {/* Features Section */}
             <ScrollAnimation>
