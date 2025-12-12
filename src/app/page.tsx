@@ -1,5 +1,6 @@
 import Banner from "@/components/shared/banner";
 import Brands from "@/components/shared/brands";
+import Categories from "@/components/shared/categories";
 import ContactUs from "@/components/shared/contact-us";
 import FAQ from "@/components/shared/faq";
 import Features from "@/components/shared/features";
@@ -9,6 +10,7 @@ import ReviewsCarousel from "@/components/shared/reviews-carousel";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getBrands } from "@/services/brand/brand.service";
+import { getCategories } from "@/services/category/category.service";
 import { getDrones } from "@/services/drone/drone.service";
 
 export default async function Home() {
@@ -35,8 +37,11 @@ export default async function Home() {
   });
   console.log(products);
 
-  // Fetch brands server-side
-  const brands = await getBrands();
+   // Fetch brands server-side
+   const brands = await getBrands();
+
+   // Fetch categories server-side
+   const categories = await getCategories();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -54,15 +59,25 @@ export default async function Home() {
              <Products products={products.data} isLoggedIn={isLoggedIn} />
            </section>
 
-           {/* Brands Section */}
-           <section>
-             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
-               Explore Brands
-             </h2>
-             <Brands brands={brands.data} />
-           </section>
+            {/* Brands Section */}
+            <section>
+              <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+                Explore Brands
+              </h2>
+              <Brands brands={brands.data} />
+            </section>
 
-           {/* Reviews Section */}
+            {/* Categories Section */}
+            {categories.data && categories.data.length > 0 && (
+              <section>
+                <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+                  Explore Categories
+                </h2>
+                <Categories categories={categories.data} />
+              </section>
+            )}
+
+            {/* Reviews Section */}
           <section>
             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
               Customer Reviews
