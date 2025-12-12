@@ -57,17 +57,7 @@ const UserMenu = ({ user }: UserMenuProps) => {
               </Link>
             </DropdownMenuItem>
           )}
-          {user?.role !== "admin" && (
-            <DropdownMenuItem asChild>
-              <Link
-                href="/dashboard/user/wishlist"
-                className="cursor-pointer w-full"
-              >
-                <Heart className="mr-2 h-4 w-4" />
-                <span>Wishlist</span>
-              </Link>
-            </DropdownMenuItem>
-          )}
+
           <DropdownMenuItem
             onClick={handleLogout}
             className="cursor-pointer text-red-600 focus:text-red-600"
