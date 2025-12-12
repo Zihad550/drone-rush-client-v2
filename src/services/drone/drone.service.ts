@@ -5,10 +5,11 @@ interface IQueryParams {
   sort?: string;
   limit?: number;
   page?: number;
-  category?: string;
-  brand?: string;
+  category?: string[];
+  brand?: string[];
   minPrice?: number;
   maxPrice?: number;
+  searchTerm?: string;
   userId?: string;
 }
 
@@ -30,7 +31,12 @@ export const getDrones = async (
     ? "?" +
       Object.entries(params)
         .filter(([_, value]) => value !== undefined)
-        .map(([key, value]) => `${key}=${value}`)
+        .map(([key, value]) => {
+          if (Array.isArray(value)) {
+            return `${key}=${value.join(",")}`;
+          }
+          return `${key}=${value}`;
+        })
         .join("&")
     : "";
 

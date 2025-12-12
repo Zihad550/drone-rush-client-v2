@@ -1,5 +1,6 @@
 import {
   Heart,
+  LayoutDashboard,
   LayoutList,
   Package,
   Plane,
@@ -53,6 +54,11 @@ export const adminNavItems: NavItem[] = [
 ];
 
 export const userNavItems: NavItem[] = [
+  {
+    title: "Dashboard",
+    href: "/dashboard/user",
+    icon: LayoutDashboard,
+  },
   {
     title: "My Orders",
     href: "/dashboard/user/orders",

@@ -44,14 +44,14 @@ const UserMenu = ({ user }: UserMenuProps) => {
         <DropdownMenuContent align="end" className="w-56">
           {user?.role === "admin" ? (
             <DropdownMenuItem asChild>
-              <Link href="/admin/dashboard" className="cursor-pointer w-full">
+              <Link href="/dashboard/admin" className="cursor-pointer w-full">
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 <span>Dashboard</span>
               </Link>
             </DropdownMenuItem>
           ) : (
             <DropdownMenuItem asChild>
-              <Link href="/dashboard" className="cursor-pointer w-full">
+              <Link href="/dashboard/user" className="cursor-pointer w-full">
                 <LayoutDashboard className="mr-2 h-4 w-4" />
                 <span>Dashboard</span>
               </Link>
