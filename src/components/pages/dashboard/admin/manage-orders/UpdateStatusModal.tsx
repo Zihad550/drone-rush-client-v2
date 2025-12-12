@@ -29,6 +29,8 @@ const orderStatusOptions: { value: TOrderStatus; label: string }[] = [
   { value: "DELIVERING", label: "Delivering" },
   { value: "COMPLETED", label: "Completed" },
   { value: "USER-CANCELLED", label: "User Cancelled" },
+  { value: "FAILED", label: "Failed" },
+  { value: "ADMIN-CANCELLED", label: "Admin Cancelled" },
 ];
 
 const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
@@ -43,7 +45,7 @@ const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
       const payload: { status: TOrderStatus; cancelReason?: string } = {
         status,
       };
-      if (status === "USER-CANCELLED") {
+      if (status === "USER-CANCELLED" || status === "ADMIN-CANCELLED") {
         payload.cancelReason = cancelReason;
       }
 
@@ -105,7 +107,7 @@ const UpdateStatusModal = ({ order, onSuccess }: UpdateStatusModalProps) => {
             </Select>
           </div>
 
-          {status === "USER-CANCELLED" && (
+          {(status === "USER-CANCELLED" || status === "ADMIN-CANCELLED") && (
             <div className="space-y-2">
               <Label>Cancel Reason</Label>
               <Textarea

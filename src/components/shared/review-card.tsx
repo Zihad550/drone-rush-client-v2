@@ -1,9 +1,9 @@
 "use client";
 
+import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type IReview from "@/types/review.type";
 import type IUser from "@/types/user.type";
-import { Star } from "lucide-react";
 
 interface ReviewCardProps {
   review: IReview;

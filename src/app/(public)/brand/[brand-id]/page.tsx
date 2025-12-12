@@ -1,7 +1,7 @@
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
-
+import Products from "@/components/shared/products";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +10,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Products from "@/components/shared/products";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getDrones } from "@/services/drone/drone.service";
@@ -37,7 +36,8 @@ export default async function BrandPage({ params }: PageProps) {
 
   // Fetch drones for this brand
   let dronesData: Awaited<ReturnType<typeof getDrones>> | null = null;
-  let brandInfo: { name: string; logo: string; description: string } | null = null;
+  let brandInfo: { name: string; logo: string; description: string } | null =
+    null;
 
   try {
     dronesData = await getDrones({
@@ -67,8 +67,8 @@ export default async function BrandPage({ params }: PageProps) {
               Failed to Load Brand
             </CardTitle>
             <CardDescription>
-              We encountered an error while loading the brand information. Please
-              try again.
+              We encountered an error while loading the brand information.
+              Please try again.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -128,7 +128,8 @@ export default async function BrandPage({ params }: PageProps) {
                     {brandInfo.description}
                   </p>
                   <div className="mt-4 text-sm text-muted-foreground">
-                    {dronesData.meta?.total || 0} drone{dronesData.meta?.total !== 1 ? 's' : ''} available
+                    {dronesData.meta?.total || 0} drone
+                    {dronesData.meta?.total !== 1 ? "s" : ""} available
                   </div>
                 </div>
               </div>
@@ -147,8 +148,12 @@ export default async function BrandPage({ params }: PageProps) {
               <Card>
                 <CardContent className="p-12 text-center">
                   <div className="text-muted-foreground">
-                    <p className="text-lg mb-2">No drones available for this brand yet.</p>
-                    <p className="text-sm">Check back later for new arrivals!</p>
+                    <p className="text-lg mb-2">
+                      No drones available for this brand yet.
+                    </p>
+                    <p className="text-sm">
+                      Check back later for new arrivals!
+                    </p>
                   </div>
                   <div className="mt-6">
                     <Button asChild>

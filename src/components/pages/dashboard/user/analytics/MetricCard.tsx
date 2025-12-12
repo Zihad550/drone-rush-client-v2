@@ -6,7 +6,11 @@ interface MetricCardProps {
   description?: string;
 }
 
-export default function MetricCard({ title, value, description }: MetricCardProps) {
+export default function MetricCard({
+  title,
+  value,
+  description,
+}: MetricCardProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

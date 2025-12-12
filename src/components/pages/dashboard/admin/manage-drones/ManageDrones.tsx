@@ -1,9 +1,10 @@
 "use client";
 
-import { Loader2, Trash2 } from "lucide-react";
+import { Edit, Loader2, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { handleDroneAction } from "@/app/actions/drone.actions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,19 +13,93 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { deleteDrone, getDrones } from "@/services/drone/drone.service";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { getBrands } from "@/services/brand/brand.service";
+import { getCategories } from "@/services/category/category.service";
+import {
+  deleteDrone,
+  getDroneById,
+  getDrones,
+} from "@/services/drone/drone.service";
+import type IBrand from "@/types/brand.type";
+import type ICategory from "@/types/category.type";
 import type IDrone from "@/types/drone.type";
+
+const DRONES_PER_PAGE = 10;
 
 const ManageDrones = () => {
   const [drones, setDrones] = useState<IDrone[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [meta, setMeta] = useState<{
+    total: number;
+    page: number;
+    limit: number;
+    totalPage: number;
+  } | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [selectedDrone, setSelectedDrone] = useState<IDrone | null>(null);
+  const [categories, setCategories] = useState<{ _id: string; name: string }[]>(
+    [],
+  );
+  const [brands, setBrands] = useState<
+    { _id: string; name: string; logo: string; description: string }[]
+  >([]);
+  const [formData, setFormData] = useState({
+    name: "",
+    price: "",
+    quantity: "",
+    img: "",
+    category: "",
+    brand: "",
+    description: "",
+  });
+  const [state, formAction, pending] = useActionState(
+    handleDroneAction.bind(null),
+    {
+      errors: {},
+      success: false,
+      message: "",
+    },
+  );
 
-  const fetchDrones = useCallback(async () => {
+  const fetchDrones = useCallback(async (currentPage: number = 1) => {
     setLoading(true);
     try {
-      const res = await getDrones();
+      const res = await getDrones({
+        page: currentPage,
+        limit: DRONES_PER_PAGE,
+      });
       if (res.success) {
         setDrones(res.data);
+        setMeta(res.meta || null);
       } else {
         toast.error(res.message || "Failed to fetch drones");
       }
@@ -36,8 +111,68 @@ const ManageDrones = () => {
   }, []);
 
   useEffect(() => {
-    fetchDrones();
-  }, [fetchDrones]);
+    fetchDrones(page);
+  }, [fetchDrones, page]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [categoriesRes, brandsRes] = await Promise.all([
+          getCategories(),
+          getBrands(),
+        ]);
+        if (categoriesRes.success) setCategories(categoriesRes.data);
+        if (brandsRes.success) setBrands(brandsRes.data);
+      } catch (_error) {
+        toast.error("Failed to load categories or brands");
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message);
+      setFormData({
+        name: "",
+        price: "",
+        quantity: "",
+        img: "",
+        category: "",
+        brand: "",
+        description: "",
+      });
+      setDialogOpen(false);
+      setIsEdit(false);
+      setSelectedDrone(null);
+      setPage(1);
+      fetchDrones(1);
+    }
+  }, [state, fetchDrones]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleEdit = async (drone: IDrone) => {
+    try {
+      const fetchedDrone = await getDroneById(drone._id);
+      setFormData({
+        name: fetchedDrone.name,
+        price: fetchedDrone.price.toString(),
+        quantity: fetchedDrone.quantity.toString(),
+        img: fetchedDrone.img,
+        category: (fetchedDrone.category as ICategory)._id,
+        brand: (fetchedDrone.brand as IBrand)._id,
+        description: fetchedDrone.description,
+      });
+      setSelectedDrone(fetchedDrone);
+      setIsEdit(true);
+      setDialogOpen(true);
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to fetch drone");
+    }
+  };
 
   const handleDelete = async (id: string, name: string) => {
     const confirmation = window.confirm(
@@ -49,7 +184,8 @@ const ManageDrones = () => {
       const res = await deleteDrone(id);
       if (res.success) {
         toast.success("Drone deleted successfully");
-        fetchDrones();
+        setPage(1);
+        fetchDrones(1);
       } else {
         toast.error(res.message || "Failed to delete drone");
       }
@@ -58,14 +194,235 @@ const ManageDrones = () => {
     }
   };
 
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Manage Drones</CardTitle>
-          <CardDescription>
-            View and manage all drones in the inventory.
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle>Manage Drones</CardTitle>
+              <CardDescription>
+                View and manage all drones in the inventory.
+              </CardDescription>
+            </div>
+            <Dialog
+              open={dialogOpen}
+              onOpenChange={(open) => {
+                setDialogOpen(open);
+                if (!open) {
+                  setIsEdit(false);
+                  setSelectedDrone(null);
+                  setFormData({
+                    name: "",
+                    price: "",
+                    quantity: "",
+                    img: "",
+                    category: "",
+                    brand: "",
+                    description: "",
+                  });
+                }
+              }}
+            >
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Drone
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>
+                    {isEdit ? "Edit Drone" : "Add New Drone"}
+                  </DialogTitle>
+                  <DialogDescription>
+                    {isEdit ? "Update drone details." : "Enter drone details."}
+                  </DialogDescription>
+                </DialogHeader>
+                {state.errors?.general && (
+                  <p className="text-red-500 text-sm">{state.errors.general}</p>
+                )}
+                <form action={formAction} className="space-y-6">
+                  {isEdit && selectedDrone && (
+                    <input
+                      type="hidden"
+                      name="droneId"
+                      value={selectedDrone._id}
+                    />
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Drone Name</Label>
+                      <Input
+                        id="name"
+                        name="name"
+                        placeholder="Enter drone name"
+                        value={formData.name}
+                        onChange={handleChange}
+                      />
+                      {state.errors?.name && (
+                        <p className="text-red-500 text-sm">
+                          {state.errors.name}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="price">Price</Label>
+                      <Input
+                        id="price"
+                        name="price"
+                        type="number"
+                        placeholder="Enter price"
+                        value={formData.price}
+                        onChange={handleChange}
+                      />
+                      {state.errors?.price && (
+                        <p className="text-red-500 text-sm">
+                          {state.errors.price}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="quantity">Quantity</Label>
+                      <Input
+                        id="quantity"
+                        name="quantity"
+                        type="number"
+                        placeholder="Enter quantity"
+                        value={formData.quantity}
+                        onChange={handleChange}
+                      />
+                      {state.errors?.quantity && (
+                        <p className="text-red-500 text-sm">
+                          {state.errors.quantity}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="img">Image URL</Label>
+                      <Input
+                        id="img"
+                        name="img"
+                        placeholder="Enter image URL"
+                        value={formData.img}
+                        onChange={handleChange}
+                      />
+                      {state.errors?.img && (
+                        <p className="text-red-500 text-sm">
+                          {state.errors.img}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="category">Category</Label>
+                      <Select
+                        name="category"
+                        value={formData.category}
+                        onValueChange={(value) =>
+                          handleSelectChange("category", value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select category" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category._id} value={category._id}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {state.errors?.category && (
+                        <p className="text-red-500 text-sm">
+                          {state.errors.category}
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="brand">Brand</Label>
+                      <Select
+                        name="brand"
+                        value={formData.brand}
+                        onValueChange={(value) =>
+                          handleSelectChange("brand", value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select brand" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {brands.map((brand) => (
+                            <SelectItem key={brand._id} value={brand._id}>
+                              {brand.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      {state.errors?.brand && (
+                        <p className="text-red-500 text-sm">
+                          {state.errors.brand}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      name="description"
+                      placeholder="Enter product description"
+                      value={formData.description}
+                      onChange={handleChange}
+                      rows={4}
+                    />
+                    {state.errors?.description && (
+                      <p className="text-red-500 text-sm">
+                        {state.errors.description}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex justify-end">
+                    <Button type="submit" disabled={pending}>
+                      {pending ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          {isEdit ? "Updating..." : "Creating..."}
+                        </>
+                      ) : (
+                        <>
+                          {isEdit ? (
+                            <Edit className="mr-2 h-4 w-4" />
+                          ) : (
+                            <Plus className="mr-2 h-4 w-4" />
+                          )}
+                          {isEdit ? "Update Drone" : "Add Drone"}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </CardHeader>
         <CardContent>
           {loading ? (
@@ -124,20 +481,144 @@ const ManageDrones = () => {
                         </td>
                         <td className="p-4 align-middle">${drone.price}</td>
                         <td className="p-4 align-middle">
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => handleDelete(drone._id, drone.name)}
-                          >
-                            <Trash2 className="h-4 w-4 mr-1" />
-                            Delete
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleEdit(drone)}
+                            >
+                              <Edit className="h-4 w-4 mr-1" />
+                              Edit
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() =>
+                                handleDelete(drone._id, drone.name)
+                              }
+                            >
+                              <Trash2 className="h-4 w-4 mr-1" />
+                              Delete
+                            </Button>
+                          </div>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+            </div>
+          )}
+          {meta && meta.totalPage > 1 && (
+            <div className="flex justify-center mt-6">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => handlePageChange(Math.max(1, page - 1))}
+                      className={
+                        page === 1
+                          ? "pointer-events-none opacity-50"
+                          : "cursor-pointer"
+                      }
+                    />
+                  </PaginationItem>
+                  {(() => {
+                    const items = [];
+                    const totalPages = meta.totalPage;
+                    const current = page;
+
+                    if (totalPages <= 7) {
+                      // Show all pages
+                      for (let i = 1; i <= totalPages; i++) {
+                        items.push(
+                          <PaginationItem key={i}>
+                            <PaginationLink
+                              onClick={() => handlePageChange(i)}
+                              isActive={i === current}
+                              className="cursor-pointer"
+                            >
+                              {i}
+                            </PaginationLink>
+                          </PaginationItem>,
+                        );
+                      }
+                    } else {
+                      // Show first, ellipsis, middle, ellipsis, last
+                      items.push(
+                        <PaginationItem key={1}>
+                          <PaginationLink
+                            onClick={() => handlePageChange(1)}
+                            isActive={1 === current}
+                            className="cursor-pointer"
+                          >
+                            1
+                          </PaginationLink>
+                        </PaginationItem>,
+                      );
+
+                      if (current > 4) {
+                        items.push(
+                          <PaginationItem key="start-ellipsis">
+                            <PaginationEllipsis />
+                          </PaginationItem>,
+                        );
+                      }
+
+                      const start = Math.max(2, current - 1);
+                      const end = Math.min(totalPages - 1, current + 1);
+
+                      for (let i = start; i <= end; i++) {
+                        items.push(
+                          <PaginationItem key={i}>
+                            <PaginationLink
+                              onClick={() => handlePageChange(i)}
+                              isActive={i === current}
+                              className="cursor-pointer"
+                            >
+                              {i}
+                            </PaginationLink>
+                          </PaginationItem>,
+                        );
+                      }
+
+                      if (current < totalPages - 3) {
+                        items.push(
+                          <PaginationItem key="end-ellipsis">
+                            <PaginationEllipsis />
+                          </PaginationItem>,
+                        );
+                      }
+
+                      items.push(
+                        <PaginationItem key={totalPages}>
+                          <PaginationLink
+                            onClick={() => handlePageChange(totalPages)}
+                            isActive={totalPages === current}
+                            className="cursor-pointer"
+                          >
+                            {totalPages}
+                          </PaginationLink>
+                        </PaginationItem>,
+                      );
+                    }
+
+                    return items;
+                  })()}
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() =>
+                        handlePageChange(Math.min(meta.totalPage, page + 1))
+                      }
+                      className={
+                        page === meta.totalPage
+                          ? "pointer-events-none opacity-50"
+                          : "cursor-pointer"
+                      }
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </div>
           )}
         </CardContent>

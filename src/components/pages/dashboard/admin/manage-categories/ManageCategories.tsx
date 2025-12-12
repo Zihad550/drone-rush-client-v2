@@ -1,8 +1,10 @@
 "use client";
 
-import { Loader2, Plus } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { Edit, Loader2, Plus, Trash2 } from "lucide-react";
+import { useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { categoryAction } from "@/app/actions/category.actions";
+import InlineSpinner from "@/components/inline-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -22,7 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  createCategory,
+  deleteCategory,
   getCategories,
 } from "@/services/category/category.service";
 
@@ -35,9 +37,19 @@ const ManageCategories = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [formData, setFormData] = useState({
+  const [editingCategory, setEditingCategory] = useState<ICategory | null>(
+    null,
+  );
+  const [formValues, setFormValues] = useState({
     name: "",
   });
+
+  const [state, action, pending] = useActionState(categoryAction, null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
 
   const fetchCategories = useCallback(async () => {
     setLoading(true);
@@ -59,24 +71,42 @@ const ManageCategories = () => {
     fetchCategories();
   }, [fetchCategories]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  useEffect(() => {
+    if (state && !state.success && state.message) {
+      toast.error(state.message);
+    }
+  }, [state]);
+
+  useEffect(() => {
+    if (state?.success) {
+      fetchCategories();
+      setDialogOpen(false);
+      setEditingCategory(null);
+      setFormValues({
+        name: "",
+      });
+    }
+  }, [state?.success, fetchCategories]);
+
+  const handleEdit = (category: ICategory) => {
+    setEditingCategory(category);
+    setFormValues({ name: category.name });
+    setDialogOpen(true);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleDelete = async (id: string, name: string) => {
+    const confirmation = window.confirm(
+      `Are you sure you want to delete "${name}"?`,
+    );
+    if (!confirmation) return;
+
     try {
-      const res = await createCategory(formData);
+      const res = await deleteCategory(id);
       if (res.success) {
-        toast.success("Category created successfully");
-        setDialogOpen(false);
-        setFormData({
-          name: "",
-        });
+        toast.success("Category deleted successfully");
         fetchCategories();
       } else {
-        toast.error(res.message || "Failed to create category");
+        toast.error(res.message || "Failed to delete category");
       }
     } catch (error: unknown) {
       toast.error((error as Error).message || "Something went wrong");
@@ -91,7 +121,16 @@ const ManageCategories = () => {
           <CardDescription>View and add drone categories.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog
+            open={dialogOpen}
+            onOpenChange={(open) => {
+              setDialogOpen(open);
+              if (!open) {
+                setEditingCategory(null);
+                setFormValues({ name: "" });
+              }
+            }}
+          >
             <DialogTrigger asChild>
               <Button className="mb-4">
                 <Plus className="h-4 w-4 mr-2" />
@@ -100,21 +139,59 @@ const ManageCategories = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add Category</DialogTitle>
-                <DialogDescription>Enter category name.</DialogDescription>
+                <DialogTitle>
+                  {editingCategory ? "Edit Category" : "Add Category"}
+                </DialogTitle>
+                <DialogDescription>
+                  {editingCategory
+                    ? "Update category name."
+                    : "Enter category name."}
+                </DialogDescription>
               </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form action={action} className="space-y-4">
+                {editingCategory && (
+                  <input type="hidden" name="id" value={editingCategory._id} />
+                )}
                 <div>
                   <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
                     name="name"
-                    value={formData.name}
+                    value={formValues.name}
                     onChange={handleChange}
                     required
+                    className={
+                      state?.errors?.name
+                        ? "border-destructive focus:border-destructive"
+                        : ""
+                    }
+                    aria-invalid={!!state?.errors?.name}
+                    aria-describedby={
+                      state?.errors?.name ? "name-error" : undefined
+                    }
                   />
+                  {state?.errors?.name && (
+                    <p
+                      id="name-error"
+                      className="text-sm text-destructive mt-1"
+                      role="alert"
+                    >
+                      {state.errors.name}
+                    </p>
+                  )}
                 </div>
-                <Button type="submit">Add</Button>
+                <Button type="submit" disabled={pending}>
+                  {pending ? (
+                    <>
+                      <InlineSpinner size="sm" />
+                      {editingCategory ? "Updating..." : "Adding..."}
+                    </>
+                  ) : editingCategory ? (
+                    "Update"
+                  ) : (
+                    "Add"
+                  )}
+                </Button>
               </form>
             </DialogContent>
           </Dialog>
@@ -133,12 +210,35 @@ const ManageCategories = () => {
                 <thead>
                   <tr className="border-b">
                     <th className="h-12 px-4 text-left">Name</th>
+                    <th className="h-12 px-4 text-left">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {categories.map((category) => (
                     <tr key={category._id} className="border-b">
                       <td className="p-4 font-medium">{category.name}</td>
+                      <td className="p-4">
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEdit(category)}
+                          >
+                            <Edit className="h-4 w-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() =>
+                              handleDelete(category._id, category.name)
+                            }
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </td>
                     </tr>
                   ))}
                 </tbody>

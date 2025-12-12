@@ -5,8 +5,11 @@ import { usePathname } from "next/navigation";
 import { useTransition } from "react";
 import { logoutUser } from "@/app/actions/auth.actions";
 import { Button } from "@/components/ui/button";
-import { adminNavItems, commonNavItems, userNavItems } from "@/lib/nav-config";
-import { DropdownMenuItem } from "../ui/dropdown-menu";
+import {
+  admin_common_nav_items,
+  commonNavItems,
+  userNavItems,
+} from "@/lib/nav-config";
 
 interface DashboardHeaderProps {
   onMenuClick: () => void;
@@ -15,7 +18,11 @@ interface DashboardHeaderProps {
 export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   const pathname = usePathname();
 
-  const allNavItems = [...adminNavItems, ...userNavItems, ...commonNavItems];
+  const allNavItems = [
+    ...admin_common_nav_items,
+    ...userNavItems,
+    ...commonNavItems,
+  ];
   const currentItem = allNavItems.find((item) => item.href === pathname);
   const pageTitle = currentItem ? currentItem.title : "Dashboard";
   const [isPending, startTransition] = useTransition();

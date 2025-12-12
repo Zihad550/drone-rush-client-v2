@@ -37,11 +37,11 @@ export default async function Home() {
   });
   console.log(products);
 
-   // Fetch brands server-side
-   const brands = await getBrands();
+  // Fetch brands server-side
+  const brands = await getBrands();
 
-   // Fetch categories server-side
-   const categories = await getCategories();
+  // Fetch categories server-side
+  const categories = await getCategories();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -51,33 +51,33 @@ export default async function Home() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="space-y-16">
-           {/* Products Section */}
-           <section>
-             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
-               {title}
-             </h2>
-             <Products products={products.data} isLoggedIn={isLoggedIn} />
-           </section>
+          {/* Products Section */}
+          <section>
+            <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+              {title}
+            </h2>
+            <Products products={products.data} isLoggedIn={isLoggedIn} />
+          </section>
 
-            {/* Brands Section */}
+          {/* Brands Section */}
+          <section>
+            <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+              Explore Brands
+            </h2>
+            <Brands brands={brands.data} />
+          </section>
+
+          {/* Categories Section */}
+          {categories.data && categories.data.length > 0 && (
             <section>
               <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
-                Explore Brands
+                Explore Categories
               </h2>
-              <Brands brands={brands.data} />
+              <Categories categories={categories.data} />
             </section>
+          )}
 
-            {/* Categories Section */}
-            {categories.data && categories.data.length > 0 && (
-              <section>
-                <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
-                  Explore Categories
-                </h2>
-                <Categories categories={categories.data} />
-              </section>
-            )}
-
-            {/* Reviews Section */}
+          {/* Reviews Section */}
           <section>
             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
               Customer Reviews

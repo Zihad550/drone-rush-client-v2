@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/card";
-import ICategory from "@/types/category.type";
+import type ICategory from "@/types/category.type";
 
 interface CategoryCardProps {
   category: ICategory;

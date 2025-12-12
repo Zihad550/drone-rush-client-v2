@@ -1,7 +1,7 @@
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import Products from "@/components/shared/products";
+import { Button } from "@/components/ui/button";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getCategories } from "@/services/category/category.service";
@@ -31,8 +31,8 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   // Fetch categories to get category name
   const categories = await getCategories();
-  console.log('Fetched categories:', categories.data);
-  console.log('Requested ID:', id);
+  console.log("Fetched categories:", categories.data);
+  console.log("Requested ID:", id);
   const category = categories.data.find((cat) => cat._id === id);
 
   if (!category) {

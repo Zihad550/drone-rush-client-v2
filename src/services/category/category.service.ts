@@ -1,5 +1,5 @@
 import { serverFetch } from "@/lib/server-fetch";
-import ICategory from "@/types/category.type";
+import type ICategory from "@/types/category.type";
 
 interface ICategoryResponse {
   success: boolean;
@@ -35,6 +35,38 @@ export const createCategory = async (
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || "Failed to create category");
+  }
+
+  return response.json();
+};
+
+export const updateCategory = async (
+  id: string,
+  payload: Record<string, unknown>,
+): Promise<ICategoryResponse> => {
+  const response = await serverFetch.patch(`/categories/${id}`, {
+    body: JSON.stringify(payload),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to update category");
+  }
+
+  return response.json();
+};
+
+export const deleteCategory = async (
+  id: string,
+): Promise<ICategoryResponse> => {
+  const response = await serverFetch.delete(`/categories/${id}`);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to delete category");
   }
 
   return response.json();

@@ -37,7 +37,11 @@ const DroneCard = ({
   const calculateAverageRating = (reviews: IDrone["reviews"]): number => {
     if (!reviews || reviews.length === 0) return 0;
     const ratings = reviews
-      .map((review) => (typeof review === "object" && review && "rating" in review ? review.rating : 0))
+      .map((review) =>
+        typeof review === "object" && review && "rating" in review
+          ? review.rating
+          : 0,
+      )
       .filter((rating) => rating > 0);
     if (ratings.length === 0) return 0;
     return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;
@@ -61,7 +65,11 @@ const DroneCard = ({
   const router = useRouter();
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
-  const { isLoggedIn: clientIsLoggedIn, isLoading: authLoading, user } = useAuth();
+  const {
+    isLoggedIn: clientIsLoggedIn,
+    isLoading: authLoading,
+    user,
+  } = useAuth();
   const {
     isInWishlist,
     addToWishlist: addToWishlistContext,
@@ -133,30 +141,34 @@ const DroneCard = ({
         />
 
         {/* Overlay Actions - Only show if user is logged in, in stock, and not admin/superAdmin */}
-        {isLoggedIn && !authLoading && !isOutOfStock && user?.role !== "admin" && user?.role !== "superAdmin" && (
-          <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-            <Button
-              size="sm"
-              variant={isInCart(_id) ? "default" : "secondary"}
-              onClick={handleAddToCart}
-              disabled={cartLoading}
-              className="shadow-lg"
-            >
-              <ShoppingCart className="h-4 w-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant={isInWishlist(_id) ? "default" : "secondary"}
-              onClick={handleAddToWishlist}
-              disabled={wishlistLoading}
-              className="shadow-lg"
-            >
-              <Heart
-                className={`h-4 w-4 ${isInWishlist(_id) ? "fill-current" : ""}`}
-              />
-            </Button>
-          </div>
-        )}
+        {isLoggedIn &&
+          !authLoading &&
+          !isOutOfStock &&
+          user?.role !== "admin" &&
+          user?.role !== "superAdmin" && (
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <Button
+                size="sm"
+                variant={isInCart(_id) ? "default" : "secondary"}
+                onClick={handleAddToCart}
+                disabled={cartLoading}
+                className="shadow-lg"
+              >
+                <ShoppingCart className="h-4 w-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant={isInWishlist(_id) ? "default" : "secondary"}
+                onClick={handleAddToWishlist}
+                disabled={wishlistLoading}
+                className="shadow-lg"
+              >
+                <Heart
+                  className={`h-4 w-4 ${isInWishlist(_id) ? "fill-current" : ""}`}
+                />
+              </Button>
+            </div>
+          )}
       </div>
 
       {/* Product Info */}

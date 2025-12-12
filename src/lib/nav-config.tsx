@@ -1,12 +1,12 @@
 import {
   ArrowLeft,
+  BarChart,
   Heart,
   LayoutDashboard,
   LayoutList,
+  Mail,
   Package,
   Plane,
-  PlusCircle,
-  ShieldCheck,
   ShoppingCart,
   Tag,
   Truck,
@@ -20,16 +20,19 @@ export interface NavItem {
   icon: React.ComponentType<{ className?: string }>;
 }
 
-export const adminNavItems: NavItem[] = [
+export const super_admin_nav_items: NavItem[] = [
   {
-    title: "Add Drone",
-    href: "/dashboard/admin/add-drone",
-    icon: PlusCircle,
+    title: "Invite Admins",
+    href: "/dashboard/admin/invite-admins",
+    icon: Mail,
   },
+];
+
+export const admin_common_nav_items: NavItem[] = [
   {
-    title: "Make Admin",
-    href: "/dashboard/admin/make-admin",
-    icon: ShieldCheck,
+    title: "Analytics",
+    href: "/dashboard/admin",
+    icon: BarChart,
   },
   {
     title: "Manage Drones",
@@ -93,8 +96,13 @@ export const commonNavItems: NavItem[] = [
 export function getNavItems(role: UserRole): NavItem[] {
   switch (role) {
     case "admin":
+      return [...admin_common_nav_items, ...commonNavItems];
     case "superAdmin":
-      return [...adminNavItems, ...commonNavItems];
+      return [
+        ...admin_common_nav_items,
+        ...super_admin_nav_items,
+        ...commonNavItems,
+      ];
     case "user":
       return [...userNavItems, ...commonNavItems];
     default:

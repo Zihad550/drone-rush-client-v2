@@ -1,18 +1,18 @@
 "use client";
 
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
+  ArcElement,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
   Title,
   Tooltip,
-  Legend,
-  ArcElement,
-  PointElement,
-  LineElement,
 } from "chart.js";
-import { Bar, Pie, Line } from "react-chartjs-2";
+import { Bar, Line, Pie } from "react-chartjs-2";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 ChartJS.register(
@@ -39,7 +39,9 @@ export default function AnalyticsCharts({
   const orderStatusLabels = Object.keys(orderStatusCounts);
   const orderStatusData = Object.values(orderStatusCounts);
 
-  const ratingLabels = Object.keys(ratingCounts).map((r) => `${r} Star${r !== "1" ? "s" : ""}`);
+  const ratingLabels = Object.keys(ratingCounts).map(
+    (r) => `${r} Star${r !== "1" ? "s" : ""}`,
+  );
   const ratingData = Object.values(ratingCounts);
 
   const barData = {

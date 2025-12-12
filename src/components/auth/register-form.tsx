@@ -1,14 +1,21 @@
 "use client";
 import { Key, Mail, User } from "lucide-react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import InlineSpinner from "@/components/inline-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/lib/auth-context";
 import { registerUser } from "@/services/auth/auth.service";
 export default function RegisterForm() {
+  const searchParams = useSearchParams();
+  const inviteToken = searchParams.get("token");
+  const router = useRouter();
+  const { refreshAuth } = useAuth();
+
   const [state, formAction, isPending] = useActionState(registerUser, null);
 
   useEffect(() => {
@@ -17,11 +24,22 @@ export default function RegisterForm() {
     }
   }, [state]);
 
+  useEffect(() => {
+    if (state?.success) {
+      refreshAuth().then(() => {
+        router.push("/");
+      });
+    }
+  }, [state?.success, refreshAuth, router]);
+
   // Extract field-specific errors if available
   const fieldErrors = state?.errors || {};
   const hasErrors = state && !state.success;
   return (
     <form action={formAction} className="space-y-4">
+      {inviteToken && (
+        <input type="hidden" name="inviteToken" value={inviteToken} />
+      )}
       <div className="space-y-2">
         <Label htmlFor="name">Your Name</Label>
         <div className="relative">

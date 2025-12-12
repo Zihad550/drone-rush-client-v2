@@ -1,5 +1,5 @@
-import { getUserAnalytics } from "@/services/user/user-analytics.service";
 import AnalyticsDashboard from "@/components/pages/dashboard/user/analytics/AnalyticsDashboard";
+import { getUserAnalytics } from "@/services/user/user-analytics.service";
 
 interface IAnalyticsData {
   totalOrders: number;

@@ -34,7 +34,12 @@ interface DronesProps {
   userId?: string;
   isLoggedIn?: boolean;
   products?: IDrone[];
-  initialMeta?: { total: number; page: number; limit: number; totalPage: number };
+  initialMeta?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPage: number;
+  };
 }
 
 function Drones({
@@ -56,7 +61,12 @@ function Drones({
   const [maxPrice, setMaxPrice] = useState("");
   const [products, setProducts] = useState<IDrone[]>(initialProducts || []);
   const [loading, setLoading] = useState(!initialProducts);
-  const [meta, setMeta] = useState<{ total: number; page: number; limit: number; totalPage: number } | null>(initialMeta || null);
+  const [meta, setMeta] = useState<{
+    total: number;
+    page: number;
+    limit: number;
+    totalPage: number;
+  } | null>(initialMeta || null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -66,7 +76,16 @@ function Drones({
   }, [searchTerm]);
 
   useEffect(() => {
-    if (initialProducts && initialMeta && category.length === 0 && brand.length === 0 && !debouncedSearchTerm && !minPrice && !maxPrice && page === 1) {
+    if (
+      initialProducts &&
+      initialMeta &&
+      category.length === 0 &&
+      brand.length === 0 &&
+      !debouncedSearchTerm &&
+      !minPrice &&
+      !maxPrice &&
+      page === 1
+    ) {
       setProducts(initialProducts);
       setMeta(initialMeta);
       setLoading(false);
@@ -96,7 +115,17 @@ function Drones({
       }
     };
     fetchProducts();
-  }, [page, category, brand, debouncedSearchTerm, minPrice, maxPrice, userId, initialProducts, initialMeta]);
+  }, [
+    page,
+    category,
+    brand,
+    debouncedSearchTerm,
+    minPrice,
+    maxPrice,
+    userId,
+    initialProducts,
+    initialMeta,
+  ]);
 
   return (
     <>
@@ -152,45 +181,56 @@ function Drones({
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start">
-                      {category.length > 0 ? `${category.length} selected` : "Select Categories"}
+                      {category.length > 0
+                        ? `${category.length} selected`
+                        : "Select Categories"}
                     </Button>
                   </PopoverTrigger>
-                <PopoverContent className="w-80">
-                  <div className="space-y-2">
-                    <Input
-                      placeholder="Search categories..."
-                      value={categorySearch}
-                      onChange={(e) => setCategorySearch(e.target.value)}
-                    />
-                    <div className="max-h-40 overflow-y-auto space-y-2">
-                      {categories
-                        .filter((cat) =>
-                          cat.name.toLowerCase().includes(categorySearch.toLowerCase())
-                        )
-                        .map((cat) => (
-                          <div key={cat._id} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`cat-${cat._id}`}
-                              checked={category.includes(cat._id)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setCategory([...category, cat._id]);
-                                } else {
-                                  setCategory(category.filter((id) => id !== cat._id));
-                                }
-                                setPage(1);
-                              }}
-                            />
-                            <label htmlFor={`cat-${cat._id}`} className="text-sm">
-                              {cat.name}
-                            </label>
-                          </div>
-                        ))}
+                  <PopoverContent className="w-80">
+                    <div className="space-y-2">
+                      <Input
+                        placeholder="Search categories..."
+                        value={categorySearch}
+                        onChange={(e) => setCategorySearch(e.target.value)}
+                      />
+                      <div className="max-h-40 overflow-y-auto space-y-2">
+                        {categories
+                          .filter((cat) =>
+                            cat.name
+                              .toLowerCase()
+                              .includes(categorySearch.toLowerCase()),
+                          )
+                          .map((cat) => (
+                            <div
+                              key={cat._id}
+                              className="flex items-center space-x-2"
+                            >
+                              <Checkbox
+                                id={`cat-${cat._id}`}
+                                checked={category.includes(cat._id)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setCategory([...category, cat._id]);
+                                  } else {
+                                    setCategory(
+                                      category.filter((id) => id !== cat._id),
+                                    );
+                                  }
+                                  setPage(1);
+                                }}
+                              />
+                              <label
+                                htmlFor={`cat-${cat._id}`}
+                                className="text-sm"
+                              >
+                                {cat.name}
+                              </label>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   </PopoverContent>
                 </Popover>
-
               </div>
             )}
 
@@ -199,7 +239,9 @@ function Drones({
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button variant="outline" className="w-full justify-start">
-                      {brand.length > 0 ? `${brand.length} selected` : "Select Brands"}
+                      {brand.length > 0
+                        ? `${brand.length} selected`
+                        : "Select Brands"}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-80">
@@ -212,54 +254,67 @@ function Drones({
                       <div className="max-h-40 overflow-y-auto space-y-2">
                         {brands
                           .filter((b) =>
-                            b.name.toLowerCase().includes(brandSearch.toLowerCase())
+                            b.name
+                              .toLowerCase()
+                              .includes(brandSearch.toLowerCase()),
                           )
                           .map((b) => (
-                          <div key={b._id} className="flex items-center space-x-2">
-                            <Checkbox
-                              id={`brand-${b._id}`}
-                              checked={brand.includes(b._id)}
-                              onCheckedChange={(checked) => {
-                                if (checked) {
-                                  setBrand([...brand, b._id]);
-                                } else {
-                                  setBrand(brand.filter((id) => id !== b._id));
-                                }
-                                setPage(1);
-                              }}
-                            />
-                            <label htmlFor={`brand-${b._id}`} className="text-sm">
-                              {b.name}
-                            </label>
-                          </div>
-                        ))}
+                            <div
+                              key={b._id}
+                              className="flex items-center space-x-2"
+                            >
+                              <Checkbox
+                                id={`brand-${b._id}`}
+                                checked={brand.includes(b._id)}
+                                onCheckedChange={(checked) => {
+                                  if (checked) {
+                                    setBrand([...brand, b._id]);
+                                  } else {
+                                    setBrand(
+                                      brand.filter((id) => id !== b._id),
+                                    );
+                                  }
+                                  setPage(1);
+                                }}
+                              />
+                              <label
+                                htmlFor={`brand-${b._id}`}
+                                className="text-sm"
+                              >
+                                {b.name}
+                              </label>
+                            </div>
+                          ))}
                       </div>
                     </div>
                   </PopoverContent>
                 </Popover>
-
               </div>
             )}
 
-             {(category.length > 0 || brand.length > 0 || searchTerm || minPrice || maxPrice) && (
-               <Button
-                 variant="outline"
-                  onClick={() => {
-                    setCategory([]);
-                    setBrand([]);
-                    setCategorySearch("");
-                    setBrandSearch("");
-                    setSearchTerm("");
-                    setMinPrice("");
-                    setMaxPrice("");
-                    setPage(1);
-                  }}
-                 className="ml-4"
-               >
-                 <X className="w-4 h-4 mr-2" />
-                 Clear Filters
-               </Button>
-             )}
+            {(category.length > 0 ||
+              brand.length > 0 ||
+              searchTerm ||
+              minPrice ||
+              maxPrice) && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setCategory([]);
+                  setBrand([]);
+                  setCategorySearch("");
+                  setBrandSearch("");
+                  setSearchTerm("");
+                  setMinPrice("");
+                  setMaxPrice("");
+                  setPage(1);
+                }}
+                className="ml-4"
+              >
+                <X className="w-4 h-4 mr-2" />
+                Clear Filters
+              </Button>
+            )}
           </div>
         </div>
       </div>
@@ -279,110 +334,120 @@ function Drones({
           )}
         </div>
       </ScrollAnimation>
-        <ScrollAnimation className="delay-200">
-         <div className="flex justify-center my-10">
-           {meta && meta.totalPage > 1 && (
-             <Pagination>
-               <PaginationContent>
-                 <PaginationItem>
-                   <PaginationPrevious
-                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                     className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                   />
-                 </PaginationItem>
-                 {(() => {
-                   const items = [];
-                   const totalPages = meta.totalPage;
-                   const current = page;
+      <ScrollAnimation className="delay-200">
+        <div className="flex justify-center my-10">
+          {meta && meta.totalPage > 1 && (
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    className={
+                      page === 1
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+                </PaginationItem>
+                {(() => {
+                  const items = [];
+                  const totalPages = meta.totalPage;
+                  const current = page;
 
-                   if (totalPages <= 7) {
-                     // Show all pages
-                     for (let i = 1; i <= totalPages; i++) {
-                       items.push(
-                         <PaginationItem key={i}>
-                           <PaginationLink
-                             onClick={() => setPage(i)}
-                             isActive={i === current}
-                             className="cursor-pointer"
-                           >
-                             {i}
-                           </PaginationLink>
-                         </PaginationItem>
-                       );
-                     }
-                   } else {
-                     // Show first, ellipsis, middle, ellipsis, last
-                     items.push(
-                       <PaginationItem key={1}>
-                         <PaginationLink
-                           onClick={() => setPage(1)}
-                           isActive={1 === current}
-                           className="cursor-pointer"
-                         >
-                           1
-                         </PaginationLink>
-                       </PaginationItem>
-                     );
+                  if (totalPages <= 7) {
+                    // Show all pages
+                    for (let i = 1; i <= totalPages; i++) {
+                      items.push(
+                        <PaginationItem key={i}>
+                          <PaginationLink
+                            onClick={() => setPage(i)}
+                            isActive={i === current}
+                            className="cursor-pointer"
+                          >
+                            {i}
+                          </PaginationLink>
+                        </PaginationItem>,
+                      );
+                    }
+                  } else {
+                    // Show first, ellipsis, middle, ellipsis, last
+                    items.push(
+                      <PaginationItem key={1}>
+                        <PaginationLink
+                          onClick={() => setPage(1)}
+                          isActive={1 === current}
+                          className="cursor-pointer"
+                        >
+                          1
+                        </PaginationLink>
+                      </PaginationItem>,
+                    );
 
-                     if (current > 4) {
-                       items.push(
-                         <PaginationItem key="start-ellipsis">
-                           <PaginationEllipsis />
-                         </PaginationItem>
-                       );
-                     }
+                    if (current > 4) {
+                      items.push(
+                        <PaginationItem key="start-ellipsis">
+                          <PaginationEllipsis />
+                        </PaginationItem>,
+                      );
+                    }
 
-                     const start = Math.max(2, current - 1);
-                     const end = Math.min(totalPages - 1, current + 1);
+                    const start = Math.max(2, current - 1);
+                    const end = Math.min(totalPages - 1, current + 1);
 
-                     for (let i = start; i <= end; i++) {
-                       items.push(
-                         <PaginationItem key={i}>
-                           <PaginationLink
-                             onClick={() => setPage(i)}
-                             isActive={i === current}
-                             className="cursor-pointer"
-                           >
-                             {i}
-                           </PaginationLink>
-                         </PaginationItem>
-                       );
-                     }
+                    for (let i = start; i <= end; i++) {
+                      items.push(
+                        <PaginationItem key={i}>
+                          <PaginationLink
+                            onClick={() => setPage(i)}
+                            isActive={i === current}
+                            className="cursor-pointer"
+                          >
+                            {i}
+                          </PaginationLink>
+                        </PaginationItem>,
+                      );
+                    }
 
-                     if (current < totalPages - 3) {
-                       items.push(
-                         <PaginationItem key="end-ellipsis">
-                           <PaginationEllipsis />
-                         </PaginationItem>
-                       );
-                     }
+                    if (current < totalPages - 3) {
+                      items.push(
+                        <PaginationItem key="end-ellipsis">
+                          <PaginationEllipsis />
+                        </PaginationItem>,
+                      );
+                    }
 
-                     items.push(
-                       <PaginationItem key={totalPages}>
-                         <PaginationLink
-                           onClick={() => setPage(totalPages)}
-                           isActive={totalPages === current}
-                           className="cursor-pointer"
-                         >
-                           {totalPages}
-                         </PaginationLink>
-                       </PaginationItem>
-                     );
-                   }
+                    items.push(
+                      <PaginationItem key={totalPages}>
+                        <PaginationLink
+                          onClick={() => setPage(totalPages)}
+                          isActive={totalPages === current}
+                          className="cursor-pointer"
+                        >
+                          {totalPages}
+                        </PaginationLink>
+                      </PaginationItem>,
+                    );
+                  }
 
-                   return items;
-                 })()}
-                 <PaginationItem>
-                   <PaginationNext
-                     onClick={() => setPage((p) => Math.min(meta.totalPage, p + 1))}
-                     className={page === meta.totalPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                   />
-                 </PaginationItem>
-               </PaginationContent>
-             </Pagination>
-           )}
-         </div>
-       </ScrollAnimation>
+                  return items;
+                })()}
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() =>
+                      setPage((p) => Math.min(meta.totalPage, p + 1))
+                    }
+                    className={
+                      page === meta.totalPage
+                        ? "pointer-events-none opacity-50"
+                        : "cursor-pointer"
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
+        </div>
+      </ScrollAnimation>
     </>
   );
 }

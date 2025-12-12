@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-
+import ReviewCard from "@/components/shared/review-card";
+import StarRating from "@/components/shared/star-rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,12 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { calculateAverageRating, calculateRatingBreakdown } from "@/lib/utils";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getDroneById } from "@/services/drone/drone.service";
-import { calculateAverageRating, calculateRatingBreakdown } from "@/lib/utils";
-import ReviewCard from "@/components/shared/review-card";
-import StarRating from "@/components/shared/star-rating";
 import { ProductActions } from "./product-actions";
 
 interface PageProps {
@@ -186,10 +185,19 @@ export default async function DroneDetailsPage({ params }: PageProps) {
                           <div className="flex-1 bg-muted rounded-full h-2">
                             <div
                               className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${ratingBreakdown[stars as keyof typeof ratingBreakdown]}%` }}
+                              style={{
+                                width: `${ratingBreakdown[stars as keyof typeof ratingBreakdown]}%`,
+                              }}
                             ></div>
                           </div>
-                          <span className="text-sm w-8">{ratingBreakdown[stars as keyof typeof ratingBreakdown]}%</span>
+                          <span className="text-sm w-8">
+                            {
+                              ratingBreakdown[
+                                stars as keyof typeof ratingBreakdown
+                              ]
+                            }
+                            %
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -200,7 +208,12 @@ export default async function DroneDetailsPage({ params }: PageProps) {
                     <h3 className="text-lg font-semibold">Customer Reviews</h3>
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                       {reviews
-                        .filter((review) => typeof review === "object" && review && "rating" in review)
+                        .filter(
+                          (review) =>
+                            typeof review === "object" &&
+                            review &&
+                            "rating" in review,
+                        )
                         .map((review) => (
                           <ReviewCard key={review._id} review={review} />
                         ))}

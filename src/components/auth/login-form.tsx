@@ -1,22 +1,42 @@
 "use client";
 import { Key, Mail } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import InlineSpinner from "@/components/inline-spinner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/lib/auth-context";
 import { loginUser } from "@/services/auth/auth.service";
 
+const initialState = {
+  message: "",
+  errors: {},
+};
+
 export default function LoginForm() {
-  const [state, formAction, isPending] = useActionState(loginUser, null);
+  const [state, formAction, isPending] = useActionState(
+    loginUser,
+    initialState,
+  );
+  const router = useRouter();
+  const { refreshAuth } = useAuth();
 
   useEffect(() => {
     if (state && !state.success && state.message) {
       toast.error(state.message);
     }
   }, [state]);
+
+  useEffect(() => {
+    if (state?.success) {
+      refreshAuth().then(() => {
+        router.push("/");
+      });
+    }
+  }, [state?.success, refreshAuth, router]);
 
   // Extract field-specific errors if available
   const fieldErrors = state?.errors || {};
@@ -41,7 +61,7 @@ export default function LoginForm() {
         </div>
         {fieldErrors.email && (
           <p id="email-error" className="text-sm text-destructive" role="alert">
-            {fieldErrors.email}
+            {fieldErrors.email[0]}
           </p>
         )}
       </div>
@@ -54,6 +74,7 @@ export default function LoginForm() {
             name="password"
             type="password"
             required
+            minLength={8}
             className={`pl-8 ${fieldErrors.password ? "border-destructive focus:border-destructive" : ""}`}
             aria-invalid={!!fieldErrors.password}
             aria-describedby={
@@ -67,7 +88,7 @@ export default function LoginForm() {
             className="text-sm text-destructive"
             role="alert"
           >
-            {fieldErrors.password}
+            {fieldErrors.password[0]}
           </p>
         )}
       </div>
@@ -103,6 +124,7 @@ export default function LoginForm() {
           "Login"
         )}
       </Button>
+      <p aria-live="polite">{state?.message}</p>
     </form>
   );
 }

@@ -1,6 +1,5 @@
 "use server";
 import { parse as parseCookie } from "cookie";
-import { redirect } from "next/navigation";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zod-validator";
 import { loginZodSchema, registerZodSchema } from "@/utils/zod-schema";
@@ -12,8 +11,11 @@ export async function registerUser(_currentState: unknown, formData: FormData) {
     name: formData.get("name") as string,
     email: formData.get("email") as string,
     password: formData.get("password") as string,
+    inviteToken: (formData.get("inviteToken") as string | undefined) || "",
   };
+  console.log("payload -", payload);
   const validator = zodValidator(payload, registerZodSchema);
+  console.log("validator -", validator);
   if (!validator.success) return validator;
   try {
     const res = await serverFetch.post(`/auth/register`, {
@@ -63,7 +65,10 @@ export async function registerUser(_currentState: unknown, formData: FormData) {
       await Promise.all(cookiePromises);
     }
 
-    redirect("/");
+    return {
+      success: true,
+      message: "Registration successful",
+    };
   } catch (error: unknown) {
     // Re-throw NEXT_REDIRECT errors so Next.js can handle them
     if (
@@ -82,21 +87,25 @@ export async function registerUser(_currentState: unknown, formData: FormData) {
   }
 }
 
-export async function loginUser(_currentState: unknown, formData: FormData) {
-  const payload = {
-    email: formData.get("email") as string,
-    password: formData.get("password") as string,
-  };
+export async function loginUser(prevState: any, formData: FormData) {
+  const validatedFields = loginZodSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
 
-  const validator = zodValidator(payload, loginZodSchema);
-  if (!validator.success) return validator;
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Validation failed",
+    };
+  }
 
   try {
     const res = await serverFetch.post("/auth/login", {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(validator.data),
+      body: JSON.stringify(validatedFields.data),
     });
 
     const data = await res.json();
@@ -140,7 +149,10 @@ export async function loginUser(_currentState: unknown, formData: FormData) {
     }
 
     if (data?.success) {
-      redirect("/");
+      return {
+        success: true,
+        message: "Login successful",
+      };
     }
 
     return data;

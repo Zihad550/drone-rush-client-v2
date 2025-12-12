@@ -22,7 +22,7 @@ export const updateOrderStatus = async (
   id: string,
   payload: { status: TOrderStatus; cancelReason?: string },
 ) => {
-  const res = await serverFetch.patch(`/orders/${id}`, {
+  const res = await serverFetch.patch(`/orders/status/${id}`, {
     body: JSON.stringify(payload),
     headers: {
       "Content-Type": "application/json",

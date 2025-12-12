@@ -11,7 +11,7 @@ const StarRating = ({ rating, size = "md" }: StarRatingProps) => {
   const sizeClasses = {
     sm: "h-3 w-3",
     md: "h-4 w-4",
-    lg: "h-5 w-5"
+    lg: "h-5 w-5",
   };
 
   return (
