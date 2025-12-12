@@ -3,11 +3,9 @@
 import { Heart, Minus, Plus, RefreshCw, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCart } from "@/lib/cart-context";
-import { serverFetch } from "@/lib/server-fetch";
 import { useWishlist } from "@/lib/wishlist-context";
 
 export default function CartPage() {

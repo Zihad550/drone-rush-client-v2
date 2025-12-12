@@ -3,7 +3,7 @@ import { parse as parseCookie } from "cookie";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zod-validator";
 import { loginZodSchema, registerZodSchema } from "@/utils/zod-schema";
-import { setCookie } from "./cookie.service";
+import { getCookie, setCookie } from "./cookie.service";
 
 export async function registerUser(_currentState: unknown, formData: FormData) {
   const payload = {

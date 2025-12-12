@@ -97,9 +97,11 @@ const ManageOrders = () => {
                       >
                         <td className="p-4 align-middle">
                           <div className="flex flex-col gap-2">
-                            {order.drones.map((item, _idx) => (
+                            {order.drones.map((item, idx) => (
                               <div
-                                key={item.id}
+                                key={
+                                  typeof item.id === "string" ? item.id : idx
+                                }
                                 className="flex items-center gap-2"
                               >
                                 <Image
