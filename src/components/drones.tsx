@@ -1,13 +1,22 @@
 "use client";
 
 import { Filter, Search, X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Products from "@/components/shared/products";
 import Spinner from "@/components/spinner";
 import Title from "@/components/title";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import {
   Popover,
   PopoverContent,
@@ -25,6 +34,7 @@ interface DronesProps {
   userId?: string;
   isLoggedIn?: boolean;
   products?: IDrone[];
+  initialMeta?: { total: number; page: number; limit: number; totalPage: number };
 }
 
 function Drones({
@@ -33,6 +43,7 @@ function Drones({
   userId,
   isLoggedIn,
   products: initialProducts,
+  initialMeta,
 }: DronesProps) {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState<string[]>([]);
@@ -45,6 +56,7 @@ function Drones({
   const [maxPrice, setMaxPrice] = useState("");
   const [products, setProducts] = useState<IDrone[]>(initialProducts || []);
   const [loading, setLoading] = useState(!initialProducts);
+  const [meta, setMeta] = useState<{ total: number; page: number; limit: number; totalPage: number } | null>(initialMeta || null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -54,8 +66,9 @@ function Drones({
   }, [searchTerm]);
 
   useEffect(() => {
-    if (initialProducts && category.length === 0 && brand.length === 0 && !debouncedSearchTerm && !minPrice && !maxPrice) {
+    if (initialProducts && initialMeta && category.length === 0 && brand.length === 0 && !debouncedSearchTerm && !minPrice && !maxPrice && page === 1) {
       setProducts(initialProducts);
+      setMeta(initialMeta);
       setLoading(false);
       return;
     }
@@ -75,10 +88,15 @@ function Drones({
       };
       const data = await getDrones(params);
       setProducts(data.data);
+      setMeta(data.meta || null);
       setLoading(false);
+      // Reset to page 1 if current page exceeds total pages
+      if (data.meta && page > data.meta.totalPage) {
+        setPage(1);
+      }
     };
     fetchProducts();
-  }, [page, category, brand, debouncedSearchTerm, minPrice, maxPrice, userId, initialProducts]);
+  }, [page, category, brand, debouncedSearchTerm, minPrice, maxPrice, userId, initialProducts, initialMeta]);
 
   return (
     <>
@@ -261,12 +279,110 @@ function Drones({
           )}
         </div>
       </ScrollAnimation>
-      <ScrollAnimation className="delay-200">
-        <div className="flex justify-center my-10">
-          {/* Pagination component - need to implement */}
-          <div>Pagination placeholder</div>
-        </div>
-      </ScrollAnimation>
+        <ScrollAnimation className="delay-200">
+         <div className="flex justify-center my-10">
+           {meta && meta.totalPage > 1 && (
+             <Pagination>
+               <PaginationContent>
+                 <PaginationItem>
+                   <PaginationPrevious
+                     onClick={() => setPage((p) => Math.max(1, p - 1))}
+                     className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                   />
+                 </PaginationItem>
+                 {(() => {
+                   const items = [];
+                   const totalPages = meta.totalPage;
+                   const current = page;
+
+                   if (totalPages <= 7) {
+                     // Show all pages
+                     for (let i = 1; i <= totalPages; i++) {
+                       items.push(
+                         <PaginationItem key={i}>
+                           <PaginationLink
+                             onClick={() => setPage(i)}
+                             isActive={i === current}
+                             className="cursor-pointer"
+                           >
+                             {i}
+                           </PaginationLink>
+                         </PaginationItem>
+                       );
+                     }
+                   } else {
+                     // Show first, ellipsis, middle, ellipsis, last
+                     items.push(
+                       <PaginationItem key={1}>
+                         <PaginationLink
+                           onClick={() => setPage(1)}
+                           isActive={1 === current}
+                           className="cursor-pointer"
+                         >
+                           1
+                         </PaginationLink>
+                       </PaginationItem>
+                     );
+
+                     if (current > 4) {
+                       items.push(
+                         <PaginationItem key="start-ellipsis">
+                           <PaginationEllipsis />
+                         </PaginationItem>
+                       );
+                     }
+
+                     const start = Math.max(2, current - 1);
+                     const end = Math.min(totalPages - 1, current + 1);
+
+                     for (let i = start; i <= end; i++) {
+                       items.push(
+                         <PaginationItem key={i}>
+                           <PaginationLink
+                             onClick={() => setPage(i)}
+                             isActive={i === current}
+                             className="cursor-pointer"
+                           >
+                             {i}
+                           </PaginationLink>
+                         </PaginationItem>
+                       );
+                     }
+
+                     if (current < totalPages - 3) {
+                       items.push(
+                         <PaginationItem key="end-ellipsis">
+                           <PaginationEllipsis />
+                         </PaginationItem>
+                       );
+                     }
+
+                     items.push(
+                       <PaginationItem key={totalPages}>
+                         <PaginationLink
+                           onClick={() => setPage(totalPages)}
+                           isActive={totalPages === current}
+                           className="cursor-pointer"
+                         >
+                           {totalPages}
+                         </PaginationLink>
+                       </PaginationItem>
+                     );
+                   }
+
+                   return items;
+                 })()}
+                 <PaginationItem>
+                   <PaginationNext
+                     onClick={() => setPage((p) => Math.min(meta.totalPage, p + 1))}
+                     className={page === meta.totalPage ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                   />
+                 </PaginationItem>
+               </PaginationContent>
+             </Pagination>
+           )}
+         </div>
+       </ScrollAnimation>
     </>
   );
 }

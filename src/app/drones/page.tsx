@@ -35,6 +35,8 @@ export default async function DronesPage() {
   // Fetch drones server-side
   const products = await getDrones({
     sort: "-quantity",
+    page: 1,
+    limit: 8,
     ...(userId && { userId }),
   });
 
@@ -95,13 +97,14 @@ export default async function DronesPage() {
       <div className="bg-background min-h-screen py-4 md:py-8">
         <div className="container mx-auto px-4">
           <div className="space-y-12">
-            <Drones
-              categories={categoriesData?.data || []}
-              brands={brandsData?.data || []}
-              userId={userId}
-              isLoggedIn={isLoggedIn}
-              products={products.data}
-            />
+             <Drones
+               categories={categoriesData?.data || []}
+               brands={brandsData?.data || []}
+               userId={userId}
+               isLoggedIn={isLoggedIn}
+               products={products.data}
+               initialMeta={products.meta}
+             />
             {/* Features Section */}
             <ScrollAnimation>
               <Features />
