@@ -1,4 +1,5 @@
 import Banner from "@/components/shared/banner";
+import Brands from "@/components/shared/brands";
 import ContactUs from "@/components/shared/contact-us";
 import FAQ from "@/components/shared/faq";
 import Features from "@/components/shared/features";
@@ -7,6 +8,7 @@ import Products from "@/components/shared/products";
 import ReviewsCarousel from "@/components/shared/reviews-carousel";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
+import { getBrands } from "@/services/brand/brand.service";
 import { getDrones } from "@/services/drone/drone.service";
 
 export default async function Home() {
@@ -33,6 +35,9 @@ export default async function Home() {
   });
   console.log(products);
 
+  // Fetch brands server-side
+  const brands = await getBrands();
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Banner Section */}
@@ -41,15 +46,23 @@ export default async function Home() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 md:py-12">
         <div className="space-y-16">
-          {/* Products Section */}
-          <section>
-            <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
-              {title}
-            </h2>
-            <Products products={products.data} isLoggedIn={isLoggedIn} />
-          </section>
+           {/* Products Section */}
+           <section>
+             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+               {title}
+             </h2>
+             <Products products={products.data} isLoggedIn={isLoggedIn} />
+           </section>
 
-          {/* Reviews Section */}
+           {/* Brands Section */}
+           <section>
+             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+               Explore Brands
+             </h2>
+             <Brands brands={brands.data} />
+           </section>
+
+           {/* Reviews Section */}
           <section>
             <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
               Customer Reviews
