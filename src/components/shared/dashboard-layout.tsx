@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import type { UserRole } from "@/lib/nav-config";
@@ -13,8 +13,11 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isLoggedIn, isLoading } = useAuth();
+  const { isLoggedIn, isLoading, user } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const role: UserRole = (user?.role as UserRole) || "user";
 
   useEffect(() => {
     if (!isLoading && !isLoggedIn) {
@@ -22,8 +25,19 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     }
   }, [isLoggedIn, isLoading, router]);
 
-  // TODO: Replace with actual auth logic to get user role
-  const role: UserRole = "USER";
+  useEffect(() => {
+    if (!isLoading && isLoggedIn && user) {
+      const isAdminPath = pathname.startsWith("/dashboard/admin");
+      const isUserPath = pathname.startsWith("/dashboard/user");
+      const isAdminRole = role === "admin" || role === "superAdmin";
+
+      if (isAdminPath && !isAdminRole) {
+        router.push("/dashboard/user");
+      } else if (isUserPath && isAdminRole) {
+        router.push("/dashboard/admin");
+      }
+    }
+  }, [isLoading, isLoggedIn, user, role, pathname, router]);
 
   if (isLoading) {
     return (

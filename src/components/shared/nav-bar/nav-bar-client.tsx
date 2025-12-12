@@ -82,10 +82,10 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
 
             {/* User Actions */}
             <div className="flex items-center gap-2">
-              {user ? (
-                <>
-                  {user.role !== "admin" && <CartLink />}
-                  {user.role !== "admin" && (
+               {user ? (
+                 <>
+                   {user.role !== "admin" && user.role !== "superAdmin" && <CartLink />}
+                   {user.role !== "admin" && user.role !== "superAdmin" && (
                     <Link
                       href="/dashboard/user/wishlist"
                       className={cn(

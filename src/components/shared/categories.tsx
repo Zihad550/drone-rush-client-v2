@@ -1,5 +1,5 @@
+import type ICategory from "@/types/category.type";
 import CategoryCard from "./category-card";
-import ICategory from "@/types/category.type";
 
 interface CategoriesProps {
   categories: ICategory[];
@@ -11,10 +11,7 @@ const Categories = ({ categories }: CategoriesProps) => {
       {categories && categories.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
           {categories.map((category) => (
-            <CategoryCard
-              key={category._id}
-              category={category}
-            />
+            <CategoryCard key={category._id} category={category} />
           ))}
         </div>
       ) : (

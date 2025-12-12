@@ -61,7 +61,7 @@ const DroneCard = ({
   const router = useRouter();
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
-  const { isLoggedIn: clientIsLoggedIn, isLoading: authLoading } = useAuth();
+  const { isLoggedIn: clientIsLoggedIn, isLoading: authLoading, user } = useAuth();
   const {
     isInWishlist,
     addToWishlist: addToWishlistContext,
@@ -132,8 +132,8 @@ const DroneCard = ({
           className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
         />
 
-        {/* Overlay Actions - Only show if user is logged in and in stock */}
-        {isLoggedIn && !authLoading && !isOutOfStock && (
+        {/* Overlay Actions - Only show if user is logged in, in stock, and not admin/superAdmin */}
+        {isLoggedIn && !authLoading && !isOutOfStock && user?.role !== "admin" && user?.role !== "superAdmin" && (
           <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
             <Button
               size="sm"

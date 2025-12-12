@@ -14,4 +14,4 @@ export default interface IUser {
 }
 
 export type TUserStatus = "active" | "blocked";
-export type TUserRole = "user" | "admin" | "super_admin";
+export type TUserRole = "user" | "admin" | "superAdmin";

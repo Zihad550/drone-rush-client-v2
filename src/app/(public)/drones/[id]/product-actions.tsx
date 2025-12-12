@@ -16,7 +16,7 @@ interface ProductActionsProps {
 
 export function ProductActions({ droneId }: ProductActionsProps) {
   const router = useRouter();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
   const [wishlistLoading, setWishlistLoading] = useState(false);
   const [cartLoading, setCartLoading] = useState(false);
   const {
@@ -91,28 +91,32 @@ export function ProductActions({ droneId }: ProductActionsProps) {
       }
     >
       <div className="flex flex-col sm:flex-row gap-4 pt-4">
-        <Button
-          size="lg"
-          className="flex-1"
-          onClick={handleCartAction}
-          disabled={cartLoading}
-          variant={isInCart(droneId) ? "destructive" : "default"}
-        >
-          <ShoppingCart className="w-5 h-5 mr-2" />
-          {isInCart(droneId) ? "Remove from Cart" : "Add to Cart"}
-        </Button>
+        {user?.role !== "admin" && user?.role !== "superAdmin" && (
+          <>
+            <Button
+              size="lg"
+              className="flex-1"
+              onClick={handleCartAction}
+              disabled={cartLoading}
+              variant={isInCart(droneId) ? "destructive" : "default"}
+            >
+              <ShoppingCart className="w-5 h-5 mr-2" />
+              {isInCart(droneId) ? "Remove from Cart" : "Add to Cart"}
+            </Button>
 
-        <Button
-          variant={isInWishlist(droneId) ? "default" : "outline"}
-          size="lg"
-          onClick={handleAddToWishlist}
-          disabled={wishlistLoading}
-        >
-          <Heart
-            className={`w-5 h-5 mr-2 ${isInWishlist(droneId) ? "fill-current" : ""}`}
-          />
-          {isInWishlist(droneId) ? "In Wishlist" : "Add to Wishlist"}
-        </Button>
+            <Button
+              variant={isInWishlist(droneId) ? "default" : "outline"}
+              size="lg"
+              onClick={handleAddToWishlist}
+              disabled={wishlistLoading}
+            >
+              <Heart
+                className={`w-5 h-5 mr-2 ${isInWishlist(droneId) ? "fill-current" : ""}`}
+              />
+              {isInWishlist(droneId) ? "In Wishlist" : "Add to Wishlist"}
+            </Button>
+          </>
+        )}
 
         <Button variant="outline" size="lg" onClick={handleShare}>
           <Share2 className="w-5 h-5 mr-2" />

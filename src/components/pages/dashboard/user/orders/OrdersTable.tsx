@@ -2,7 +2,6 @@
 
 import { Star, X } from "lucide-react";
 import Image from "next/image";
-import { cancelOrderAction } from "@/app/dashboard/user/cancelOrderAction";
 import ReviewModal from "@/components/review/ReviewModal";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type IOrder from "@/types/order.type";
+import { cancelOrderAction } from "@/app/(dashboard)/dashboard/user/cancelOrderAction";
 
 interface OrdersTableProps {
   orders: IOrder[];

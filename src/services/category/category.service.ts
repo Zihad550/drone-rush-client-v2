@@ -1,9 +1,10 @@
 import { serverFetch } from "@/lib/server-fetch";
+import ICategory from "@/types/category.type";
 
 interface ICategoryResponse {
   success: boolean;
   message: string;
-  data: { _id: string; name: string }[];
+  data: ICategory[];
   meta?: {
     total: number;
     page: number;

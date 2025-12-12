@@ -1,4 +1,5 @@
 import {
+  ArrowLeft,
   Heart,
   LayoutDashboard,
   LayoutList,
@@ -6,13 +7,12 @@ import {
   Plane,
   PlusCircle,
   ShieldCheck,
-  ShoppingBag,
   ShoppingCart,
   Tag,
   Truck,
 } from "lucide-react";
 
-export type UserRole = "ADMIN" | "USER";
+export type UserRole = "user" | "admin" | "superAdmin";
 
 export interface NavItem {
   title: string;
@@ -70,9 +70,6 @@ export const userNavItems: NavItem[] = [
     href: "/dashboard/user/shipping",
     icon: Truck,
   },
-];
-
-export const commonNavItems: NavItem[] = [
   {
     title: "Cart",
     href: "/dashboard/user/cart",
@@ -85,11 +82,20 @@ export const commonNavItems: NavItem[] = [
   },
 ];
 
+export const commonNavItems: NavItem[] = [
+  {
+    title: "Go back",
+    href: "/",
+    icon: ArrowLeft,
+  },
+];
+
 export function getNavItems(role: UserRole): NavItem[] {
   switch (role) {
-    case "ADMIN":
-      return adminNavItems;
-    case "USER":
+    case "admin":
+    case "superAdmin":
+      return [...adminNavItems, ...commonNavItems];
+    case "user":
       return [...userNavItems, ...commonNavItems];
     default:
       return [];
