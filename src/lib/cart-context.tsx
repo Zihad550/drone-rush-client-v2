@@ -115,7 +115,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const isInCart = (droneId: string) => {
-    return cart.some((item) => item.drone._id === droneId);
+    return cart.some((item) => item.drone?._id === droneId);
   };
 
   const getTotalItems = () => {

@@ -34,42 +34,6 @@ export default function CartPage() {
     }
   };
 
-  const handleCheckout = async () => {
-    try {
-      const drones = cart.map((item) => ({
-        _id: item.drone._id,
-        quantity: item.quantity,
-      }));
-
-      const response = await serverFetch.post("/orders", {
-        body: JSON.stringify({ drones }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(
-          errorData.message || "Failed to create checkout session",
-        );
-      }
-
-      const {
-        data: { paymentUrl },
-      } = await response.json();
-
-      window.location.href = paymentUrl;
-    } catch (error) {
-      console.error("Checkout error:", error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : "Failed to process checkout. Please try again.",
-      );
-    }
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center h-96">

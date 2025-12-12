@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2, Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -41,22 +41,22 @@ const InviteAdmins = () => {
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loadingInvites, setLoadingInvites] = useState(true);
 
-  const fetchInvites = async () => {
+  const fetchInvites = useCallback(async () => {
     try {
       const res = await getInvites();
       if (res.success) {
         setInvites(res.data);
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to fetch invites");
     } finally {
       setLoadingInvites(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchInvites();
-  }, []);
+  }, [fetchInvites]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,7 +87,7 @@ const InviteAdmins = () => {
       } else {
         toast.error(res.message || "Failed to delete invite");
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to delete invite");
     }
   };

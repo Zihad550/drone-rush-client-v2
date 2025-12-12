@@ -61,7 +61,7 @@ function renderProducts(order: IOrder) {
 }
 
 export default function OrdersTable({ orders }: OrdersTableProps) {
-  const handleSubmitSuccess = (orderId: string) => {
+  const handleSubmitSuccess = () => {
     // Since orders are server-rendered, we might need to revalidate or update state
     // For simplicity, assume page refresh or handle via modal callback
     window.location.reload(); // Temporary solution

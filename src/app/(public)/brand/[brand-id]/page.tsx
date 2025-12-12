@@ -1,4 +1,5 @@
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Products from "@/components/shared/products";
@@ -111,9 +112,11 @@ export default async function BrandPage({ params }: PageProps) {
                 {/* Brand Logo */}
                 <div className="flex-shrink-0">
                   <div className="relative w-24 h-24 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20 rounded-xl flex items-center justify-center">
-                    <img
+                    <Image
                       src={brandInfo.logo}
                       alt={brandInfo.name}
+                      width={64}
+                      height={64}
                       className="w-16 h-16 object-contain"
                     />
                   </div>

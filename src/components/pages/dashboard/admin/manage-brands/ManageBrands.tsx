@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
+import { Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -66,7 +66,12 @@ const ManageBrands = () => {
 
   const [state, action, pending] = useActionState(brandAction, null);
 
-  const fieldErrors = (state?.errors && typeof state.errors === 'object' && !('general' in state.errors)) ? state.errors : {};
+  const fieldErrors =
+    state?.errors &&
+    typeof state.errors === "object" &&
+    !("general" in state.errors)
+      ? state.errors
+      : {};
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -205,23 +210,23 @@ const ManageBrands = () => {
           <CardDescription>View and add drone brands.</CardDescription>
         </CardHeader>
         <CardContent>
-            <Dialog
-              open={dialogOpen}
-              onOpenChange={(open) => {
-                setDialogOpen(open);
-                if (!open) {
-                  setIsEdit(false);
-                  setSelectedBrand(null);
-                  setFormData({
-                    name: "",
-                    logo: "",
-                    description: "",
-                  });
-                  setSelectedFile(null);
-                  setImagePreview(null);
-                }
-              }}
-            >
+          <Dialog
+            open={dialogOpen}
+            onOpenChange={(open) => {
+              setDialogOpen(open);
+              if (!open) {
+                setIsEdit(false);
+                setSelectedBrand(null);
+                setFormData({
+                  name: "",
+                  logo: "",
+                  description: "",
+                });
+                setSelectedFile(null);
+                setImagePreview(null);
+              }
+            }}
+          >
             <DialogTrigger asChild>
               <Button className="mb-4">
                 <Plus className="h-4 w-4 mr-2" />
@@ -235,7 +240,7 @@ const ManageBrands = () => {
                   {isEdit ? "Update brand details." : "Enter brand details."}
                 </DialogDescription>
               </DialogHeader>
-               <form
+              <form
                 action={async (formData: FormData) => {
                   // Create clean FormData with only required fields for server
                   const cleanFormData = new FormData();
@@ -246,7 +251,11 @@ const ManageBrands = () => {
                   }
 
                   // Extract form data and create payload
-                  const payload: any = {
+                  const payload: {
+                    name: string;
+                    description: string;
+                    id?: string;
+                  } = {
                     name: formData.get("name") as string,
                     description: formData.get("description") as string,
                   };
@@ -266,11 +275,7 @@ const ManageBrands = () => {
                 className="space-y-4"
               >
                 {isEdit && selectedBrand && (
-                  <input
-                    type="hidden"
-                    name="id"
-                    value={selectedBrand._id}
-                  />
+                  <input type="hidden" name="id" value={selectedBrand._id} />
                 )}
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>

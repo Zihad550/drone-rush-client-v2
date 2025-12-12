@@ -295,9 +295,9 @@ const ManageDrones = () => {
                     {isEdit ? "Update drone details." : "Enter drone details."}
                   </DialogDescription>
                 </DialogHeader>
-                 {state.errors && 'general' in state.errors && (
-                   <p className="text-red-500 text-sm">{state.errors.general}</p>
-                 )}
+                {state.errors && "general" in state.errors && (
+                  <p className="text-red-500 text-sm">{state.errors.general}</p>
+                )}
                 <form
                   action={async (formData: FormData) => {
                     // Create clean FormData with only required fields for server
@@ -308,20 +308,28 @@ const ManageDrones = () => {
                       cleanFormData.set("file", selectedFile);
                     }
 
-                     // Extract form data and create payload
-                     const payload: any = {
-                       name: formData.get("name") as string,
-                       price: formData.get("price") as string,
-                       quantity: formData.get("quantity") as string,
-                       category: formData.get("category") as string,
-                       brand: formData.get("brand") as string,
-                       description: formData.get("description") as string,
-                     };
+                    // Extract form data and create payload
+                    const payload: {
+                      name: string;
+                      price: string;
+                      quantity: string;
+                      category: string;
+                      brand: string;
+                      description: string;
+                      droneId?: string;
+                    } = {
+                      name: formData.get("name") as string,
+                      price: formData.get("price") as string,
+                      quantity: formData.get("quantity") as string,
+                      category: formData.get("category") as string,
+                      brand: formData.get("brand") as string,
+                      description: formData.get("description") as string,
+                    };
 
-                     // Add droneId if editing
-                     if (isEdit && selectedDrone) {
-                       payload.droneId = selectedDrone._id;
-                     }
+                    // Add droneId if editing
+                    if (isEdit && selectedDrone) {
+                      payload.droneId = selectedDrone._id;
+                    }
 
                     // Add payload as JSON string
                     cleanFormData.set("data", JSON.stringify(payload));
@@ -349,7 +357,7 @@ const ManageDrones = () => {
                         value={formData.name}
                         onChange={handleChange}
                       />
-                      {state.errors && 'name' in state.errors && (
+                      {state.errors && "name" in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.name}
                         </p>
@@ -366,7 +374,7 @@ const ManageDrones = () => {
                         value={formData.price}
                         onChange={handleChange}
                       />
-                      {state.errors && 'price' in state.errors && (
+                      {state.errors && "price" in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.price}
                         </p>
@@ -383,7 +391,7 @@ const ManageDrones = () => {
                         value={formData.quantity}
                         onChange={handleChange}
                       />
-                      {state.errors && 'quantity' in state.errors && (
+                      {state.errors && "quantity" in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.quantity}
                         </p>
@@ -425,7 +433,7 @@ const ManageDrones = () => {
                           Accepted formats: JPEG, PNG, WebP. Max size: 5MB
                         </p>
                       </div>
-                      {state.errors && 'img' in state.errors && (
+                      {state.errors && "img" in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.img}
                         </p>
@@ -452,7 +460,7 @@ const ManageDrones = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      {state.errors && 'category' in state.errors && (
+                      {state.errors && "category" in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.category}
                         </p>
@@ -479,7 +487,7 @@ const ManageDrones = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      {state.errors && 'brand' in state.errors && (
+                      {state.errors && "brand" in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.brand}
                         </p>
@@ -497,7 +505,7 @@ const ManageDrones = () => {
                       onChange={handleChange}
                       rows={4}
                     />
-                    {state.errors && 'description' in state.errors && (
+                    {state.errors && "description" in state.errors && (
                       <p className="text-red-500 text-sm">
                         {state.errors.description}
                       </p>

@@ -30,15 +30,6 @@ export async function brandAction(_prevState: unknown, formData: FormData) {
     };
   }
 
-  const { name, logo, description } = validatedFields.data;
-
-  // Create payload
-  const payload = {
-    name,
-    logo,
-    description,
-  };
-
   try {
     let res: Response;
     let successMessage: string;
@@ -62,7 +53,9 @@ export async function brandAction(_prevState: unknown, formData: FormData) {
     if (!res.ok) {
       return {
         success: false,
-        message: data?.message || `Failed to ${parsedData.id ? "update" : "create"} brand`,
+        message:
+          data?.message ||
+          `Failed to ${parsedData.id ? "update" : "create"} brand`,
       };
     }
 

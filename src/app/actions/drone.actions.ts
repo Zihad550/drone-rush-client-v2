@@ -6,6 +6,7 @@ import {
   getDroneById,
   updateDrone,
 } from "@/services/drone/drone.service";
+import type { TDroneWriteDoc } from "@/types/drone.type";
 import { droneZodSchema } from "@/utils/zod-schema";
 
 export async function handleDroneAction(
@@ -41,7 +42,7 @@ export async function handleDroneAction(
     validatedFields.data;
 
   // Create payload without img since it will be uploaded via file
-  const payload: any = {
+  const payload: Omit<TDroneWriteDoc, "img"> = {
     name,
     price,
     quantity,

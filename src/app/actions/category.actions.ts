@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { serverFetch } from "@/lib/server-fetch";
 import { categoryZodSchema } from "@/utils/zod-schema";
 

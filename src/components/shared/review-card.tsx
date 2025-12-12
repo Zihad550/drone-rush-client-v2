@@ -27,9 +27,9 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
       <CardContent className="flex flex-col p-6">
         {/* Rating Stars */}
         <div className="mb-3 flex items-center gap-1">
-          {Array.from({ length: 5 }, (_, i) => (
+          {[0, 1, 2, 3, 4].map((i) => (
             <Star
-              key={i}
+              key={`rating-star-${i}`}
               className={`h-4 w-4 ${
                 i < rating
                   ? "fill-yellow-400 text-yellow-400"
