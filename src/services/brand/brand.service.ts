@@ -29,12 +29,25 @@ export const getBrands = async (): Promise<IBrandResponse> => {
 
 export const createBrand = async (
   payload: Record<string, unknown>,
+  formData?: FormData,
 ): Promise<IBrandResponse> => {
+  let body: string | FormData;
+  let headers: Record<string, string> = {};
+
+  if (formData) {
+    // Add the payload data as JSON string in "data" field
+    formData.set("data", JSON.stringify(payload));
+    // If FormData is provided, use it for file upload
+    body = formData;
+  } else {
+    // Fallback to JSON for backward compatibility
+    body = JSON.stringify(payload);
+    headers = { "Content-Type": "application/json" };
+  }
+
   const response = await serverFetch.post("/brands", {
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    body,
+    headers,
   });
 
   if (!response.ok) {
@@ -60,12 +73,25 @@ export const getBrandById = async (
 export const updateBrand = async (
   id: string,
   payload: Record<string, unknown>,
+  formData?: FormData,
 ): Promise<ISingleBrandResponse> => {
+  let body: string | FormData;
+  let headers: Record<string, string> = {};
+
+  if (formData) {
+    // If FormData is provided, use it for file upload
+    body = formData;
+    // Add the payload data as JSON string in "data" field
+    formData.set("data", JSON.stringify(payload));
+  } else {
+    // Fallback to JSON for backward compatibility
+    body = JSON.stringify(payload);
+    headers = { "Content-Type": "application/json" };
+  }
+
   const response = await serverFetch.put(`/brands/${id}`, {
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    body,
+    headers,
   });
 
   if (!response.ok) {

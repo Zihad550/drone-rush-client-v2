@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Loader2, Plus, Trash2 } from "lucide-react";
+import { Edit, Loader2, Plus, Trash2, X } from "lucide-react";
 import Image from "next/image";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -76,11 +76,12 @@ const ManageDrones = () => {
     name: "",
     price: "",
     quantity: "",
-    img: "",
     category: "",
     brand: "",
     description: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [state, formAction, pending] = useActionState(
     handleDroneAction.bind(null),
     {
@@ -137,11 +138,12 @@ const ManageDrones = () => {
         name: "",
         price: "",
         quantity: "",
-        img: "",
         category: "",
         brand: "",
         description: "",
       });
+      setSelectedFile(null);
+      setImagePreview(null);
       setDialogOpen(false);
       setIsEdit(false);
       setSelectedDrone(null);
@@ -161,11 +163,11 @@ const ManageDrones = () => {
         name: fetchedDrone.name,
         price: fetchedDrone.price.toString(),
         quantity: fetchedDrone.quantity.toString(),
-        img: fetchedDrone.img,
         category: (fetchedDrone.category as ICategory)._id,
         brand: (fetchedDrone.brand as IBrand)._id,
         description: fetchedDrone.description,
       });
+      setImagePreview(fetchedDrone.img); // Set preview for existing image
       setSelectedDrone(fetchedDrone);
       setIsEdit(true);
       setDialogOpen(true);
@@ -192,6 +194,48 @@ const ManageDrones = () => {
     } catch (error: unknown) {
       toast.error((error as Error).message || "Something went wrong");
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setSelectedFile(null);
+      setImagePreview(null);
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Please select a valid image file (JPEG, PNG, or WebP)");
+      e.target.value = "";
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      toast.error("File size must be less than 5MB");
+      e.target.value = "";
+      return;
+    }
+
+    setSelectedFile(file);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    setImagePreview(null);
+    // Reset file input
+    const fileInput = document.getElementById("img") as HTMLInputElement;
+    if (fileInput) fileInput.value = "";
   };
 
   const handleChange = (
@@ -227,11 +271,12 @@ const ManageDrones = () => {
                     name: "",
                     price: "",
                     quantity: "",
-                    img: "",
                     category: "",
                     brand: "",
                     description: "",
                   });
+                  setSelectedFile(null);
+                  setImagePreview(null);
                 }
               }}
             >
@@ -250,10 +295,43 @@ const ManageDrones = () => {
                     {isEdit ? "Update drone details." : "Enter drone details."}
                   </DialogDescription>
                 </DialogHeader>
-                {state.errors?.general && (
-                  <p className="text-red-500 text-sm">{state.errors.general}</p>
-                )}
-                <form action={formAction} className="space-y-6">
+                 {state.errors && 'general' in state.errors && (
+                   <p className="text-red-500 text-sm">{state.errors.general}</p>
+                 )}
+                <form
+                  action={async (formData: FormData) => {
+                    // Create clean FormData with only required fields for server
+                    const cleanFormData = new FormData();
+
+                    // Add file if selected
+                    if (selectedFile) {
+                      cleanFormData.set("file", selectedFile);
+                    }
+
+                     // Extract form data and create payload
+                     const payload: any = {
+                       name: formData.get("name") as string,
+                       price: formData.get("price") as string,
+                       quantity: formData.get("quantity") as string,
+                       category: formData.get("category") as string,
+                       brand: formData.get("brand") as string,
+                       description: formData.get("description") as string,
+                     };
+
+                     // Add droneId if editing
+                     if (isEdit && selectedDrone) {
+                       payload.droneId = selectedDrone._id;
+                     }
+
+                    // Add payload as JSON string
+                    cleanFormData.set("data", JSON.stringify(payload));
+
+                    // Call the server action with clean FormData
+                    const result = await formAction(cleanFormData);
+                    return result;
+                  }}
+                  className="space-y-6"
+                >
                   {isEdit && selectedDrone && (
                     <input
                       type="hidden"
@@ -271,7 +349,7 @@ const ManageDrones = () => {
                         value={formData.name}
                         onChange={handleChange}
                       />
-                      {state.errors?.name && (
+                      {state.errors && 'name' in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.name}
                         </p>
@@ -288,7 +366,7 @@ const ManageDrones = () => {
                         value={formData.price}
                         onChange={handleChange}
                       />
-                      {state.errors?.price && (
+                      {state.errors && 'price' in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.price}
                         </p>
@@ -305,7 +383,7 @@ const ManageDrones = () => {
                         value={formData.quantity}
                         onChange={handleChange}
                       />
-                      {state.errors?.quantity && (
+                      {state.errors && 'quantity' in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.quantity}
                         </p>
@@ -313,15 +391,41 @@ const ManageDrones = () => {
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="img">Image URL</Label>
-                      <Input
-                        id="img"
-                        name="img"
-                        placeholder="Enter image URL"
-                        value={formData.img}
-                        onChange={handleChange}
-                      />
-                      {state.errors?.img && (
+                      <Label htmlFor="img">Drone Image</Label>
+                      <div className="space-y-4">
+                        <Input
+                          id="img"
+                          name="img"
+                          type="file"
+                          accept="image/jpeg,image/jpg,image/png,image/webp"
+                          onChange={handleFileChange}
+                          className="cursor-pointer"
+                        />
+                        {imagePreview && (
+                          <div className="relative inline-block">
+                            <Image
+                              src={imagePreview}
+                              alt="Preview"
+                              width={200}
+                              height={200}
+                              className="rounded-lg object-cover border"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="sm"
+                              className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                              onClick={handleRemoveImage}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </div>
+                        )}
+                        <p className="text-sm text-muted-foreground">
+                          Accepted formats: JPEG, PNG, WebP. Max size: 5MB
+                        </p>
+                      </div>
+                      {state.errors && 'img' in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.img}
                         </p>
@@ -348,7 +452,7 @@ const ManageDrones = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      {state.errors?.category && (
+                      {state.errors && 'category' in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.category}
                         </p>
@@ -375,7 +479,7 @@ const ManageDrones = () => {
                           ))}
                         </SelectContent>
                       </Select>
-                      {state.errors?.brand && (
+                      {state.errors && 'brand' in state.errors && (
                         <p className="text-red-500 text-sm">
                           {state.errors.brand}
                         </p>
@@ -393,7 +497,7 @@ const ManageDrones = () => {
                       onChange={handleChange}
                       rows={4}
                     />
-                    {state.errors?.description && (
+                    {state.errors && 'description' in state.errors && (
                       <p className="text-red-500 text-sm">
                         {state.errors.description}
                       </p>

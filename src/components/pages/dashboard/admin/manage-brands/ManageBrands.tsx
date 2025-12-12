@@ -1,6 +1,7 @@
 "use client";
 
-import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
+import { Edit, Loader2, Pencil, Plus, Trash2, X } from "lucide-react";
+import Image from "next/image";
 import { useActionState, useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { brandAction } from "@/app/actions/brand.actions";
@@ -60,10 +61,12 @@ const ManageBrands = () => {
     logo: "",
     description: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const [state, action, pending] = useActionState(brandAction, null);
 
-  const fieldErrors = state?.errors || {};
+  const fieldErrors = (state?.errors && typeof state.errors === 'object' && !('general' in state.errors)) ? state.errors : {};
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -109,6 +112,8 @@ const ManageBrands = () => {
         logo: "",
         description: "",
       });
+      setSelectedFile(null);
+      setImagePreview(null);
     }
   }, [state?.success, fetchBrands]);
 
@@ -121,6 +126,7 @@ const ManageBrands = () => {
           logo: res.data.logo,
           description: res.data.description,
         });
+        setImagePreview(res.data.logo); // Set preview for existing image
         setSelectedBrand(brand);
         setIsEdit(true);
         setDialogOpen(true);
@@ -149,6 +155,48 @@ const ManageBrands = () => {
     }
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setSelectedFile(null);
+      setImagePreview(null);
+      return;
+    }
+
+    // Validate file type
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Please select a valid image file (JPEG, PNG, or WebP)");
+      e.target.value = "";
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      toast.error("File size must be less than 5MB");
+      e.target.value = "";
+      return;
+    }
+
+    setSelectedFile(file);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedFile(null);
+    setImagePreview(null);
+    // Reset file input
+    const fileInput = document.getElementById("logo") as HTMLInputElement;
+    if (fileInput) fileInput.value = "";
+  };
+
   return (
     <div className="space-y-6">
       <Card>
@@ -157,21 +205,23 @@ const ManageBrands = () => {
           <CardDescription>View and add drone brands.</CardDescription>
         </CardHeader>
         <CardContent>
-          <Dialog
-            open={dialogOpen}
-            onOpenChange={(open) => {
-              setDialogOpen(open);
-              if (!open) {
-                setIsEdit(false);
-                setSelectedBrand(null);
-                setFormData({
-                  name: "",
-                  logo: "",
-                  description: "",
-                });
-              }
-            }}
-          >
+            <Dialog
+              open={dialogOpen}
+              onOpenChange={(open) => {
+                setDialogOpen(open);
+                if (!open) {
+                  setIsEdit(false);
+                  setSelectedBrand(null);
+                  setFormData({
+                    name: "",
+                    logo: "",
+                    description: "",
+                  });
+                  setSelectedFile(null);
+                  setImagePreview(null);
+                }
+              }}
+            >
             <DialogTrigger asChild>
               <Button className="mb-4">
                 <Plus className="h-4 w-4 mr-2" />
@@ -185,9 +235,42 @@ const ManageBrands = () => {
                   {isEdit ? "Update brand details." : "Enter brand details."}
                 </DialogDescription>
               </DialogHeader>
-              <form action={action} className="space-y-4">
+               <form
+                action={async (formData: FormData) => {
+                  // Create clean FormData with only required fields for server
+                  const cleanFormData = new FormData();
+
+                  // Add file if selected
+                  if (selectedFile) {
+                    cleanFormData.set("file", selectedFile);
+                  }
+
+                  // Extract form data and create payload
+                  const payload: any = {
+                    name: formData.get("name") as string,
+                    description: formData.get("description") as string,
+                  };
+
+                  // Add id if editing
+                  if (isEdit && selectedBrand) {
+                    payload.id = selectedBrand._id;
+                  }
+
+                  // Add payload as JSON string
+                  cleanFormData.set("data", JSON.stringify(payload));
+
+                  // Call the server action with clean FormData
+                  const result = await action(cleanFormData);
+                  return result;
+                }}
+                className="space-y-4"
+              >
                 {isEdit && selectedBrand && (
-                  <input type="hidden" name="id" value={selectedBrand._id} />
+                  <input
+                    type="hidden"
+                    name="id"
+                    value={selectedBrand._id}
+                  />
                 )}
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
@@ -218,23 +301,40 @@ const ManageBrands = () => {
                   )}
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="logo">Logo URL</Label>
-                  <Input
-                    id="logo"
-                    name="logo"
-                    value={formData.logo}
-                    onChange={handleChange}
-                    required
-                    className={
-                      fieldErrors.logo
-                        ? "border-destructive focus:border-destructive"
-                        : ""
-                    }
-                    aria-invalid={!!fieldErrors.logo}
-                    aria-describedby={
-                      fieldErrors.logo ? "logo-error" : undefined
-                    }
-                  />
+                  <Label htmlFor="logo">Brand Logo</Label>
+                  <div className="space-y-4">
+                    <Input
+                      id="logo"
+                      name="logo"
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png,image/webp"
+                      onChange={handleFileChange}
+                      className="cursor-pointer"
+                    />
+                    {imagePreview && (
+                      <div className="relative inline-block">
+                        <Image
+                          src={imagePreview}
+                          alt="Preview"
+                          width={200}
+                          height={200}
+                          className="rounded-lg object-cover border"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="sm"
+                          className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                          onClick={handleRemoveImage}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
+                    <p className="text-sm text-muted-foreground">
+                      Accepted formats: JPEG, PNG, WebP. Max size: 5MB
+                    </p>
+                  </div>
                   {fieldErrors.logo && (
                     <p
                       id="logo-error"

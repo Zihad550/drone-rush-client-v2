@@ -8,11 +8,7 @@ export const registerZodSchema = z.object({
 });
 
 export const loginZodSchema = z.object({
-  email: z
-    .string({
-      invalid_type_error: "Invalid Email",
-    })
-    .email(),
+  email: z.string().email("Invalid Email"),
   password: z.string().min(8, "Password must be at least 8 characters"),
 });
 
@@ -30,7 +26,7 @@ export const droneZodSchema = z.object({
     .number()
     .int()
     .nonnegative("Quantity must be a non-negative integer"),
-  img: z.string().url("Invalid image URL"),
+  img: z.string().optional(), // Made optional since file will be uploaded separately
   category: z.string().min(1, "Category is required"),
   brand: z.string().min(1, "Brand is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
@@ -38,7 +34,7 @@ export const droneZodSchema = z.object({
 
 export const brandZodSchema = z.object({
   name: z.string().min(1, "Brand name is required"),
-  logo: z.string().url("Invalid logo URL"),
+  logo: z.string().url("Invalid logo URL").optional(),
   description: z.string().min(10, "Description must be at least 10 characters"),
 });
 

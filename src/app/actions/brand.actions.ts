@@ -5,42 +5,54 @@ import { serverFetch } from "@/lib/server-fetch";
 import { brandZodSchema } from "@/utils/zod-schema";
 
 export async function brandAction(_prevState: unknown, formData: FormData) {
-  const id = formData.get("id") as string | null;
+  // Parse the JSON data from the "data" field
+  const dataString = formData.get("data") as string;
+  let parsedData: Record<string, unknown>;
 
-  const validatedFields = brandZodSchema.safeParse({
-    name: formData.get("name"),
-    logo: formData.get("logo"),
-    description: formData.get("description"),
-  });
+  try {
+    parsedData = JSON.parse(dataString);
+  } catch (_error) {
+    return {
+      errors: { general: "Invalid form data" },
+      success: false,
+      message: "",
+    };
+  }
+
+  // Validate the parsed data
+  const validatedFields = brandZodSchema.safeParse(parsedData);
 
   if (!validatedFields.success) {
     return {
-      success: false,
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Validation failed",
+      success: false,
+      message: "",
     };
   }
+
+  const { name, logo, description } = validatedFields.data;
+
+  // Create payload
+  const payload = {
+    name,
+    logo,
+    description,
+  };
 
   try {
     let res: Response;
     let successMessage: string;
 
-    if (id) {
+    if (parsedData.id) {
       // Update
-      res = await serverFetch.put(`/brands/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(validatedFields.data),
+      res = await serverFetch.put(`/brands/${parsedData.id}`, {
+        body: formData,
       });
       successMessage = "Brand updated successfully";
     } else {
       // Create
       res = await serverFetch.post("/brands", {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(validatedFields.data),
+        body: formData,
       });
       successMessage = "Brand created successfully";
     }
@@ -50,7 +62,7 @@ export async function brandAction(_prevState: unknown, formData: FormData) {
     if (!res.ok) {
       return {
         success: false,
-        message: data?.message || `Failed to ${id ? "update" : "create"} brand`,
+        message: data?.message || `Failed to ${parsedData.id ? "update" : "create"} brand`,
       };
     }
 

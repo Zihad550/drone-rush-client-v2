@@ -12,8 +12,22 @@ export async function handleDroneAction(
   _prevState: unknown,
   formData: FormData,
 ) {
-  const rawData = Object.fromEntries(formData.entries());
-  const validatedFields = droneZodSchema.safeParse(rawData);
+  // Parse the JSON data from the "data" field
+  const dataString = formData.get("data") as string;
+  let parsedData: Record<string, unknown>;
+
+  try {
+    parsedData = JSON.parse(dataString);
+  } catch (_error) {
+    return {
+      errors: { general: "Invalid form data" },
+      success: false,
+      message: "",
+    };
+  }
+
+  // Validate the parsed data
+  const validatedFields = droneZodSchema.safeParse(parsedData);
 
   if (!validatedFields.success) {
     return {
@@ -23,13 +37,14 @@ export async function handleDroneAction(
     };
   }
 
-  const { name, price, quantity, img, category, brand, description } =
+  const { name, price, quantity, category, brand, description } =
     validatedFields.data;
-  const payload = {
+
+  // Create payload without img since it will be uploaded via file
+  const payload: any = {
     name,
     price,
     quantity,
-    img,
     category,
     brand,
     description,
@@ -37,11 +52,11 @@ export async function handleDroneAction(
   };
 
   try {
-    if (formData.has("droneId")) {
-      const droneId = formData.get("droneId") as string;
+    if (parsedData.droneId) {
+      const droneId = parsedData.droneId as string;
       const existingDrone = await getDroneById(droneId);
       payload.reviews = existingDrone.reviews;
-      await updateDrone(droneId, payload);
+      await updateDrone(droneId, payload, formData);
       revalidatePath("/dashboard/admin/manage-drones");
       return {
         success: true,
@@ -49,7 +64,7 @@ export async function handleDroneAction(
         errors: {},
       };
     } else {
-      await createDrone(payload);
+      await createDrone(payload, formData);
       revalidatePath("/dashboard/admin/manage-drones");
       return {
         success: true,

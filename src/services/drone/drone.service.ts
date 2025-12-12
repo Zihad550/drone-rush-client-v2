@@ -67,12 +67,25 @@ export const getDroneById = async (
 
 export const createDrone = async (
   payload: Record<string, unknown>,
+  formData?: FormData,
 ): Promise<IDroneResponse> => {
+  let body: string | FormData;
+  let headers: Record<string, string> = {};
+
+  if (formData) {
+    // Add the payload data as JSON string in "data" field
+    formData.set("data", JSON.stringify(payload));
+    // If FormData is provided, use it for file upload
+    body = formData;
+  } else {
+    // Fallback to JSON for backward compatibility
+    body = JSON.stringify(payload);
+    headers = { "Content-Type": "application/json" };
+  }
+
   const response = await serverFetch.post("/drones", {
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    body,
+    headers,
   });
 
   if (!response.ok) {
@@ -86,12 +99,25 @@ export const createDrone = async (
 export const updateDrone = async (
   id: string,
   payload: Record<string, unknown>,
+  formData?: FormData,
 ): Promise<IDroneResponse> => {
+  let body: string | FormData;
+  let headers: Record<string, string> = {};
+
+  if (formData) {
+    // If FormData is provided, use it for file upload
+    body = formData;
+    // Add the payload data as JSON string in "data" field
+    formData.set("data", JSON.stringify(payload));
+  } else {
+    // Fallback to JSON for backward compatibility
+    body = JSON.stringify(payload);
+    headers = { "Content-Type": "application/json" };
+  }
+
   const response = await serverFetch.patch(`/drones/${id}`, {
-    body: JSON.stringify(payload),
-    headers: {
-      "Content-Type": "application/json",
-    },
+    body,
+    headers,
   });
 
   if (!response.ok) {

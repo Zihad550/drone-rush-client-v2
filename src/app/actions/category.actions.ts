@@ -54,7 +54,6 @@ export async function categoryAction(_prevState: unknown, formData: FormData) {
     }
 
     revalidatePath("/dashboard/admin/manage-categories");
-    revalidateTag("categories");
 
     return {
       success: true,
