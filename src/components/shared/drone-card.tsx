@@ -37,7 +37,7 @@ const DroneCard = ({
   const calculateAverageRating = (reviews: IDrone["reviews"]): number => {
     if (!reviews || reviews.length === 0) return 0;
     const ratings = reviews
-      .map((review) => (typeof review === "string" ? 0 : review.rating))
+      .map((review) => (typeof review === "object" && review && "rating" in review ? review.rating : 0))
       .filter((rating) => rating > 0);
     if (ratings.length === 0) return 0;
     return ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length;

@@ -14,6 +14,9 @@ import {
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getDroneById } from "@/services/drone/drone.service";
+import { calculateAverageRating, calculateRatingBreakdown } from "@/lib/utils";
+import ReviewCard from "@/components/shared/review-card";
+import StarRating from "@/components/shared/star-rating";
 import { ProductActions } from "./product-actions";
 
 interface PageProps {
@@ -74,8 +77,10 @@ export default async function DroneDetailsPage({ params }: PageProps) {
 
   const { img, name, description, price, brand, reviews } = product;
 
-  // Since reviews are string[] | IReview[] in the new type, we'll show a simple review count
+  // Calculate review metrics
   const reviewCount = reviews?.length || 0;
+  const averageRating = calculateAverageRating(reviews);
+  const ratingBreakdown = calculateRatingBreakdown(reviews);
 
   return (
     <div className="min-h-screen bg-background py-8">
@@ -113,16 +118,18 @@ export default async function DroneDetailsPage({ params }: PageProps) {
                     </div>
                   </div>
 
-                  {/* Rating (placeholder since reviews are string[]) */}
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1">
-                      {/* Placeholder stars - could be enhanced later */}
-                      <span className="text-yellow-400">★★★★☆</span>
+                  {/* Rating */}
+                  {averageRating > 0 && (
+                    <div className="flex items-center gap-2">
+                      <StarRating rating={averageRating} size="sm" />
+                      <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                        {averageRating.toFixed(1)}
+                      </span>
+                      <span className="text-sm text-muted-foreground">
+                        ({reviewCount} reviews)
+                      </span>
                     </div>
-                    <span className="text-sm text-muted-foreground">
-                      ({reviewCount} reviews)
-                    </span>
-                  </div>
+                  )}
 
                   {/* Price */}
                   <div className="text-3xl font-bold text-primary">
@@ -160,59 +167,43 @@ export default async function DroneDetailsPage({ params }: PageProps) {
                   {/* Rating Summary */}
                   <div className="flex items-center gap-6 p-6 bg-muted/50 rounded-lg">
                     <div className="text-center">
-                      <div className="text-4xl font-bold text-primary">4.5</div>
-                      <div className="text-yellow-400 text-lg">★★★★☆</div>
+                      <div className="text-4xl font-bold text-primary">
+                        {averageRating.toFixed(1)}
+                      </div>
+                      <div className="text-lg">
+                        <StarRating rating={averageRating} size="md" />
+                      </div>
                       <div className="text-sm text-muted-foreground">
                         {reviewCount} Ratings
                       </div>
                     </div>
 
-                    {/* Rating Breakdown - Placeholder */}
+                    {/* Rating Breakdown */}
                     <div className="flex-1 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm w-8">5★</span>
-                        <div className="flex-1 bg-muted rounded-full h-2">
-                          <div className="bg-yellow-400 h-2 rounded-full w-3/4"></div>
+                      {[5, 4, 3, 2, 1].map((stars) => (
+                        <div key={stars} className="flex items-center gap-2">
+                          <span className="text-sm w-8">{stars}★</span>
+                          <div className="flex-1 bg-muted rounded-full h-2">
+                            <div
+                              className="bg-yellow-400 h-2 rounded-full transition-all duration-300"
+                              style={{ width: `${ratingBreakdown[stars as keyof typeof ratingBreakdown]}%` }}
+                            ></div>
+                          </div>
+                          <span className="text-sm w-8">{ratingBreakdown[stars as keyof typeof ratingBreakdown]}%</span>
                         </div>
-                        <span className="text-sm w-8">75%</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm w-8">4★</span>
-                        <div className="flex-1 bg-muted rounded-full h-2">
-                          <div className="bg-yellow-400 h-2 rounded-full w-1/2"></div>
-                        </div>
-                        <span className="text-sm w-8">50%</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm w-8">3★</span>
-                        <div className="flex-1 bg-muted rounded-full h-2">
-                          <div className="bg-yellow-400 h-2 rounded-full w-1/4"></div>
-                        </div>
-                        <span className="text-sm w-8">25%</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm w-8">2★</span>
-                        <div className="flex-1 bg-muted rounded-full h-2">
-                          <div className="bg-muted h-2 rounded-full w-0"></div>
-                        </div>
-                        <span className="text-sm w-8">0%</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm w-8">1★</span>
-                        <div className="flex-1 bg-muted rounded-full h-2">
-                          <div className="bg-muted h-2 rounded-full w-0"></div>
-                        </div>
-                        <span className="text-sm w-8">0%</span>
-                      </div>
+                      ))}
                     </div>
                   </div>
 
-                  {/* Individual Reviews - Placeholder */}
+                  {/* Individual Reviews */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">Customer Reviews</h3>
-                    <div className="text-muted-foreground">
-                      Individual review display will be implemented when review
-                      data structure is available.
+                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                      {reviews
+                        .filter((review) => typeof review === "object" && review && "rating" in review)
+                        .map((review) => (
+                          <ReviewCard key={review._id} review={review} />
+                        ))}
                     </div>
                   </div>
                 </div>

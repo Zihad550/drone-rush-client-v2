@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, LayoutDashboard, LogOut, User } from "lucide-react";
+import { LayoutDashboard, LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 import { logoutUser } from "@/app/actions/auth.actions";

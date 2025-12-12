@@ -1,25 +1,18 @@
 "use client";
 
-import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import type IReview from "@/types/review.type";
+import type IUser from "@/types/user.type";
+import { Star } from "lucide-react";
 
 interface ReviewCardProps {
   review: IReview;
 }
 
 const ReviewCard = ({ review }: ReviewCardProps) => {
-  const { user, drone, comment, rating, createdAt } = review;
-  const userName = user
-    ? typeof user === "string"
-      ? user
-      : user.name
-    : "Anonymous";
-  const droneName = drone
-    ? typeof drone === "string"
-      ? drone
-      : drone.name
-    : "Unknown Drone";
+  const { user, comment, rating, createdAt } = review;
+  const u = user as IUser;
+  const userName = "name" in u ? u.name : "Anonymous";
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -59,9 +52,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
           <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
             {userName}
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            on {droneName}
-          </p>
+
           <p className="text-xs text-gray-400 dark:text-gray-500">
             {formatDate(createdAt)}
           </p>
