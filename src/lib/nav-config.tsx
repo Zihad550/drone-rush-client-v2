@@ -58,11 +58,7 @@ export const userNavItems: NavItem[] = [
     href: "/dashboard/user/orders",
     icon: Package,
   },
-  {
-    title: "Purchased",
-    href: "/dashboard/user/purchased",
-    icon: ShoppingBag,
-  },
+
   {
     title: "Shipping Info",
     href: "/dashboard/user/shipping",

@@ -26,7 +26,10 @@ interface CartContextType {
   addToCart: (droneId: string, quantity?: number) => Promise<void>;
   updateQuantity: (droneId: string, quantity: number) => Promise<void>;
   removeFromCart: (droneId: string) => Promise<void>;
-  addToCartAndRemoveFromWishlist: (droneId: string, quantity?: number) => Promise<void>;
+  addToCartAndRemoveFromWishlist: (
+    droneId: string,
+    quantity?: number,
+  ) => Promise<void>;
   moveToWishlist: (droneId: string) => Promise<void>;
   refreshCart: () => Promise<void>;
   isInCart: (droneId: string) => boolean;

@@ -109,7 +109,9 @@ const ManageOrders = () => {
                                   className="h-10 w-10 rounded object-cover"
                                 />
                                 <div>
-                                  <p className="font-medium">{(item.id as IDrone).name}</p>
+                                  <p className="font-medium">
+                                    {(item.id as IDrone).name}
+                                  </p>
                                   <p className="text-xs text-muted-foreground">
                                     Qty: {item.quantity}
                                   </p>

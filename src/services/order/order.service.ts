@@ -1,3 +1,4 @@
+"use server";
 import { serverFetch } from "@/lib/server-fetch";
 import type { TOrderStatus } from "@/types/order.type";
 
@@ -26,6 +27,18 @@ export const updateOrderStatus = async (
     headers: {
       "Content-Type": "application/json",
     },
+  });
+  return res.json();
+};
+
+export const getUserOrders = async () => {
+  const res = await serverFetch.get("/orders/user", { cache: "no-store" });
+  return res.json();
+};
+
+export const getCompletedUserOrders = async () => {
+  const res = await serverFetch.get("/orders/user?status=completed", {
+    cache: "no-store",
   });
   return res.json();
 };

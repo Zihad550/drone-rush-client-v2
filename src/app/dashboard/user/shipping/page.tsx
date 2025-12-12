@@ -172,7 +172,10 @@ const ShippingPage = () => {
       }));
 
       const response = await serverFetch.post("/orders", {
-        body: JSON.stringify({ drones, shippingInformation: selectedShippingId }),
+        body: JSON.stringify({
+          drones,
+          shippingInformation: selectedShippingId,
+        }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -312,10 +315,15 @@ const ShippingPage = () => {
 
           {shippingInfo.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-4">Select Shipping Address for Checkout</h3>
+              <h3 className="text-lg font-semibold mb-4">
+                Select Shipping Address for Checkout
+              </h3>
               <div className="space-y-2">
                 {shippingInfo.map((info) => (
-                  <div key={info._id} className="flex items-center space-x-2 border rounded p-3">
+                  <div
+                    key={info._id}
+                    className="flex items-center space-x-2 border rounded p-3"
+                  >
                     <input
                       type="radio"
                       id={info._id}
@@ -326,7 +334,8 @@ const ShippingPage = () => {
                       className="cursor-pointer"
                     />
                     <Label htmlFor={info._id} className="flex-1 cursor-pointer">
-                      {info.street}, {info.city}, {info.state}, {info.zipCode}, {info.country} - {info.paymentMethod}
+                      {info.street}, {info.city}, {info.state}, {info.zipCode},{" "}
+                      {info.country} - {info.paymentMethod}
                     </Label>
                   </div>
                 ))}

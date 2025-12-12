@@ -29,7 +29,7 @@ export default function PaymentSuccessPage() {
                   Return to Home
                 </Button>
               </Link>
-              <Link href="/dashboard/user/purchased" className="flex-1">
+              <Link href="/dashboard/user/orders" className="flex-1">
                 <Button variant="outline" className="w-full" size="lg">
                   View Orders
                 </Button>

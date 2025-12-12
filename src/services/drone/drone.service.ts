@@ -2,14 +2,14 @@ import { serverFetch } from "@/lib/server-fetch";
 import type IDrone from "@/types/drone.type";
 
 interface IQueryParams {
-	sort?: string;
-	limit?: number;
-	page?: number;
-	category?: string;
-	brand?: string;
-	minPrice?: number;
-	maxPrice?: number;
-	userId?: string;
+  sort?: string;
+  limit?: number;
+  page?: number;
+  category?: string;
+  brand?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  userId?: string;
 }
 
 interface IDroneResponse {
@@ -43,9 +43,12 @@ export const getDrones = async (
   return await response.json();
 };
 
-export const getDroneById = async (id: string, userId?: string): Promise<IDrone> => {
-	const queryString = userId ? `?userId=${userId}` : "";
-	const response = await serverFetch.get(`/drones/${id}${queryString}`);
+export const getDroneById = async (
+  id: string,
+  userId?: string,
+): Promise<IDrone> => {
+  const queryString = userId ? `?userId=${userId}` : "";
+  const response = await serverFetch.get(`/drones/${id}${queryString}`);
 
   if (!response.ok) {
     throw new Error("Failed to fetch drone");

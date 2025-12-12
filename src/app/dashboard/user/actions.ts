@@ -1,10 +1,14 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { getOrders, updateOrderStatus } from "@/services/order/order.service";
+import {
+  getCompletedUserOrders,
+  updateOrderStatus,
+  getUserOrders as getUserOrdersService,
+} from "@/services/order/order.service";
 
 export async function getUserOrders() {
   try {
-    const response = await getOrders({});
+    const response = await getUserOrdersService();
     return response;
   } catch (error) {
     console.error("Failed to fetch orders:", error);
@@ -18,7 +22,7 @@ export async function getUserOrders() {
 
 export async function getCompletedOrders() {
   try {
-    const response = await getOrders({ status: "completed" });
+    const response = await getCompletedUserOrders();
     return response;
   } catch (error) {
     console.error("Failed to fetch completed orders:", error);

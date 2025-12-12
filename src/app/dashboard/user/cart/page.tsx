@@ -10,7 +10,6 @@ import { useCart } from "@/lib/cart-context";
 import { serverFetch } from "@/lib/server-fetch";
 import { useWishlist } from "@/lib/wishlist-context";
 
-
 export default function CartPage() {
   const {
     cart,
@@ -203,11 +202,11 @@ export default function CartPage() {
                   <span>${totalPrice.toFixed(2)}</span>
                 </div>
               </div>
-               <Link href="/dashboard/user/shipping">
-                 <Button className="w-full" size="lg">
-                   Proceed to Checkout
-                 </Button>
-               </Link>
+              <Link href="/dashboard/user/shipping">
+                <Button className="w-full" size="lg">
+                  Proceed to Checkout
+                </Button>
+              </Link>
             </CardContent>
           </Card>
         </div>

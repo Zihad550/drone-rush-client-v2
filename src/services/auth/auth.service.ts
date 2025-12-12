@@ -198,12 +198,8 @@ export async function getNewAccessToken() {
     let accessTokenObject: null | Record<string, string | undefined> = null;
     let refreshTokenObject: null | Record<string, string | undefined> = null;
 
-    // API Call - serverFetch will skip getNewAccessToken for /auth/refresh-token endpoint
-    const response = await serverFetch.post("/auth/refresh-token", {
-      headers: {
-        Cookie: `refreshToken=${refreshToken}`,
-      },
-    });
+    // API Call - serverFetch now includes all cookies automatically
+    const response = await serverFetch.post("/auth/refresh-token");
 
     const result = await response.json();
 

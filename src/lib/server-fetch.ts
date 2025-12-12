@@ -1,8 +1,3 @@
-
-
-
-
-
 const BACKEND_API_URL =
   process.env.NEXT_PUBLIC_BASE_API_URL || "http://localhost:5000/api/v1";
 
@@ -48,11 +43,30 @@ const serverFetchHelper = async (
 
   for (let attempt = 0; attempt <= config.maxRetries; attempt++) {
     try {
+      // Prepare headers with cookies for server-side requests
+      const requestHeaders = new Headers(headers as HeadersInit);
+
+      // Include cookies when running on server (server components/actions)
+      if (typeof window === "undefined") {
+        try {
+          const { cookies: getCookies } = await import("next/headers");
+          const cookieStore = await getCookies();
+          const allCookies = cookieStore.getAll();
+          if (allCookies.length > 0) {
+            const cookieString = allCookies
+              .map((c) => `${c.name}=${c.value}`)
+              .join("; ");
+            requestHeaders.set("Cookie", cookieString);
+          }
+        } catch (error) {
+          // Handle cookie access errors gracefully (e.g., in middleware)
+          console.warn("Failed to access cookies:", error);
+        }
+      }
+
       const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
-        credentials: "include", // Send cookies automatically
-        headers: {
-          ...headers,
-        },
+        credentials: "include", // Send cookies automatically (client-side)
+        headers: requestHeaders,
         ...restOptions,
       });
 
