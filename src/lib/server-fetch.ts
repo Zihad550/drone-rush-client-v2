@@ -1,5 +1,9 @@
+import { getCookie } from "@/services/auth/cookie.service";
+
 const BACKEND_API_URL =
-  process.env.NEXT_PUBLIC_BASE_API_URL || "http://localhost:5000/api/v1";
+  process.env.NEXT_PUBLIC_BASE_API_URL ||
+  process.env.BASE_API_URL ||
+  "http://localhost:5000/api/v1";
 
 interface FetchResult<T = unknown> {
   success: boolean;
@@ -64,6 +68,9 @@ const serverFetchHelper = async (
         }
       }
 
+      const accessToken = await getCookie("accessToken");
+      if (accessToken) requestHeaders.set("Authorization", accessToken);
+
       const response = await fetch(`${BACKEND_API_URL}${endpoint}`, {
         credentials: "include", // Send cookies automatically (client-side)
         headers: requestHeaders,
@@ -88,6 +95,7 @@ const serverFetchHelper = async (
             {
               method: "POST",
               credentials: "include",
+              headers: requestHeaders,
             },
           );
           if (refreshResponse.ok) {

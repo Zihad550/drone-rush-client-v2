@@ -10,6 +10,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { useAuth } from "@/lib/auth-context";
 import {
   addToCart,
   addToCartAndRemoveFromWishlist,
@@ -42,8 +43,11 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<ICartItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const { isLoggedIn } = useAuth();
 
   const refreshCart = useCallback(async () => {
+    if (!isLoggedIn) return;
+
     try {
       setLoading(true);
       const response = await getCart();
@@ -54,7 +58,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isLoggedIn]);
 
   const addToCartHandler = async (droneId: string, quantity: number = 1) => {
     try {
@@ -130,8 +134,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    refreshCart();
-  }, [refreshCart]);
+    if (isLoggedIn) {
+      refreshCart();
+    } else {
+      setCart([]); // Clear cart when user logs out
+    }
+  }, [isLoggedIn, refreshCart]);
 
   const value: CartContextType = {
     cart,

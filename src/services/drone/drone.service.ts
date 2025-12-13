@@ -1,3 +1,5 @@
+"use server";
+
 import { serverFetch } from "@/lib/server-fetch";
 import type IDrone from "@/types/drone.type";
 

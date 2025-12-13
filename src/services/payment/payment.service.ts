@@ -1,3 +1,5 @@
+"use server";
+
 import { serverFetch } from "@/lib/server-fetch";
 
 export const getInvoice = async (paymentId: string) => {

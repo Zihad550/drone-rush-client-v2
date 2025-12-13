@@ -10,6 +10,7 @@ import {
 } from "react";
 import { toast } from "sonner";
 import { ErrorBoundary } from "@/components/error-boundary";
+import { useAuth } from "@/lib/auth-context";
 import {
   addToWishlist,
   getWishlist,
@@ -35,8 +36,11 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const [wishlist, setWishlist] = useState<IWishlist[]>([]);
   const [loading, setLoading] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<Set<string>>(new Set());
+  const { isLoggedIn } = useAuth();
 
   const refreshWishlist = useCallback(async () => {
+    if (!isLoggedIn) return;
+
     try {
       setLoading(true);
       const response = await getWishlist();
@@ -49,7 +53,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [isLoggedIn]);
 
   const addToWishlistHandler = async (droneId: string) => {
     try {
@@ -76,8 +80,13 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const isInWishlist = (droneId: string) => wishlistIds.has(droneId);
 
   useEffect(() => {
-    refreshWishlist();
-  }, [refreshWishlist]);
+    if (isLoggedIn) {
+      refreshWishlist();
+    } else {
+      setWishlist([]); // Clear wishlist when user logs out
+      setWishlistIds(new Set());
+    }
+  }, [isLoggedIn, refreshWishlist]);
 
   const value: WishlistContextType = {
     wishlist,

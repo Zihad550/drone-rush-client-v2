@@ -1,3 +1,5 @@
+"use server";
+
 import { serverFetch } from "@/lib/server-fetch";
 import type IProduct from "@/types/product.type";
 
