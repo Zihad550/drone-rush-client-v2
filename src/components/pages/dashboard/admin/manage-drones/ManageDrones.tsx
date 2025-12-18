@@ -61,7 +61,7 @@ const ManageDrones = () => {
     total: number;
     page: number;
     limit: number;
-    totalPage: number;
+    total_page: number;
   } | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -621,7 +621,7 @@ const ManageDrones = () => {
               </div>
             </div>
           )}
-          {meta && meta.totalPage > 1 && (
+          {meta && meta.total_page > 1 && (
             <div className="flex justify-center mt-6">
               <Pagination>
                 <PaginationContent>
@@ -637,7 +637,7 @@ const ManageDrones = () => {
                   </PaginationItem>
                   {(() => {
                     const items = [];
-                    const totalPages = meta.totalPage;
+                    const totalPages = meta.total_page;
                     const current = page;
 
                     if (totalPages <= 7) {
@@ -720,10 +720,10 @@ const ManageDrones = () => {
                   <PaginationItem>
                     <PaginationNext
                       onClick={() =>
-                        handlePageChange(Math.min(meta.totalPage, page + 1))
+                        handlePageChange(Math.min(meta.total_page, page + 1))
                       }
                       className={
-                        page === meta.totalPage
+                        page === meta.total_page
                           ? "pointer-events-none opacity-50"
                           : "cursor-pointer"
                       }

@@ -16,7 +16,7 @@ export interface IMeta {
   limit: number;
   page: number;
   total: number;
-  totalPage: number;
+  total_page: number;
 }
 
 export interface IResponse<T> {

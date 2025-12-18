@@ -23,7 +23,7 @@ interface IDroneResponse {
     total: number;
     page: number;
     limit: number;
-    totalPage: number;
+    total_page: number;
   };
 }
 

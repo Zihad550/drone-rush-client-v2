@@ -31,7 +31,7 @@ const ManageOrders = () => {
       const res = await getOrders({ page, limit });
       if (res.success) {
         setOrders(res.data);
-        setTotalPages(res.meta.totalPage);
+        setTotalPages(res.meta.total_page);
       } else {
         toast.error(res.message || "Failed to fetch orders");
       }

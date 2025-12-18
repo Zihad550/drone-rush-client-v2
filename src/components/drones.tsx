@@ -38,7 +38,7 @@ interface DronesProps {
     total: number;
     page: number;
     limit: number;
-    totalPage: number;
+    total_page: number;
   };
 }
 
@@ -65,7 +65,7 @@ function Drones({
     total: number;
     page: number;
     limit: number;
-    totalPage: number;
+    total_page: number;
   } | null>(initialMeta || null);
 
   useEffect(() => {
@@ -110,7 +110,7 @@ function Drones({
       setMeta(data.meta || null);
       setLoading(false);
       // Reset to page 1 if current page exceeds total pages
-      if (data.meta && page > data.meta.totalPage) {
+      if (data.meta && page > data.meta.total_page) {
         setPage(1);
       }
     };
@@ -336,7 +336,7 @@ function Drones({
       </ScrollAnimation>
       <ScrollAnimation className="delay-200">
         <div className="flex justify-center my-10">
-          {meta && meta.totalPage > 1 && (
+          {meta && meta.total_page > 1 && (
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
@@ -351,7 +351,7 @@ function Drones({
                 </PaginationItem>
                 {(() => {
                   const items = [];
-                  const totalPages = meta.totalPage;
+                  const totalPages = meta.total_page;
                   const current = page;
 
                   if (totalPages <= 7) {
@@ -434,10 +434,10 @@ function Drones({
                 <PaginationItem>
                   <PaginationNext
                     onClick={() =>
-                      setPage((p) => Math.min(meta.totalPage, p + 1))
+                      setPage((p) => Math.min(meta.total_page, p + 1))
                     }
                     className={
-                      page === meta.totalPage
+                      page === meta.total_page
                         ? "pointer-events-none opacity-50"
                         : "cursor-pointer"
                     }
