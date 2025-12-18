@@ -105,14 +105,6 @@ export default async function DronesPage() {
               products={products.data}
               initialMeta={products.meta}
             />
-            {/* Features Section */}
-            <ScrollAnimation>
-              <Features />
-            </ScrollAnimation>
-            {/* FAQ Section */}
-            <ScrollAnimation className="delay-100">
-              <FAQ />
-            </ScrollAnimation>
           </div>
         </div>
       </div>
