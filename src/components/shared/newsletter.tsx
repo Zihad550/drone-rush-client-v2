@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PublicSectionTitle from "./public-section-title";
 
 const Newsletter = () => {
   const [email, setEmail] = useState("");
@@ -16,9 +17,9 @@ const Newsletter = () => {
   return (
     <section className="mt-12 mb-8">
       <div className="rounded-3xl bg-gradient-to-br from-blue-50 to-cyan-50 p-8 text-center shadow-lg dark:from-blue-950/30 dark:to-cyan-950/30 md:p-12">
-        <h2 className="mb-3 text-3xl font-bold text-gray-900 dark:text-white">
+        <PublicSectionTitle className="mb-3 text-3xl">
           Subscribe to our Newsletter
-        </h2>
+        </PublicSectionTitle>
         <p className="mb-6 text-gray-600 dark:text-gray-400">
           Get the latest drone news, deals, and updates straight to your inbox.
         </p>

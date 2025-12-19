@@ -2,13 +2,14 @@
 
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import SectionContainer from "@/components/shared/SectionContainer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function PaymentCancelPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-amber-100 dark:from-yellow-950 dark:to-amber-900 py-12">
-      <div className="container mx-auto max-w-2xl px-4">
+      <SectionContainer maxWidth="2xl">
         <Card className="shadow-2xl border-0">
           <CardHeader className="text-center pb-6">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900">
@@ -37,7 +38,7 @@ export default function PaymentCancelPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

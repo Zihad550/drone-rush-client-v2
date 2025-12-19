@@ -1,4 +1,4 @@
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 
 const Address = () => {
   const addresses = [
@@ -7,18 +7,6 @@ const Address = () => {
       field: "Address:",
       value: "5171 W Campbell Ave undefined Kent, Utah 53127 United States",
       icon: <MapPin className="w-5 h-5" />,
-    },
-    {
-      id: 2,
-      field: "Call Us:",
-      value: "+88 01855629170",
-      icon: <Phone className="w-5 h-5" />,
-    },
-    {
-      id: 3,
-      field: "Email:",
-      value: "dev.jehadhossain@gmail.com",
-      icon: <Mail className="w-5 h-5" />,
     },
     {
       id: 4,

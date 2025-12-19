@@ -1,4 +1,5 @@
 import Image from "next/image";
+import PublicSectionTitle from "./public-section-title";
 
 const Features = () => {
   const features = [
@@ -40,9 +41,9 @@ const Features = () => {
 
         {/* Right - Features List */}
         <div className="flex flex-col justify-center space-y-8">
-          <h2 className="text-center text-4xl font-bold text-gray-900 dark:text-white md:text-left">
+          <PublicSectionTitle className="text-center md:text-left">
             Features
-          </h2>
+          </PublicSectionTitle>
 
           {features.map((feature) => (
             <div key={feature.id} className="flex items-start gap-4">

@@ -2,13 +2,14 @@
 
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";
+import SectionContainer from "@/components/shared/SectionContainer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function PaymentSuccessPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950 dark:to-emerald-900 py-12">
-      <div className="container mx-auto max-w-2xl px-4">
+      <SectionContainer maxWidth="2xl">
         <Card className="shadow-2xl border-0">
           <CardHeader className="text-center pb-6">
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
@@ -37,7 +38,7 @@ export default function PaymentSuccessPage() {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import AnalyticsDashboard from "@/components/pages/dashboard/user/analytics/AnalyticsDashboard";
 import { getUserAnalytics } from "@/services/user/user-analytics.service";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 interface IAnalyticsData {
   totalOrders: number;

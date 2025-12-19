@@ -1,6 +1,7 @@
 import Drones from "@/components/drones";
 import FAQ from "@/components/faq";
 import Features from "@/components/features";
+import SectionContainer from "@/components/shared/SectionContainer";
 import {
   Card,
   CardContent,
@@ -58,7 +59,7 @@ export default async function DronesPage() {
     return (
       <div className="animate-in fade-in duration-700">
         <div className="bg-background min-h-screen py-4 md:py-8">
-          <div className="container mx-auto px-4">
+          <SectionContainer>
             <div className="space-y-12">
               <Card className="border-destructive/50 bg-destructive/5">
                 <CardHeader>
@@ -86,7 +87,7 @@ export default async function DronesPage() {
                 <FAQ />
               </ScrollAnimation>
             </div>
-          </div>
+          </SectionContainer>
         </div>
       </div>
     );
@@ -95,7 +96,7 @@ export default async function DronesPage() {
   return (
     <div className="animate-in fade-in duration-700">
       <div className="bg-background min-h-screen py-4 md:py-8">
-        <div className="container mx-auto px-4">
+        <SectionContainer>
           <div className="space-y-12">
             <Drones
               categories={categoriesData?.data || []}
@@ -106,7 +107,7 @@ export default async function DronesPage() {
               initialMeta={products.meta}
             />
           </div>
-        </div>
+        </SectionContainer>
       </div>
     </div>
   );

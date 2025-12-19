@@ -95,10 +95,10 @@ export function ProductActions({ droneId }: ProductActionsProps) {
           <>
             <Button
               size="lg"
-              className="flex-1"
+              className={`flex-1 ${isInCart(droneId) ? "bg-blue-500 text-white hover:bg-blue-600" : "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500"}`}
               onClick={handleCartAction}
               disabled={cartLoading}
-              variant={isInCart(droneId) ? "destructive" : "default"}
+              variant={isInCart(droneId) ? "default" : "outline"}
             >
               <ShoppingCart className="w-5 h-5 mr-2" />
               {isInCart(droneId) ? "Remove from Cart" : "Add to Cart"}
@@ -107,11 +107,12 @@ export function ProductActions({ droneId }: ProductActionsProps) {
             <Button
               variant={isInWishlist(droneId) ? "default" : "outline"}
               size="lg"
+              className={`${isInWishlist(droneId) ? "bg-blue-500 hover:bg-blue-600 text-white" : "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500"}`}
               onClick={handleAddToWishlist}
               disabled={wishlistLoading}
             >
               <Heart
-                className={`w-5 h-5 mr-2 ${isInWishlist(droneId) ? "fill-current" : ""}`}
+                className={`w-5 h-5 mr-2 ${isInWishlist(droneId) ? "text-white fill-current" : "text-blue-500"}`}
               />
               {isInWishlist(droneId) ? "In Wishlist" : "Add to Wishlist"}
             </Button>

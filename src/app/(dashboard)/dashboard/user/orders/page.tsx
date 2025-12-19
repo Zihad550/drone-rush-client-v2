@@ -2,7 +2,7 @@ import OrdersTable from "@/components/pages/dashboard/user/orders/OrdersTable";
 import { getUserOrders } from "@/services/order/order.service";
 import type IOrder from "@/types/order.type";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 export default async function OrdersPage() {
   let orders: IOrder[] = [];

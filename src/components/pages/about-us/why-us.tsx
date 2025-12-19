@@ -1,4 +1,5 @@
 import { Archive, Headset, PiggyBank, ShoppingBag, Truck } from "lucide-react";
+import PublicSectionTitle from "../../shared/public-section-title";
 
 export default function WhyUs() {
   const services = [
@@ -30,11 +31,14 @@ export default function WhyUs() {
   ];
 
   return (
-    <div className="mb-8 px-0 py-0 text-center">
-      <h4 className="mb-1.5 text-[22px] font-bold tracking-tighter text-primary sm:text-[28px]">
+    <div className="px-0 py-0 text-center">
+      <PublicSectionTitle
+        variant="h4"
+        align="left"
+        className="text-primary tracking-tighter"
+      >
         Why Choose Us?
-      </h4>
-      <div className="mx-auto mb-8 h-1 w-12 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500" />
+      </PublicSectionTitle>
       <div className="mx-auto grid max-w-[900px] grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fit,minmax(210px,1fr))] sm:gap-8">
         {services.map((service) => {
           const Icon = service.icon;

@@ -1,12 +1,13 @@
 import Banner from "@/components/shared/banner";
 import Brands from "@/components/shared/brands";
 import Categories from "@/components/shared/categories";
-import ContactUs from "@/components/shared/contact-us";
+
 import FAQ from "@/components/shared/faq";
 import Features from "@/components/shared/features";
 import Newsletter from "@/components/shared/newsletter";
 import Products from "@/components/shared/products";
 import ReviewsCarousel from "@/components/shared/reviews-carousel";
+import SectionContainer from "@/components/shared/SectionContainer";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getBrands } from "@/services/brand/brand.service";
@@ -49,19 +50,19 @@ export default async function Home() {
       <Banner />
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8 md:py-12">
-        <div className="space-y-16">
+      <SectionContainer className="py-12 md:py-16 lg:py-20">
+        <div className="space-y-12 md:space-y-16 lg:space-y-20">
           {/* Products Section */}
-          <section>
-            <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+          <section className="pt-8 md:pt-12">
+            <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
               {title}
             </h2>
             <Products products={products.data} isLoggedIn={isLoggedIn} />
           </section>
 
           {/* Brands Section */}
-          <section>
-            <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+          <section className="pt-8 md:pt-12">
+            <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
               Explore Brands
             </h2>
             <Brands brands={brands.data} />
@@ -69,8 +70,8 @@ export default async function Home() {
 
           {/* Categories Section */}
           {categories.data && categories.data.length > 0 && (
-            <section>
-              <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+            <section className="pt-8 md:pt-12">
+              <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
                 Explore Categories
               </h2>
               <Categories categories={categories.data} />
@@ -78,26 +79,29 @@ export default async function Home() {
           )}
 
           {/* Reviews Section */}
-          <section>
-            <h2 className="mb-6 text-center text-4xl font-bold text-gray-900 dark:text-white">
+          <section className="pt-8 md:pt-12">
+            <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
               Customer Reviews
             </h2>
             <ReviewsCarousel />
           </section>
 
           {/* Features Section */}
-          <Features />
+          <section className="pt-8 md:pt-12">
+            <Features />
+          </section>
 
           {/* FAQ Section */}
-          <FAQ />
+          <section className="pt-8 md:pt-12">
+            <FAQ />
+          </section>
 
           {/* Newsletter Section */}
-          <Newsletter />
-
-          {/* Contact Us Section */}
-          <ContactUs />
+          <section className="pt-8 md:pt-12">
+            <Newsletter />
+          </section>
         </div>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Products from "@/components/shared/products";
+import SectionContainer from "@/components/shared/SectionContainer";
 import { Button } from "@/components/ui/button";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
@@ -59,7 +60,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="container mx-auto px-4 py-8 md:py-12">
+      <SectionContainer className="py-8 md:py-12">
         <div className="space-y-16">
           {/* Go Back Button */}
           <div className="mb-6">
@@ -86,7 +87,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
             <Products products={drones.data} isLoggedIn={isLoggedIn} />
           </section>
         </div>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import "swiper/css/pagination";
 import InlineSpinner from "@/components/inline-spinner";
 import { getReviews } from "@/services/review/review.service";
 import type IReview from "@/types/review.type";
+import PublicSectionTitle from "./public-section-title";
 import ReviewCard from "./review-card";
 
 const ReviewsCarousel = () => {
@@ -57,33 +58,124 @@ const ReviewsCarousel = () => {
   }
 
   return (
-    <div className="w-full">
+    <div className="relative w-full">
+      <PublicSectionTitle>Customer Reviews</PublicSectionTitle>
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 rounded-2xl" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.1),transparent_50%)] dark:bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.05),transparent_50%)]" />
+
       <Swiper
         modules={[Autoplay, Navigation, Pagination]}
-        spaceBetween={20}
+        spaceBetween={24}
         slidesPerView={1}
-        navigation
-        pagination={{ clickable: true }}
+        centeredSlides={true}
+        loop={true}
+        navigation={{
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        }}
+        pagination={{
+          clickable: true,
+          dynamicBullets: true,
+          dynamicMainBullets: 3,
+        }}
         autoplay={{
-          delay: 5000,
+          delay: 6000,
           disableOnInteraction: false,
+          pauseOnMouseEnter: true,
         }}
         breakpoints={{
+          480: {
+            slidesPerView: 1.2,
+            spaceBetween: 16,
+          },
           640: {
-            slidesPerView: 2,
+            slidesPerView: 2.2,
+            spaceBetween: 20,
+          },
+          768: {
+            slidesPerView: 2.5,
+            spaceBetween: 24,
           },
           1024: {
-            slidesPerView: 3,
+            slidesPerView: 3.2,
+            spaceBetween: 28,
+          },
+          1280: {
+            slidesPerView: 3.5,
+            spaceBetween: 32,
           },
         }}
-        className="pb-12"
+        className="pb-16 pt-4"
+        style={{
+          paddingLeft: "2rem",
+          paddingRight: "2rem",
+        }}
+        a11y={{
+          prevSlideMessage: "Previous review",
+          nextSlideMessage: "Next review",
+          firstSlideMessage: "This is the first review",
+          lastSlideMessage: "This is the last review",
+          paginationBulletMessage: "Go to review {{index}}",
+        }}
+        keyboard={{
+          enabled: true,
+          onlyInViewport: true,
+        }}
       >
         {reviews.map((review) => (
-          <SwiperSlide key={review._id}>
-            <ReviewCard review={review} />
+          <SwiperSlide
+            key={review._id}
+            className="transition-transform duration-300"
+          >
+            <div className="h-full transform transition-transform duration-300 hover:scale-[1.02]">
+              <ReviewCard review={review} />
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
+
+      {/* Custom Navigation Buttons */}
+      <button
+        type="button"
+        className="swiper-button-prev absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/80 p-3 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-xl dark:bg-gray-900/80 dark:hover:bg-gray-900"
+        aria-label="Previous review"
+      >
+        <svg
+          className="h-5 w-5 text-gray-700 dark:text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M15 19l-7-7 7-7"
+          />
+        </svg>
+      </button>
+      <button
+        type="button"
+        className="swiper-button-next absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/80 p-3 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-xl dark:bg-gray-900/80 dark:hover:bg-gray-900"
+        aria-label="Next review"
+      >
+        <svg
+          className="h-5 w-5 text-gray-700 dark:text-gray-300"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M9 5l7 7-7 7"
+          />
+        </svg>
+      </button>
     </div>
   );
 };

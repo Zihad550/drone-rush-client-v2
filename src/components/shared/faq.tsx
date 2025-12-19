@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import PublicSectionTitle from "./public-section-title";
 
 const FAQ = () => {
   const [openId, setOpenId] = useState<number | null>(1);
@@ -45,9 +46,7 @@ const FAQ = () => {
 
   return (
     <section className="mb-20">
-      <h2 className="mx-auto mb-8 text-center text-4xl font-bold text-gray-900 dark:text-white">
-        Common Questions
-      </h2>
+      <PublicSectionTitle>Common Questions</PublicSectionTitle>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
         {/* Left - Video */}

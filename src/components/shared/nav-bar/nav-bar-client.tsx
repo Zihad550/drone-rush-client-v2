@@ -9,6 +9,7 @@ import { useWishlist } from "@/lib/wishlist-context";
 import type { IUser } from "@/types/global";
 import CartLink from "../cart-link";
 import Logo from "../logo";
+import SectionContainer from "../SectionContainer";
 import UserMenu from "./user-menu";
 
 interface NavBarClientProps {
@@ -38,7 +39,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
   return (
     <div className="flex flex-col">
       <header className="sticky top-0 left-0 z-50 w-full bg-slate-900/75 backdrop-blur-md border-b border-white/10 shadow-lg">
-        <div className="container mx-auto px-4 max-w-7xl">
+        <SectionContainer>
           <div className="flex items-center justify-between h-16">
             {/* Logo and Mobile Menu Button */}
             <div className="flex items-center flex-grow">
@@ -122,7 +123,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
               )}
             </div>
           </div>
-        </div>
+        </SectionContainer>
       </header>
 
       {/* Mobile Drawer */}

@@ -1,11 +1,12 @@
 import ContactForm from "@/components/pages/contact-us/contact-form";
 import ContactUsBanner from "@/components/pages/contact-us/contact-us-banner";
+import SectionContainer from "@/components/shared/SectionContainer";
 import Title from "@/components/title";
 
 export default function ContactUsPage() {
   return (
     <div className="animate-fade-in bg-background py-8 md:py-16">
-      <div className="container mx-auto max-w-[1400px]">
+      <SectionContainer maxWidth="[1400px]">
         {/* Banner */}
         <div className="mb-20 mt-4 md:mt-6">
           <div className="relative mb-20 after:absolute after:-bottom-10 after:left-1/2 after:h-px after:w-3/5 after:-translate-x-1/2 after:rounded-lg after:bg-[rgba(0,0,0,0.06)] after:content-['']">
@@ -33,7 +34,7 @@ export default function ContactUsPage() {
             perfect drone solution for your needs.
           </p>
         </div>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

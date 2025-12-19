@@ -1,10 +1,11 @@
 import Image from "next/image";
 import LoginForm from "@/components/auth/login-form";
+import SectionContainer from "@/components/shared/SectionContainer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LoginPage() {
   return (
-    <div className="container mx-auto py-10">
+    <SectionContainer paddingX={false} className="py-10">
       <div className="flex justify-center items-center min-h-[80vh]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
           <div className="flex flex-col justify-center">
@@ -32,6 +33,6 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-    </div>
+    </SectionContainer>
   );
 }

@@ -1,18 +1,19 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import SectionContainer from "@/components/shared/SectionContainer";
 import { Button } from "@/components/ui/button";
 
 export default function AboutUsBanner() {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[rgba(79,196,207,0.08)] to-[rgba(79,196,207,0.15)] py-12 md:py-16">
+    <div className="relative overflow-hidden rounded-b-2xl bg-gradient-to-br from-[rgba(79,196,207,0.08)] to-[rgba(79,196,207,0.15)] py-12 md:py-16">
       {/* Decorative background elements */}
       <div className="absolute -top-[50px] -right-[50px] z-0 h-[200px] w-[200px] rounded-full bg-[radial-gradient(circle,rgba(var(--primary),0.13)_0%,transparent_70%)]" />
       <div className="absolute -bottom-[80px] left-[45%] z-0 h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,rgba(var(--primary),0.08)_0%,transparent_60%)]" />
 
-      <div className="container relative z-10 mx-auto px-4">
+      <SectionContainer className="relative z-10">
         <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
-          <div className="text-center md:pl-12 md:pr-8 md:text-left">
+          <div className="text-center   md:text-left">
             <div className="mb-2 inline-block rounded-full bg-primary px-3 py-1 text-sm font-semibold uppercase tracking-wider text-primary-foreground">
               Our Story
             </div>
@@ -72,7 +73,7 @@ export default function AboutUsBanner() {
             <div className="absolute bottom-[5%] left-[10%] z-20 h-[50px] w-[50px] rounded-full bg-primary opacity-10 md:bottom-[15%] md:left-[15%] md:h-[70px] md:w-[70px]" />
           </div>
         </div>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

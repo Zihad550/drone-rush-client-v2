@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Products from "@/components/shared/products";
+import SectionContainer from "@/components/shared/SectionContainer";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -93,7 +94,7 @@ export default async function BrandPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-background py-8">
-      <div className="container mx-auto px-4">
+      <SectionContainer>
         <div className="max-w-7xl mx-auto">
           {/* Go Back Button */}
           <div className="mb-6">
@@ -168,7 +169,7 @@ export default async function BrandPage({ params }: PageProps) {
             )}
           </div>
         </div>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

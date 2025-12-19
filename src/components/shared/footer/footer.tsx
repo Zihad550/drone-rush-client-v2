@@ -1,7 +1,6 @@
-import { Facebook, Instagram, Twitter } from "lucide-react";
+import { Facebook, Instagram, Mail, Phone, Twitter } from "lucide-react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import SectionContainer from "../SectionContainer";
 import Address from "./address";
 import FooterNav from "./footer-nav";
 
@@ -95,10 +94,10 @@ const Footer = () => {
 
   return (
     <footer className="relative w-full bg-slate-900/95 backdrop-blur-md text-gray-100 pt-12 pb-0 mt-16 border-t border-white/8 shadow-[0_-10px_40px_rgba(0,0,0,0.2)] before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.1),_transparent_70%)] before:pointer-events-none pb-8">
-      <div className="container mx-auto px-4 max-w-7xl">
+      <SectionContainer>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-4">
           {/* About & Address */}
-          <div className="md:col-span-6 lg:col-span-4">
+          <div className="md:col-span-6 lg:col-span-3">
             <h2 className="font-['Courgette',cursive] text-blue-400 text-2xl mb-2">
               Drone Rush
             </h2>
@@ -144,28 +143,29 @@ const Footer = () => {
             <FooterNav navs={corporateNavs} title="Corporate" />
           </div>
 
-          {/* Newsletter */}
-          <div className="md:col-span-6 lg:col-span-2">
+          {/* Contact Us */}
+          <div className="md:col-span-6 lg:col-span-3">
             <h3 className="text-xl font-semibold mb-2 text-blue-400">
-              Newsletter
+              Contact Us
             </h3>
-            <p className="text-sm text-gray-400 mb-2">
-              Subscribe to get the latest drone news and deals!
+            <p className="text-sm text-gray-400 mb-4">
+              Have questions or need help? Reach out to our team.
             </p>
-            <div className="p-6 rounded-2xl bg-white/5 backdrop-blur-md border border-white/8 shadow-[0_8px_32px_rgba(0,0,0,0.1)] mt-4">
-              <form className="flex flex-col sm:flex-row lg:flex-col gap-2 w-full">
-                <Input
-                  type="email"
-                  placeholder="Your email"
-                  className="flex-1 rounded-lg bg-white/5 backdrop-blur-sm border-white/10 text-gray-100 placeholder:text-gray-400 hover:border-white/20 focus:border-blue-500"
-                />
-                <Button
-                  type="submit"
-                  className="rounded-lg font-semibold bg-gradient-to-r from-blue-500 to-cyan-500 shadow-[0_4px_12px_rgba(59,130,246,0.4)] hover:shadow-[0_6px_16px_rgba(59,130,246,0.6)] hover:-translate-y-0.5 transition-all duration-300"
-                >
-                  Subscribe
-                </Button>
-              </form>
+            <div className="flex flex-col gap-2">
+              <a
+                href="mailto:jehadhossain008@gmail.com"
+                className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+                <span className="text-sm">jehadhossain008@gmail.com</span>
+              </a>
+              <a
+                href="tel:+8801855629170"
+                className="flex items-center gap-2 text-gray-300 hover:text-blue-400 transition-colors"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="text-sm">+88 01855629170</span>
+              </a>
             </div>
           </div>
         </div>
@@ -190,7 +190,7 @@ const Footer = () => {
             </Link>
           </div>
         </div>
-      </div>
+      </SectionContainer>
     </footer>
   );
 };

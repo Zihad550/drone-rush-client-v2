@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReviewCard from "@/components/shared/review-card";
+import SectionContainer from "@/components/shared/SectionContainer";
 import StarRating from "@/components/shared/star-rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -83,7 +84,7 @@ export default async function DroneDetailsPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-background py-8">
-      <div className="container mx-auto px-4">
+      <SectionContainer maxWidth="none">
         <div className="max-w-6xl mx-auto">
           {/* Product Details Section */}
           <Card className="mb-8">
@@ -228,7 +229,7 @@ export default async function DroneDetailsPage({ params }: PageProps) {
             </CardContent>
           </Card>
         </div>
-      </div>
+      </SectionContainer>
     </div>
   );
 }

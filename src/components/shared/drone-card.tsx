@@ -128,7 +128,7 @@ const DroneCard = ({
       className={`group h-full overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 ${
         isOutOfStock
           ? "opacity-60 cursor-not-allowed"
-          : "cursor-pointer hover:-translate-y-2 hover:shadow-2xl"
+          : "cursor-pointer hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/25"
       }`}
     >
       {/* Product Image */}
@@ -146,25 +146,25 @@ const DroneCard = ({
           !isOutOfStock &&
           user?.role !== "admin" &&
           user?.role !== "superAdmin" && (
-            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-black/75 via-black/50 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-blue-500/50 via-blue-500/25 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <Button
                 size="sm"
-                variant={isInCart(_id) ? "default" : "secondary"}
+                variant={isInCart(_id) ? "default" : "outline"}
                 onClick={handleAddToCart}
                 disabled={cartLoading}
-                className="shadow-lg"
+                className={`shadow-lg ${!isInCart(_id) ? "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500" : "bg-blue-500 text-white hover:bg-blue-600"}`}
               >
                 <ShoppingCart className="h-4 w-4" />
               </Button>
               <Button
                 size="sm"
-                variant={isInWishlist(_id) ? "default" : "secondary"}
+                variant={isInWishlist(_id) ? "default" : "outline"}
                 onClick={handleAddToWishlist}
                 disabled={wishlistLoading}
-                className="shadow-lg"
+                className={`shadow-lg transition-colors ${!isInWishlist(_id) ? "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500" : "bg-blue-500 hover:bg-blue-600 text-white"}`}
               >
                 <Heart
-                  className={`h-4 w-4 ${isInWishlist(_id) ? "fill-current" : ""}`}
+                  className={`h-4 w-4 ${isInWishlist(_id) ? "text-white fill-current" : "text-blue-500"}`}
                 />
               </Button>
             </div>
@@ -245,6 +245,9 @@ const DroneCard = ({
           </div>
         </div>
       </CardContent>
+
+      {/* Subtle glow effect */}
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-cyan-500/0 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10" />
     </Card>
   );
 };

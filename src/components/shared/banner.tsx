@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import SectionContainer from "./SectionContainer";
 
 const Banner = () => {
   return (
@@ -10,10 +11,10 @@ const Banner = () => {
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(/assets/banner-bg.jpg)`,
       }}
     >
-      <div className="container mx-auto px-4">
+      <SectionContainer>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative z-10">
           {/* Left Content */}
-          <div className="my-auto text-white text-center md:text-left pr-0 md:pr-16 pl-6 md:pl-10 py-8 md:py-10">
+          <div className="my-auto text-white text-center md:text-left pr-0 md:pr-16   py-8 md:py-10">
             {/* Premium Quality Badge */}
             <div className="inline-block mb-2 px-3 py-1 rounded-full bg-blue-500 text-white text-sm font-semibold tracking-wider uppercase">
               Premium Quality
@@ -67,7 +68,7 @@ const Banner = () => {
             <div className="absolute bottom-[5%] md:bottom-[15%] left-[10%] md:left-[15%] w-[50px] md:w-[70px] h-[50px] md:h-[70px] rounded-full bg-blue-500 opacity-10 z-20" />
           </div>
         </div>
-      </div>
+      </SectionContainer>
     </section>
   );
 };

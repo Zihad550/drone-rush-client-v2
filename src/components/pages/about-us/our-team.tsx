@@ -1,6 +1,7 @@
 import { Code, Facebook, Linkedin, Twitter } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import PublicSectionTitle from "../../shared/public-section-title";
 
 export default function OurTeam() {
   const members = [
@@ -47,7 +48,8 @@ export default function OurTeam() {
   ];
 
   return (
-    <div className="mb-8 px-0 py-0 text-center">
+    <div className="px-0 py-0 text-center">
+      <PublicSectionTitle>Our Team</PublicSectionTitle>
       <div className="mx-auto grid max-w-[900px] grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] sm:gap-8">
         {members.map((member) => (
           <div
