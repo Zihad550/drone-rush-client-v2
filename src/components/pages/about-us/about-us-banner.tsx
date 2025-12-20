@@ -6,21 +6,21 @@ import { Button } from "@/components/ui/button";
 
 export default function AboutUsBanner() {
   return (
-    <div className="relative overflow-hidden rounded-b-2xl bg-gradient-to-br from-[rgba(79,196,207,0.08)] to-[rgba(79,196,207,0.15)] py-12 md:py-16">
+    <div className="relative overflow-hidden rounded-b-2xl bg-gradient-to-br from-[rgba(79,196,207,0.08)] to-[rgba(79,196,207,0.15)] min-h-screen flex flex-col items-center justify-center">
       {/* Decorative background elements */}
       <div className="absolute -top-[50px] -right-[50px] z-0 h-[200px] w-[200px] rounded-full bg-[radial-gradient(circle,rgba(var(--primary),0.13)_0%,transparent_70%)]" />
       <div className="absolute -bottom-[80px] left-[45%] z-0 h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,rgba(var(--primary),0.08)_0%,transparent_60%)]" />
 
-      <SectionContainer className="relative z-10">
-        <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
+      <SectionContainer className="h-full" paddingX={false}>
+        <div className="h-full grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12 justify-center">
           <div className="text-center   md:text-left">
-            <div className="mb-2 inline-block rounded-full bg-primary px-3 py-1 text-sm font-semibold uppercase tracking-wider text-primary-foreground">
+            <div className="mb-2 inline-block animate-pulse rounded-full bg-primary px-3 py-1 text-sm font-semibold uppercase tracking-wider text-primary-foreground shadow-[0_0_10px_rgba(var(--primary),0.5)]">
               Our Story
             </div>
 
             <h1 className="relative mb-8 mt-4 inline-block font-['Courgette'] text-[2.8rem] font-semibold text-foreground md:text-[4rem]">
               Drone Rush
-              <span className="absolute -bottom-2 left-1/4 h-1 w-1/2 rounded-md bg-primary md:left-0 md:w-2/5" />
+              <span className="absolute -bottom-2 left-1/4 h-1 w-1/2 rounded-md bg-primary shadow-[0_0_15px_rgba(var(--primary),0.8)] md:left-0 md:w-2/5" />
             </h1>
 
             <h2 className="mb-8 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
@@ -54,7 +54,7 @@ export default function AboutUsBanner() {
           </div>
 
           <div className="relative flex items-center justify-center">
-            <div className="relative h-auto w-[90%] overflow-hidden rounded-2xl md:h-[420px] md:w-full">
+            <div className="relative h-auto w-full overflow-hidden rounded-2xl">
               {/* Image overlays */}
               <div className="absolute top-0 left-0 z-10 h-full w-full bg-gradient-to-br from-[rgba(79,196,207,0.3)] via-transparent to-transparent" />
               <div className="absolute right-0 bottom-0 z-10 h-[40%] w-[70%] bg-gradient-to-bl from-[rgba(79,196,207,0.2)] via-transparent to-transparent" />
@@ -69,8 +69,8 @@ export default function AboutUsBanner() {
             </div>
 
             {/* Decorative elements */}
-            <div className="absolute top-[5%] right-[5%] z-20 h-[70px] w-[70px] rounded-full border-2 border-dashed border-primary opacity-60 md:top-[12%] md:right-[12%] md:h-[100px] md:w-[100px]" />
-            <div className="absolute bottom-[5%] left-[10%] z-20 h-[50px] w-[50px] rounded-full bg-primary opacity-10 md:bottom-[15%] md:left-[15%] md:h-[70px] md:w-[70px]" />
+            <div className="absolute top-[5%] right-4 z-20 h-[70px] w-[70px] rounded-full border-2 border-dashed border-primary opacity-60 md:top-[12%] md:right-8 md:h-[100px] md:w-[100px]" />
+            <div className="absolute bottom-[5%] left-4 z-20 h-[50px] w-[50px] rounded-full bg-primary opacity-10 md:bottom-[15%] md:left-8 md:h-[70px] md:w-[70px]" />
           </div>
         </div>
       </SectionContainer>

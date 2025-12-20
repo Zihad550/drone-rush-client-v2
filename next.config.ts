@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "6mb",
     },
+    viewTransition: true,
   },
 };
 

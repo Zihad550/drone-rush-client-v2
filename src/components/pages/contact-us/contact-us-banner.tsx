@@ -1,24 +1,51 @@
-import { Clock, Mail, Phone } from "lucide-react";
 import Image from "next/image";
 import SectionContainer from "@/components/shared/SectionContainer";
+import ContactCtaButton from "./ContactCtaButton";
+import ContactInfoCards from "./ContactInfoCards";
 
 export default function ContactUsBanner() {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[rgba(79,196,207,0.08)] to-[rgba(79,196,207,0.15)] py-12 md:py-16">
-      {/* Decorative background elements */}
-      <div className="absolute -top-[50px] -right-[50px] z-0 h-[200px] w-[200px] rounded-full bg-[radial-gradient(circle,rgba(var(--primary),0.13)_0%,transparent_70%)]" />
-      <div className="absolute -bottom-[80px] left-[45%] z-0 h-[300px] w-[300px] rounded-full bg-[radial-gradient(circle,rgba(var(--primary),0.08)_0%,transparent_60%)]" />
+    <div className="relative overflow-hidden w-screen h-[calc(100vh-4rem)] bg-gradient-to-br from-[rgba(79,196,207,0.08)] to-[rgba(79,196,207,0.15)]">
+      {/* Hexagonal decorative elements */}
+      <div className="absolute -top-[30px] -right-[30px] z-0 opacity-20">
+        <svg
+          width="150"
+          height="130"
+          viewBox="0 0 150 130"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="75,0 150,43.3 150,86.6 75,130 0,86.6 0,43.3"
+            fill="url(#banner-particle-gradient)"
+          />
+          <title>Decorative hexagon</title>
+        </svg>
+      </div>
+      <div className="absolute -bottom-[50px] left-[40%] z-0 opacity-15">
+        <svg
+          width="200"
+          height="173"
+          viewBox="0 0 200 173"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <polygon
+            points="100,0 200,57.74 200,115.47 100,173 0,115.47 0,57.74"
+            fill="url(#banner-particle-gradient)"
+          />
+          <title>Decorative hexagon</title>
+        </svg>
+      </div>
 
-      <SectionContainer className="relative z-10">
-        <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-12">
-          <div className="text-center md:pl-12 md:pr-8 md:text-left">
-            <div className="mb-2 inline-block rounded-full bg-primary px-3 py-1 text-sm font-semibold uppercase tracking-wider text-primary-foreground">
+      <SectionContainer className="relative z-10 h-full">
+        <div className="flex flex-col md:flex-row  items-center justify-center   gap-8  md:gap-12 h-full">
+          <div className="text-center md:text-left md:col-span-2">
+            <div className="mb-2 inline-block rounded-full bg-primary px-3 py-1 text-sm font-semibold uppercase tracking-wider text-primary-foreground shadow-[0_0_10px_rgba(var(--primary),0.5)]">
               Get In Touch
             </div>
 
             <h1 className="relative mb-8 mt-4 inline-block text-[2.8rem] font-semibold text-foreground md:text-[4rem]">
               Contact Us
-              <span className="absolute -bottom-2 left-1/4 h-1 w-1/2 rounded-md bg-primary md:left-0 md:w-2/5" />
+              <span className="absolute -bottom-2 left-1/4 h-1 w-1/2 rounded-md bg-primary shadow-[0_0_15px_rgba(var(--primary),0.8)] md:left-0 md:w-2/5" />
             </h1>
 
             <h2 className="mb-8 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
@@ -31,76 +58,50 @@ export default function ContactUsBanner() {
               to us through any of the channels below.
             </p>
 
-            {/* Contact Information Cards */}
-            <div className="mt-8 space-y-4">
-              <div className="rounded-xl border-l-4 border-primary bg-[rgba(79,196,207,0.07)] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-primary" />
-                  <div className="text-left">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Email
-                    </p>
-                    <a
-                      href="mailto:jehadhossain008@gmail.com"
-                      className="text-base font-semibold text-foreground hover:text-primary transition-colors"
-                    >
-                      jehadhossain008@gmail.com
-                    </a>
-                  </div>
-                </div>
-              </div>
+            <ContactInfoCards />
 
-              <div className="rounded-xl border-l-4 border-primary bg-[rgba(79,196,207,0.07)] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5 text-primary" />
-                  <div className="text-left">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Phone
-                    </p>
-                    <a
-                      href="tel:+8801855629170"
-                      className="text-base font-semibold text-foreground hover:text-primary transition-colors"
-                    >
-                      +88 01855629170
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <div className="rounded-xl border-l-4 border-primary bg-[rgba(79,196,207,0.07)] p-4 shadow-[0_4px_20px_rgba(0,0,0,0.03)]">
-                <div className="flex items-center gap-3">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <div className="text-left">
-                    <p className="text-sm font-medium text-muted-foreground">
-                      Business Hours
-                    </p>
-                    <p className="text-base font-semibold text-foreground">
-                      10:00–18:00 GMT+6 (Mon–Fri)
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <ContactCtaButton />
           </div>
 
           <div className="relative flex items-center justify-center">
-            <div className="relative h-auto w-[90%] overflow-hidden rounded-2xl md:h-[500px] md:w-full">
-              {/* Image overlays */}
-              <div className="absolute top-0 left-0 z-10 h-full w-full bg-gradient-to-br from-[rgba(79,196,207,0.3)] via-transparent to-transparent" />
-              <div className="absolute right-0 bottom-0 z-10 h-[40%] w-[70%] bg-gradient-to-bl from-[rgba(79,196,207,0.2)] via-transparent to-transparent" />
-
+            <div className="relative h-auto w-[90%] overflow-hidden rounded-2xl border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.2)] md:w-full">
               <Image
                 src="/assets/feature-img.jpg"
                 alt="Contact Drone Rush"
                 width={600}
                 height={500}
-                className="h-full w-full object-cover object-center transition-all duration-500 hover:scale-105 hover:contrast-110 hover:brightness-105"
+                priority
+                className="hidden md:block h-full w-full object-cover object-center"
               />
             </div>
 
-            {/* Decorative elements */}
-            <div className="absolute top-[5%] right-[5%] z-20 h-[70px] w-[70px] rounded-full border-2 border-dashed border-primary opacity-60 md:top-[12%] md:right-[12%] md:h-[100px] md:w-[100px]" />
-            <div className="absolute bottom-[5%] left-[10%] z-20 h-[50px] w-[50px] rounded-full bg-primary opacity-10 md:bottom-[15%] md:left-[15%] md:h-[70px] md:w-[70px]" />
+            {/* Futuristic decorative elements */}
+
+            <div className="absolute bottom-[5%] left-[10%] z-20 opacity-20 md:bottom-[15%] md:left-[15%]">
+              <svg
+                width="50"
+                height="50"
+                viewBox="0 0 50 50"
+                xmlns="http://www.w3.org/2000/svg"
+                className="md:w-[70px] md:h-[70px]"
+              >
+                <circle
+                  cx="25"
+                  cy="25"
+                  r="20"
+                  fill="var(--primary)"
+                  opacity="0.3"
+                />
+                <circle
+                  cx="25"
+                  cy="25"
+                  r="10"
+                  fill="var(--primary)"
+                  opacity="0.6"
+                />
+                <title>Futuristic circle decoration</title>
+              </svg>
+            </div>
           </div>
         </div>
       </SectionContainer>

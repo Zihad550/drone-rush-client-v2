@@ -1,81 +1,91 @@
 import { Archive, Headset, PiggyBank, ShoppingBag, Truck } from "lucide-react";
 import PublicSectionTitle from "../../shared/public-section-title";
+import SectionContainer from "../../shared/SectionContainer";
 
 export default function WhyUs() {
   const services = [
     {
       id: 1,
-      service: "Complete buyer supply store",
+      service: "Complete Buyer Supply Store",
+      description:
+        "We offer a comprehensive range of drone supplies and accessories for all your aerial needs.",
       icon: ShoppingBag,
     },
     {
       id: 2,
-      service: "Same day dispatch on all orders",
+      service: "Same Day Dispatch on All Orders",
+      description:
+        "Get your orders dispatched the same day, ensuring quick turnaround and minimal wait times.",
       icon: Archive,
     },
     {
       id: 3,
-      service: "Free delivery on all orders",
+      service: "Free Delivery on All Orders",
+      description:
+        "Enjoy complimentary shipping on every purchase, no matter the order size or value.",
       icon: Truck,
     },
     {
       id: 4,
-      service: "Professional advice and support",
+      service: "Professional Advice and Support",
+      description:
+        "Our expert team provides personalized guidance and 24/7 support for all drone-related queries.",
       icon: Headset,
     },
     {
       id: 5,
-      service: "Fall savings are in the air",
+      service: "Fall Savings Are in the Air",
+      description:
+        "Take advantage of seasonal promotions and discounts to save on top-quality drone products.",
       icon: PiggyBank,
     },
   ];
 
   return (
-    <div className="px-0 py-0 text-center">
-      <PublicSectionTitle
-        variant="h4"
-        align="left"
-        className="text-primary tracking-tighter"
-      >
-        Why Choose Us?
-      </PublicSectionTitle>
-      <div className="mx-auto grid max-w-[900px] grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fit,minmax(210px,1fr))] sm:gap-8">
-        {services.map((service) => {
-          const Icon = service.icon;
-          return (
-            <div
-              key={service.id}
-              className="group flex flex-col items-center rounded-xl border border-gray-200 bg-white p-4 shadow-[0_2px_16px_rgba(59,130,246,0.07)] transition-all duration-200 hover:-translate-y-2 hover:border-blue-500 hover:shadow-[0_8px_32px_rgba(59,130,246,0.13)] sm:p-8"
-            >
-              <div className="mb-4">
-                <Icon
-                  className="h-10 w-10 text-cyan-500 sm:h-14 sm:w-14"
-                  style={{
-                    stroke: "url(#blue-cyan-gradient)",
-                  }}
-                />
-                {/* SVG Gradient Definition for Lucide Icons */}
-                <svg width="0" height="0">
-                  <title>Gradient definition</title>
-                  <linearGradient
-                    id="blue-cyan-gradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
+    <SectionContainer>
+      <div className="text-center">
+        <PublicSectionTitle variant="h4" className="text-[22px] md:text-[32px]">
+          Why Choose Drone Rush?
+        </PublicSectionTitle>
+        <div className="mx-auto mb-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+        <div className="mx-auto grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {services.map((service) => {
+            const Icon = service.icon;
+            return (
+              <div
+                key={service.id}
+                className="group rounded-2xl border border-primary/20 bg-background/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_rgba(var(--primary),0.2)]"
+              >
+                {/* Hexagonal overlay */}
+                <div className="absolute inset-0 opacity-5">
+                  <svg
+                    width="100%"
+                    height="100%"
+                    viewBox="0 0 100 100"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <stop offset="0%" stopColor="#3b82f6" />
-                    <stop offset="100%" stopColor="#06b6d4" />
-                  </linearGradient>
-                </svg>
+                    <polygon
+                      points="50,0 100,25 100,75 50,100 0,75 0,25"
+                      fill="currentColor"
+                      className="text-primary"
+                    />
+                    <title>Hexagonal overlay</title>
+                  </svg>
+                </div>
+                <div className="mb-4 flex justify-center">
+                  <div className="rounded-full bg-primary/10 p-4 group-hover:bg-primary/20 transition-colors">
+                    <Icon className="h-8 w-8 text-primary" />
+                  </div>
+                </div>
+                <h3 className="mb-2 text-xl font-semibold text-foreground">
+                  {service.service}
+                </h3>
+                <p className="text-muted-foreground">{service.description}</p>
               </div>
-              <p className="mt-1 text-center text-[17px] font-medium text-gray-700">
-                {service.service}
-              </p>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </SectionContainer>
   );
 }

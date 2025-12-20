@@ -37,29 +37,75 @@ export default function ContactForm() {
   const hasErrors = state && !state.success;
 
   return (
-    <div className="rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-800 md:p-12">
-      <div className="mb-8 text-center">
-        <h2 className="mb-3 text-3xl font-bold text-gray-900 dark:text-white">
+    <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-background via-background/95 to-primary/5 p-8 shadow-[0_0_30px_rgba(var(--primary),0.1)] backdrop-blur-sm md:p-12">
+      {/* Hexagonal border overlay */}
+      <div className="absolute inset-0 opacity-10">
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 400 300"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <pattern
+              id="hex-border"
+              x="0"
+              y="0"
+              width="50"
+              height="43.3"
+              patternUnits="userSpaceOnUse"
+            >
+              <polygon
+                points="25,0 50,14.43 50,43.3 25,57.73 0,43.3 0,14.43"
+                fill="none"
+                stroke="var(--primary)"
+                strokeWidth="0.5"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#hex-border)" />
+          <title>Hexagonal border pattern</title>
+        </svg>
+      </div>
+
+      {/* Progress bar for futuristic feel */}
+      <div className="relative z-10 mb-8">
+        <div className="mb-4 flex items-center justify-center gap-2">
+          <div className="h-1 w-8 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+          <span className="text-sm font-medium text-muted-foreground">
+            Step 1 of 1
+          </span>
+          <div className="h-1 w-8 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+        </div>
+        <div className="h-2 w-full rounded-full bg-primary/20">
+          <div className="h-full w-full rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)] transition-all duration-300" />
+        </div>
+      </div>
+
+      <div className="relative z-10 mb-8 text-center">
+        <h2 className="mb-3 text-3xl font-bold text-foreground">
           Send Us a Message
         </h2>
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-muted-foreground">
           Fill out the form below and we'll respond as soon as possible
         </p>
       </div>
 
-      <form action={formAction} className="space-y-6">
+      <form action={formAction} className="relative z-10 space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
             <div className="relative">
-              <User className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <div className="absolute left-2 top-2.5 rounded-full bg-primary/10 p-1">
+                <User className="h-4 w-4 text-primary" />
+              </div>
               <Input
                 id="name"
                 name="name"
                 type="text"
                 placeholder="John Doe"
                 required
-                className={`pl-8 ${fieldErrors.name ? "border-destructive focus:border-destructive" : ""}`}
+                className={`pl-10 transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.name ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
                 aria-invalid={!!fieldErrors.name}
                 aria-describedby={fieldErrors.name ? "name-error" : undefined}
               />
@@ -78,14 +124,16 @@ export default function ContactForm() {
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
             <div className="relative">
-              <Mail className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <div className="absolute left-2 top-2.5 rounded-full bg-primary/10 p-1">
+                <Mail className="h-4 w-4 text-primary" />
+              </div>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 placeholder="john@example.com"
                 required
-                className={`pl-8 ${fieldErrors.email ? "border-destructive focus:border-destructive" : ""}`}
+                className={`pl-10 transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.email ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
                 aria-invalid={!!fieldErrors.email}
                 aria-describedby={fieldErrors.email ? "email-error" : undefined}
               />
@@ -105,14 +153,16 @@ export default function ContactForm() {
         <div className="space-y-2">
           <Label htmlFor="subject">Subject</Label>
           <div className="relative">
-            <MessageSquare className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <div className="absolute left-2 top-2.5 rounded-full bg-primary/10 p-1">
+              <MessageSquare className="h-4 w-4 text-primary" />
+            </div>
             <Input
               id="subject"
               name="subject"
               type="text"
               placeholder="How can we help you?"
               required
-              className={`pl-8 ${fieldErrors.subject ? "border-destructive focus:border-destructive" : ""}`}
+              className={`pl-10 transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.subject ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
               aria-invalid={!!fieldErrors.subject}
               aria-describedby={
                 fieldErrors.subject ? "subject-error" : undefined
@@ -138,7 +188,7 @@ export default function ContactForm() {
             placeholder="Tell us more about your inquiry..."
             required
             rows={6}
-            className={`resize-none ${fieldErrors.message ? "border-destructive focus:border-destructive" : ""}`}
+            className={`resize-none transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.message ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
             aria-invalid={!!fieldErrors.message}
             aria-describedby={fieldErrors.message ? "message-error" : undefined}
           />
@@ -166,7 +216,7 @@ export default function ContactForm() {
         <Button
           type="submit"
           disabled={isPending}
-          className="w-full cursor-pointer"
+          className="w-full cursor-pointer shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] hover:scale-105"
         >
           {isPending ? (
             <>

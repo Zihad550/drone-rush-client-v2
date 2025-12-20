@@ -1,12 +1,14 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import DroneD3 from "./drone-d3";
 import SectionContainer from "./SectionContainer";
 
 const Banner = () => {
   return (
     <section
-      className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-12 md:py-16 before:content-[''] before:absolute before:top-[-50px] before:right-[-50px] before:w-[200px] before:h-[200px] before:rounded-full before:bg-[radial-gradient(circle,_rgba(59,130,246,0.13)_0%,_transparent_70%)] before:z-0 after:content-[''] after:absolute after:bottom-[-80px] after:left-[45%] after:w-[300px] after:h-[300px] after:rounded-full after:bg-[radial-gradient(circle,_rgba(59,130,246,0.08)_0%,_transparent_60%)] after:z-0"
+      className="relative overflow-hidden bg-cover bg-center bg-no-repeat min-h-screen flex items-center before:content-[''] before:absolute before:top-[-50px] before:right-[-50px] before:w-[200px] before:h-[200px] before:rounded-full before:bg-[radial-gradient(circle,_rgba(59,130,246,0.13)_0%,_transparent_70%)] before:z-0 after:content-[''] after:absolute after:bottom-[-80px] after:left-[45%] after:w-[300px] after:h-[300px] after:rounded-full after:bg-[radial-gradient(circle,_rgba(59,130,246,0.08)_0%,_transparent_60%)] after:z-0"
       style={{
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url(/assets/banner-bg.jpg)`,
       }}
@@ -49,15 +51,12 @@ const Banner = () => {
 
           {/* Right Content - Drone Image */}
           <div className="flex justify-center items-center relative">
-            <div className="relative w-[90%] md:w-full h-auto md:h-[420px] rounded-2xl overflow-hidden flex justify-center items-center before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[linear-gradient(135deg,_rgba(79,196,207,0.3)_0%,_rgba(79,196,207,0)_50%)] before:z-10">
-              <Image
-                src="/assets/banner-img.svg"
-                alt="Professional Drone"
+            <div className="relative w-[90%] md:w-full h-auto rounded-2xl overflow-hidden flex justify-center items-center before:content-[''] before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-[linear-gradient(135deg,_rgba(79,196,207,0.3)_0%,_rgba(79,196,207,0)_50%)] before:z-10">
+              <DroneD3
                 width={500}
                 height={420}
                 className="max-w-full max-h-full object-contain transition-all duration-500 ease-in-out scale-[1.01] hover:scale-[1.04]"
                 style={{ filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.3))" }}
-                priority
               />
             </div>
 
