@@ -49,7 +49,9 @@ const Banner = () => {
                 width={500}
                 height={420}
                 className="max-w-full max-h-full object-contain transition-all duration-500 ease-in-out scale-[1.01] hover:scale-[1.04]"
-                style={{ filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.3))" }}
+                style={{
+                  filter: "drop-shadow(0 10px 15px rgba(0,0,0,0.3))",
+                }}
               />
             </div>
 

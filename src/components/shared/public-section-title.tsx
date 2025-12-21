@@ -14,7 +14,7 @@ const PublicSectionTitle = ({
   className = "",
 }: PublicSectionTitleProps) => {
   const baseClasses =
-    "font-bold text-gray-900 dark:text-white mb-8 text-4xl md:text-5xl tracking-wide relative inline-block";
+    "font-roboto-slab font-bold text-gray-900 dark:text-white mb-10 text-4xl md:text-5xl tracking-wide relative inline-block";
   const alignClass =
     align === "center"
       ? "text-center"

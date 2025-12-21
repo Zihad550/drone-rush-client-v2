@@ -125,7 +125,10 @@ export default function ReviewModal({
             key={star}
             type="button"
             onClick={() => {
-              setRatings((prev) => ({ ...prev, [droneId]: star }));
+              setRatings((prev) => ({
+                ...prev,
+                [droneId]: star,
+              }));
             }}
             className="text-yellow-400"
           >
@@ -190,7 +193,8 @@ export default function ReviewModal({
                       htmlFor={`comment-${droneId}`}
                       className="text-sm font-medium"
                     >
-                      Comment{ratings[droneId] > 0 ? " *" : ""}
+                      Comment
+                      {ratings[droneId] > 0 ? " *" : ""}
                     </label>
                     <Textarea
                       id={`comment-${droneId}`}
