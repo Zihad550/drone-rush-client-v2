@@ -1,11 +1,21 @@
+"use client";
+
 import Image from "next/image";
+import CtaButton from "@/components/shared/cta-button";
+import PublicSectionTitle from "@/components/shared/public-section-title";
 import SectionContainer from "@/components/shared/SectionContainer";
-import ContactCtaButton from "./ContactCtaButton";
 import ContactInfoCards from "./ContactInfoCards";
+
+function scrollToContactForm() {
+  const element = document.getElementById("contact-form");
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" });
+  }
+}
 
 export default function ContactUsBanner() {
   return (
-    <div className="relative overflow-hidden w-screen h-[calc(100vh-4rem)] bg-gradient-to-br from-[rgba(79,196,207,0.08)] to-[rgba(79,196,207,0.15)]">
+    <div className="relative overflow-hidden w-screen h-[calc(100vh-4rem)] bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10 backdrop-blur-sm">
       {/* Hexagonal decorative elements */}
       <div className="absolute -top-[30px] -right-[30px] z-0 opacity-20">
         <svg
@@ -14,6 +24,26 @@ export default function ContactUsBanner() {
           viewBox="0 0 150 130"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <defs>
+            <linearGradient
+              id="banner-particle-gradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop
+                offset="0%"
+                stop-color="var(--primary)"
+                stop-opacity="0.3"
+              />
+              <stop
+                offset="100%"
+                stop-color="var(--primary)"
+                stop-opacity="0.1"
+              />
+            </linearGradient>
+          </defs>
           <polygon
             points="75,0 150,43.3 150,86.6 75,130 0,86.6 0,43.3"
             fill="url(#banner-particle-gradient)"
@@ -28,6 +58,26 @@ export default function ContactUsBanner() {
           viewBox="0 0 200 173"
           xmlns="http://www.w3.org/2000/svg"
         >
+          <defs>
+            <linearGradient
+              id="banner-particle-gradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop
+                offset="0%"
+                stop-color="var(--primary)"
+                stop-opacity="0.3"
+              />
+              <stop
+                offset="100%"
+                stop-color="var(--primary)"
+                stop-opacity="0.1"
+              />
+            </linearGradient>
+          </defs>
           <polygon
             points="100,0 200,57.74 200,115.47 100,173 0,115.47 0,57.74"
             fill="url(#banner-particle-gradient)"
@@ -38,21 +88,20 @@ export default function ContactUsBanner() {
 
       <SectionContainer className="relative z-10 h-full">
         <div className="flex flex-col md:flex-row  items-center justify-center   gap-8  md:gap-12 h-full">
-          <div className="text-center md:text-left md:col-span-2">
+          <div className="text-left md:col-span-2">
             <div className="mb-2 inline-block rounded-full bg-primary px-3 py-1 text-sm font-semibold uppercase tracking-wider text-primary-foreground shadow-[0_0_10px_rgba(var(--primary),0.5)]">
               Get In Touch
             </div>
 
-            <h1 className="relative mb-8 mt-4 inline-block text-[2.8rem] font-semibold text-foreground md:text-[4rem]">
+            <PublicSectionTitle variant="h1" className="mb-8 mt-4">
               Contact Us
-              <span className="absolute -bottom-2 left-1/4 h-1 w-1/2 rounded-md bg-primary shadow-[0_0_15px_rgba(var(--primary),0.8)] md:left-0 md:w-2/5" />
-            </h1>
+            </PublicSectionTitle>
 
-            <h2 className="mb-8 text-lg font-light leading-relaxed text-muted-foreground md:text-xl">
-              We're here to help with all your drone needs
+            <h2 className="mb-8 text-lg font-light leading-relaxed text-muted-foreground dark:text-gray-200 md:text-xl">
+              Get in Touch with Drone Rush
             </h2>
 
-            <p className="mb-6 text-base font-normal leading-relaxed text-muted-foreground md:text-lg">
+            <p className="mb-6 text-base font-normal leading-relaxed text-muted-foreground dark:text-gray-200 md:text-lg">
               Have questions or need assistance? Our expert team is ready to
               provide you with the support and information you need. Reach out
               to us through any of the channels below.
@@ -60,11 +109,13 @@ export default function ContactUsBanner() {
 
             <ContactInfoCards />
 
-            <ContactCtaButton />
+            <CtaButton onClick={scrollToContactForm}>
+              Initiate Contact
+            </CtaButton>
           </div>
 
           <div className="relative flex items-center justify-center">
-            <div className="relative h-auto w-[90%] overflow-hidden rounded-2xl border border-primary/20 shadow-[0_0_30px_rgba(var(--primary),0.2)] md:w-full">
+            <div className="relative h-auto w-[90%] overflow-hidden rounded-2xl border border-primary/20 dark:border-red-500/20 shadow-[0_0_30px_rgba(var(--primary),0.2)] md:w-full">
               <Image
                 src="/assets/feature-img.jpg"
                 alt="Contact Drone Rush"

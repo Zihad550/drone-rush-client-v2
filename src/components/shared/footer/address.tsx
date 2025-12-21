@@ -21,11 +21,17 @@ const Address = () => {
       {addresses.map((address) => (
         <div key={address.id} className="flex mb-2">
           {/* icon */}
-          <div className="mr-2 text-gray-400">{address.icon}</div>
+          <div className="mr-2 text-muted-foreground dark:text-gray-400">
+            {address.icon}
+          </div>
           {/* text */}
           <div className="flex items-start">
-            <span className="text-gray-300 text-sm">{address.field}</span>
-            <span className="ml-2 text-gray-300 text-sm">{address.value}</span>
+            <span className="text-muted-foreground dark:text-gray-300 text-sm">
+              {address.field}
+            </span>
+            <span className="ml-2 text-muted-foreground dark:text-gray-300 text-sm">
+              {address.value}
+            </span>
           </div>
         </div>
       ))}

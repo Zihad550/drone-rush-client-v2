@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function PaymentSuccessPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950 dark:to-emerald-900 py-12">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 dark:from-red-500/10 dark:to-black/10 py-12">
       <SectionContainer maxWidth="2xl">
         <Card className="shadow-2xl border-0">
           <CardHeader className="text-center pb-6">

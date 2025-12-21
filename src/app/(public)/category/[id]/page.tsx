@@ -38,7 +38,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   if (!category) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">
             Category Not Found
@@ -59,7 +59,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10">
       <SectionContainer className="py-8 md:py-12">
         <div className="space-y-16">
           {/* Go Back Button */}

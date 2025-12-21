@@ -9,11 +9,11 @@ const CartLink = () => {
   return (
     <Link
       href="/dashboard/user/cart"
-      className="relative p-2 text-white hover:text-blue-400 transition-colors"
+      className="relative p-2 rounded-lg text-foreground dark:text-white hover:text-primary dark:hover:text-primary transition-colors hover:bg-accent dark:hover:bg-white/10"
     >
       <ShoppingCart className="w-6 h-6" />
       {totalItems > 0 && (
-        <span className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+        <span className="absolute top-0 right-0 bg-destructive text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
           {totalItems > 99 ? "99+" : totalItems}
         </span>
       )}

@@ -50,7 +50,7 @@ export default function OurTeam() {
 
   return (
     <SectionContainer>
-      <div className="text-center">
+      <div className="text-left">
         <PublicSectionTitle>Our Team</PublicSectionTitle>
         <div className="mx-auto grid grid-cols-1 gap-4 sm:grid-cols-[repeat(auto-fit,minmax(220px,1fr))] sm:gap-8">
           {members.map((member) => (
@@ -121,7 +121,7 @@ export default function OurTeam() {
               </div>
               {/* about */}
               <div>
-                <h3 className="mb-1 text-lg font-bold text-gray-900">
+                <h3 className="mb-1 text-lg font-bold text-foreground dark:text-white">
                   {member.name}
                 </h3>
                 <p className="text-[15px] font-medium text-cyan-500">

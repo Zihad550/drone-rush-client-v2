@@ -32,9 +32,9 @@ export default async function AnalyticsPage() {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex items-center justify-center h-96 bg-card rounded-lg p-6">
         <div className="text-center space-y-4">
-          <p className="text-lg text-muted-foreground">{error}</p>
+          <p className="text-lg text-card-foreground">{error}</p>
           <p className="text-sm text-muted-foreground">
             Please refresh the page manually.
           </p>
@@ -45,8 +45,8 @@ export default async function AnalyticsPage() {
 
   if (!analytics) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <p className="text-lg text-muted-foreground">
+      <div className="flex items-center justify-center h-96 bg-card rounded-lg p-6">
+        <p className="text-lg text-card-foreground">
           No analytics data available.
         </p>
       </div>

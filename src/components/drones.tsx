@@ -131,7 +131,7 @@ function Drones({
     <>
       {/* Filters Section */}
       <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <div className="sticky top-4 z-10 p-3 md:p-4 rounded-2xl mb-4 bg-white/75 backdrop-blur-md shadow-lg border border-gray-100">
+        <div className="sticky top-4 z-10 p-3 md:p-4 rounded-2xl mb-4 bg-white/75 dark:bg-black/30 backdrop-blur-md shadow-lg border border-gray-100 dark:border-gray-700">
           <div className="flex flex-col sm:flex-row items-center gap-2 mb-2">
             <div className="flex items-center gap-2 mr-4">
               <Filter className="text-primary w-7 h-7" />
@@ -141,7 +141,7 @@ function Drones({
           {/* filters */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 items-end">
             <div className="relative xl:col-span-2">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
               <Input
                 type="text"
                 placeholder="Search drones, brands, categories..."
@@ -221,7 +221,7 @@ function Drones({
                               />
                               <label
                                 htmlFor={`cat-${cat._id}`}
-                                className="text-sm"
+                                className="text-sm text-foreground dark:text-white"
                               >
                                 {cat.name}
                               </label>
@@ -279,7 +279,7 @@ function Drones({
                               />
                               <label
                                 htmlFor={`brand-${b._id}`}
-                                className="text-sm"
+                                className="text-sm text-foreground dark:text-white"
                               >
                                 {b.name}
                               </label>

@@ -125,14 +125,14 @@ const DroneCard = ({
   return (
     <Card
       onClick={isOutOfStock ? undefined : handleCardClick}
-      className={`group h-full overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 ${
+      className={`group h-full overflow-hidden rounded-2xl border border-white/20 dark:border-red-500/30 bg-white/10 dark:bg-black/20 backdrop-blur-md shadow-xl shadow-blue-500/10 dark:shadow-red-500/10 transition-all duration-500 ${
         isOutOfStock
           ? "opacity-60 cursor-not-allowed"
-          : "cursor-pointer hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/25"
+          : "cursor-pointer hover:-translate-y-3 hover:shadow-2xl hover:shadow-cyan-500/30 dark:hover:shadow-red-500/30 hover:border-cyan-400/50 dark:hover:border-red-400/50"
       }`}
     >
       {/* Product Image */}
-      <div className="relative h-56 overflow-hidden  from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20">
+      <div className="relative h-56 overflow-hidden bg-gradient-to-br from-blue-50/80 to-cyan-50/80 dark:from-red-950/30 dark:to-black/30">
         <Image
           src={img}
           alt={name}
@@ -146,25 +146,27 @@ const DroneCard = ({
           !isOutOfStock &&
           user?.role !== "admin" &&
           user?.role !== "superAdmin" && (
-            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-blue-500/50 via-blue-500/25 to-transparent p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div className="absolute bottom-0 left-0 right-0 flex justify-center gap-2 bg-gradient-to-t from-cyan-500/60 dark:from-red-500/60 via-blue-500/30 dark:via-black/30 to-transparent p-3 opacity-0 transition-opacity duration-500 group-hover:opacity-100 backdrop-blur-sm">
               <Button
                 size="sm"
                 variant={isInCart(_id) ? "default" : "outline"}
                 onClick={handleAddToCart}
                 disabled={cartLoading}
-                className={`shadow-lg ${!isInCart(_id) ? "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+                className={`shadow-lg transition-colors ${!isInCart(_id) ? "border-border text-foreground dark:text-primary bg-background hover:bg-accent hover:border-border hover:text-foreground dark:hover:text-primary" : "bg-blue-500 hover:bg-blue-600 dark:bg-red-500 dark:hover:bg-red-600 text-white"}`}
               >
-                <ShoppingCart className="h-4 w-4" />
+                <ShoppingCart
+                  className={`h-4 w-4 ${isInCart(_id) ? "text-white fill-current" : "text-foreground dark:text-primary"}`}
+                />
               </Button>
               <Button
                 size="sm"
                 variant={isInWishlist(_id) ? "default" : "outline"}
                 onClick={handleAddToWishlist}
                 disabled={wishlistLoading}
-                className={`shadow-lg transition-colors ${!isInWishlist(_id) ? "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500" : "bg-blue-500 hover:bg-blue-600 text-white"}`}
+                className={`shadow-lg transition-colors ${!isInWishlist(_id) ? "border-border text-foreground dark:text-primary bg-background hover:bg-accent hover:border-border hover:text-foreground dark:hover:text-primary" : "bg-blue-500 hover:bg-blue-600 dark:bg-red-500 dark:hover:bg-red-600 text-white"}`}
               >
                 <Heart
-                  className={`h-4 w-4 ${isInWishlist(_id) ? "text-white fill-current" : "text-blue-500"}`}
+                  className={`h-4 w-4 ${isInWishlist(_id) ? "text-white fill-current" : "text-foreground dark:text-primary"}`}
                 />
               </Button>
             </div>
@@ -173,7 +175,7 @@ const DroneCard = ({
 
       {/* Product Info */}
       <CardContent className="flex flex-col p-4">
-        <h3 className="mb-2 line-clamp-2 min-h-[3rem] text-lg font-semibold text-gray-900 dark:text-gray-100">
+        <h3 className="mb-2 line-clamp-2 min-h-[3rem] text-lg font-semibold text-foreground">
           {name}
         </h3>
 
@@ -181,10 +183,10 @@ const DroneCard = ({
         {averageRating > 0 && (
           <div className="mb-2 flex items-center gap-1">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+            <span className="text-sm font-medium text-foreground">
               {averageRating.toFixed(1)}
             </span>
-            <span className="text-xs text-gray-500 dark:text-gray-400">
+            <span className="text-xs text-muted-foreground">
               ({reviewCount} reviews)
             </span>
           </div>
@@ -194,36 +196,36 @@ const DroneCard = ({
         <div className="mb-3 flex flex-wrap gap-2">
           <Badge
             variant="secondary"
-            className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+            className="bg-blue-500 text-white dark:bg-red-500 dark:text-white"
           >
             {getCategoryName(category)}
           </Badge>
           <Badge
             variant="outline"
-            className="border-blue-200 text-blue-700 dark:border-blue-800 dark:text-blue-400"
+            className="border-blue-500 text-blue-700 dark:border-red-500 dark:text-white"
           >
             {getBrandName(brand)}
           </Badge>
         </div>
 
-        <p className="mb-3 line-clamp-3 min-h-[4.5rem] text-sm text-gray-600 dark:text-gray-400">
+        <p className="mb-3 line-clamp-3 min-h-[4.5rem] text-sm text-muted-foreground">
           {description}
         </p>
 
         <div className="mt-auto flex items-center justify-between gap-2">
           {isOutOfStock ? (
-            <span className="text-lg font-semibold text-red-600 dark:text-red-400">
+            <span className="text-lg font-semibold text-destructive">
               Out of Stock
             </span>
           ) : (
-            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-xl font-bold text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-xl font-bold text-transparent dark:text-red-600">
               ${price?.toFixed(2)}
             </span>
           )}
 
           <div className="flex flex-col items-end gap-1">
             {!isOutOfStock && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-muted-foreground">
                 In Stock: {quantity}
               </span>
             )}
@@ -232,8 +234,8 @@ const DroneCard = ({
                 isInCart(_id)
                   ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                   : isOutOfStock
-                    ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                    : "text-gray-500 dark:text-gray-400"
+                    ? "bg-destructive text-destructive-foreground"
+                    : "text-muted-foreground"
               }`}
             >
               {isInCart(_id)
@@ -247,7 +249,7 @@ const DroneCard = ({
       </CardContent>
 
       {/* Subtle glow effect */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-cyan-500/0 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-cyan-500/10 via-blue-500/5 to-purple-500/10 dark:from-red-500/10 dark:via-black/5 dark:to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-2xl -z-10" />
     </Card>
   );
 };

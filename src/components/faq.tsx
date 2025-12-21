@@ -59,12 +59,12 @@ const FAQ = () => {
                 className="border rounded-lg"
               >
                 <Accordion.Header>
-                  <Accordion.Trigger className="flex w-full justify-between p-4 text-left font-medium hover:bg-gray-50">
+                  <Accordion.Trigger className="flex w-full justify-between p-4 text-left font-medium hover:bg-gray-50 dark:hover:bg-gray-700">
                     {faq.question}
                     <ChevronDownIcon className="h-5 w-5 transition-transform duration-200 group-data-[state=open]:rotate-180" />
                   </Accordion.Trigger>
                 </Accordion.Header>
-                <Accordion.Content className="p-4 pt-0 text-gray-600">
+                <Accordion.Content className="p-4 pt-0 text-gray-600 dark:text-gray-300">
                   {faq.answer}
                 </Accordion.Content>
               </Accordion.Item>

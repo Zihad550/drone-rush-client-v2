@@ -34,11 +34,11 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
           <div className="flex items-center gap-1">
             {[0, 1, 2, 3, 4].map((i) => (
               <Star
-                key={`rating-star-${i}`}
-                className={`h-4 w-4 transition-all duration-300 ${
-                  i < rating
-                    ? "fill-yellow-400 text-yellow-400 group-hover:scale-110"
-                    : "text-gray-300 dark:text-gray-600"
+                key={i}
+                className={`h-4 w-4 ${
+                  i <= Math.floor(rating)
+                    ? "text-yellow-400 fill-current drop-shadow-sm"
+                    : "text-gray-300 dark:text-gray-500"
                 }`}
               />
             ))}
@@ -49,7 +49,7 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
         </div>
 
         {/* Comment */}
-        <p className="mb-6 flex-1 text-sm leading-relaxed text-gray-700 dark:text-gray-300 transition-colors duration-300 group-hover:text-gray-900 dark:group-hover:text-gray-100">
+        <p className="mb-6 flex-1 text-sm leading-relaxed text-muted-foreground dark:text-gray-200 transition-colors duration-500 group-hover:text-foreground dark:group-hover:text-white italic">
           "{comment}"
         </p>
 
@@ -61,10 +61,10 @@ const ReviewCard = ({ review }: ReviewCardProps) => {
             </span>
           </div>
           <div>
-            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100 transition-colors duration-300 group-hover:text-primary">
+            <p className="text-sm font-semibold text-foreground dark:text-white transition-colors duration-500 group-hover:text-cyan-400 drop-shadow-sm">
               {userName}
             </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
+            <p className="text-xs text-muted-foreground dark:text-gray-300">
               {formatDate(createdAt)}
             </p>
           </div>

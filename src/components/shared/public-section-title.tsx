@@ -10,7 +10,7 @@ interface PublicSectionTitleProps {
 const PublicSectionTitle = ({
   children,
   variant = "h2",
-  align = "center",
+  align = "left",
   className = "",
 }: PublicSectionTitleProps) => {
   const baseClasses =

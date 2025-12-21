@@ -51,7 +51,7 @@ const ReviewsCarousel = () => {
   if (error || reviews.length === 0) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <p className="text-gray-500 dark:text-gray-400">
+        <p className="text-muted-foreground dark:text-gray-300">
           {error || "No reviews available"}
         </p>
       </div>
@@ -63,8 +63,7 @@ const ReviewsCarousel = () => {
       <div className="relative w-full">
         <PublicSectionTitle>Customer Reviews</PublicSectionTitle>
         {/* Subtle background pattern */}
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5 rounded-2xl" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.1),transparent_50%)] dark:bg-[radial-gradient(circle_at_30%_20%,rgba(120,119,198,0.05),transparent_50%)]" />
+        <div className="absolute inset-0" />
 
         <Swiper
           modules={[Autoplay, Navigation, Pagination]}
@@ -144,7 +143,7 @@ const ReviewsCarousel = () => {
           aria-label="Previous review"
         >
           <svg
-            className="h-5 w-5 text-gray-700 dark:text-gray-300"
+            className="h-5 w-5 text-foreground dark:text-gray-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -164,7 +163,7 @@ const ReviewsCarousel = () => {
           aria-label="Next review"
         >
           <svg
-            className="h-5 w-5 text-gray-700 dark:text-gray-300"
+            className="h-5 w-5 text-foreground dark:text-gray-300"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

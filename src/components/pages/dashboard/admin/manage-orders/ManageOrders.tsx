@@ -145,10 +145,10 @@ const ManageOrders = () => {
                           <span
                             className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${
                               order.status === "COMPLETED"
-                                ? "bg-green-100 text-green-800"
+                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                                 : order.status === "PENDING"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-gray-100 text-gray-800"
+                                  ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+                                  : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-200"
                             }`}
                           >
                             {order.status}

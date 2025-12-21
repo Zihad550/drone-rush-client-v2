@@ -1,10 +1,10 @@
+import PublicSectionTitle from "@/components/shared/public-section-title";
+
 export default function ContactMap() {
   return (
     <div className="mx-auto">
-      <div className="mb-12 text-center">
-        <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
-          Find Us
-        </h2>
+      <div className="mb-12 text-left">
+        <PublicSectionTitle className="mb-4">Find Us</PublicSectionTitle>
         <p className="text-muted-foreground">
           Visit our office or contact us for personalized assistance
         </p>

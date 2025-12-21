@@ -1,6 +1,7 @@
 "use client";
 
 import * as d3 from "d3";
+import { useTheme } from "next-themes";
 import { useEffect, useRef } from "react";
 
 interface DroneD3Props {
@@ -28,6 +29,8 @@ const DroneD3: React.FC<DroneD3Props> = ({
   style,
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
 
   useEffect(() => {
     if (!svgRef.current) return;
@@ -44,42 +47,73 @@ const DroneD3: React.FC<DroneD3Props> = ({
     const centerX = width / 2;
     const centerY = height / 2;
 
-    // Main body (sleeker design)
-    const bodyGroup = svg.append("g").attr("class", "body");
-
-    // Body base
-    bodyGroup
-      .append("rect")
-      .attr("x", centerX - 60)
-      .attr("y", centerY - 18)
-      .attr("width", 120)
-      .attr("height", 36)
-      .attr("rx", 8)
-      .attr("fill", "#2563eb")
-      .attr("stroke", "#1e40af")
-      .attr("stroke-width", 2);
-
-    // Body top detail
-    bodyGroup
-      .append("rect")
-      .attr("x", centerX - 50)
-      .attr("y", centerY - 12)
-      .attr("width", 100)
-      .attr("height", 24)
-      .attr("rx", 6)
-      .attr("fill", "#1e40af")
-      .attr("opacity", 0.6);
-
     // Arms (diagonal for quadcopter X configuration)
     const armLength = 90;
     const armAngle = 45; // degrees
     const armPositions = [
-      { angle: armAngle, color: "#1e3a8a" },
-      { angle: 180 - armAngle, color: "#1e3a8a" },
-      { angle: 180 + armAngle, color: "#1e3a8a" },
-      { angle: 360 - armAngle, color: "#1e3a8a" },
+      { angle: armAngle, color: isDark ? "#a52a2a" : "#1e3a8a" },
+      { angle: 180 - armAngle, color: isDark ? "#a52a2a" : "#1e3a8a" },
+      { angle: 180 + armAngle, color: isDark ? "#a52a2a" : "#1e3a8a" },
+      { angle: 360 - armAngle, color: isDark ? "#a52a2a" : "#1e3a8a" },
     ];
 
+    // Calculate propeller positions first
+    const propellers: PropellerData[] = armPositions.map((arm) => {
+      const rad = (arm.angle * Math.PI) / 180;
+      return {
+        x: centerX + Math.cos(rad) * armLength,
+        y: centerY + Math.sin(rad) * armLength,
+      };
+    });
+
+    // Render BACK propellers FIRST (top 2: indices 2 & 3 at negative Y, top of screen)
+    // These will appear BEHIND the body
+    const backPropellers = [propellers[2], propellers[3]];
+    const backPropellerGroup = svg
+      .selectAll<SVGGElement, PropellerData>(".propeller-back")
+      .data(backPropellers)
+      .enter()
+      .append("g")
+      .attr("class", "propeller propeller-back");
+
+    // Motor housing (circles) for back propellers
+    backPropellerGroup
+      .append("circle")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("r", 12)
+      .attr("fill", "#1e293b")
+      .attr("stroke", "#0f172a")
+      .attr("stroke-width", 2);
+
+    // Motor center for back propellers
+    backPropellerGroup
+      .append("circle")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("r", 5)
+      .attr("fill", "#374151");
+
+    // Propeller blades for back propellers
+    backPropellerGroup
+      .append("ellipse")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("rx", 20)
+      .attr("ry", 4)
+      .attr("fill", "#9ca3af")
+      .attr("opacity", 0.5);
+
+    backPropellerGroup
+      .append("ellipse")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("rx", 4)
+      .attr("ry", 20)
+      .attr("fill", "#9ca3af")
+      .attr("opacity", 0.5);
+
+    // NOW render the arms (will be on top of back propellers)
     const arms = svg.append("g").attr("class", "arms");
 
     armPositions.forEach((arm) => {
@@ -110,58 +144,55 @@ const DroneD3: React.FC<DroneD3Props> = ({
         .attr("stroke-linecap", "round");
     });
 
-    // Motor housings and propellers
-    const propellers: PropellerData[] = armPositions.map((arm) => {
-      const rad = (arm.angle * Math.PI) / 180;
-      return {
-        x: centerX + Math.cos(rad) * armLength,
-        y: centerY + Math.sin(rad) * armLength,
-      };
-    });
+    // Main body (aerodynamic pointed design) - Facing User (pointing down)
+    const bodyGroup = svg.append("g").attr("class", "body");
 
-    const propellerGroup = svg
-      .selectAll<SVGGElement, PropellerData>(".propeller")
-      .data(propellers)
-      .enter()
-      .append("g")
-      .attr("class", "propeller");
+    // Create pointed body shape pointing downwards
+    const bodyPoints = [
+      [centerX, centerY - 65], // Tail tip (top)
+      [centerX - 35, centerY - 35], // Back-left side
+      [centerX - 30, centerY + 45], // Front-left shoulder
+      [centerX, centerY + 75], // Nose tip (bottom, facing user)
+      [centerX + 30, centerY + 45], // Front-right shoulder
+      [centerX + 35, centerY - 35], // Back-right side
+    ]
+      .map((p) => p.join(","))
+      .join(" ");
 
-    // Motor housing (circles)
-    propellerGroup
-      .append("circle")
-      .attr("cx", (d: PropellerData) => d.x)
-      .attr("cy", (d: PropellerData) => d.y)
-      .attr("r", 12)
-      .attr("fill", "#1e293b")
-      .attr("stroke", "#0f172a")
+    bodyGroup
+      .append("polygon")
+      .attr("points", bodyPoints)
+      .attr("fill", isDark ? "#8b0000" : "#2563eb")
+      .attr("stroke", isDark ? "#b22222" : "#1e40af")
       .attr("stroke-width", 2);
 
-    // Motor center
-    propellerGroup
-      .append("circle")
-      .attr("cx", (d: PropellerData) => d.x)
-      .attr("cy", (d: PropellerData) => d.y)
-      .attr("r", 5)
-      .attr("fill", "#374151");
+    // Body top detail (smaller pointed overlay)
+    const topDetailPoints = [
+      [centerX, centerY - 55], // Back detail tip
+      [centerX - 28, centerY - 28], // Back-left side
+      [centerX - 24, centerY + 38], // Front-left side
+      [centerX, centerY + 65], // Front detail tip
+      [centerX + 24, centerY + 38], // Front-right side
+      [centerX + 28, centerY - 28], // Back-right side
+    ]
+      .map((p) => p.join(","))
+      .join(" ");
 
-    // Propeller blades (more realistic)
-    propellerGroup
-      .append("ellipse")
-      .attr("cx", (d: PropellerData) => d.x)
-      .attr("cy", (d: PropellerData) => d.y)
-      .attr("rx", 20)
-      .attr("ry", 4)
-      .attr("fill", "#9ca3af")
-      .attr("opacity", 0.7);
+    bodyGroup
+      .append("polygon")
+      .attr("points", topDetailPoints)
+      .attr("fill", isDark ? "#b22222" : "#1e40af")
+      .attr("opacity", 0.6);
 
-    propellerGroup
-      .append("ellipse")
-      .attr("cx", (d: PropellerData) => d.x)
-      .attr("cy", (d: PropellerData) => d.y)
-      .attr("rx", 4)
-      .attr("ry", 20)
-      .attr("fill", "#9ca3af")
-      .attr("opacity", 0.7);
+    // Add subtle nose detail for extra pointiness at the front (bottom)
+    bodyGroup
+      .append("polygon")
+      .attr(
+        "points",
+        `${centerX - 8},${centerY + 55} ${centerX},${centerY + 72} ${centerX + 8},${centerY + 55}`,
+      )
+      .attr("fill", isDark ? "#a52a2a" : "#1e3a8a")
+      .attr("opacity", 0.8);
 
     // Landing gear struts
     const landingGear = svg.append("g").attr("class", "landing-gear");
@@ -199,24 +230,24 @@ const DroneD3: React.FC<DroneD3Props> = ({
       .attr("r", 4)
       .attr("fill", "#1e293b");
 
-    // Camera/Gimbal (centered below body)
+    // Camera/Gimbal (centered below body, near nose)
     const gimbal = svg.append("g").attr("class", "gimbal");
 
-    // Gimbal mount
+    // Gimbal mount (moved forward)
     gimbal
       .append("rect")
       .attr("x", centerX - 15)
-      .attr("y", centerY + 18)
+      .attr("y", centerY + 35)
       .attr("width", 30)
       .attr("height", 8)
       .attr("rx", 2)
       .attr("fill", "#475569");
 
-    // Camera body
+    // Camera body (moved forward)
     gimbal
       .append("rect")
       .attr("x", centerX - 18)
-      .attr("y", centerY + 26)
+      .attr("y", centerY + 43)
       .attr("width", 36)
       .attr("height", 22)
       .attr("rx", 4)
@@ -224,28 +255,28 @@ const DroneD3: React.FC<DroneD3Props> = ({
       .attr("stroke", "#0f172a")
       .attr("stroke-width", 1.5);
 
-    // Camera lens
+    // Camera lens (moved forward)
     gimbal
       .append("circle")
       .attr("cx", centerX)
-      .attr("cy", centerY + 37)
+      .attr("cy", centerY + 54)
       .attr("r", 8)
       .attr("fill", "#0f172a");
 
     gimbal
       .append("circle")
       .attr("cx", centerX)
-      .attr("cy", centerY + 37)
+      .attr("cy", centerY + 54)
       .attr("r", 6)
-      .attr("fill", "#1e3a8a")
+      .attr("fill", isDark ? "#a52a2a" : "#1e3a8a")
       .attr("opacity", 0.6);
 
     // LEDs (status lights on body)
     const leds: LedData[] = [
-      { x: centerX - 45, y: centerY - 8, color: "#ef4444" }, // red front left
-      { x: centerX + 45, y: centerY - 8, color: "#10b981" }, // green front right
-      { x: centerX - 45, y: centerY + 8, color: "#3b82f6" }, // blue rear left
-      { x: centerX + 45, y: centerY + 8, color: "#3b82f6" }, // blue rear right
+      { x: centerX - 25, y: centerY + 40, color: "#ef4444" }, // red front left (near nose)
+      { x: centerX + 25, y: centerY + 40, color: "#10b981" }, // green front right (near nose)
+      { x: centerX - 25, y: centerY - 35, color: "#3b82f6" }, // blue rear left
+      { x: centerX + 25, y: centerY - 35, color: "#3b82f6" }, // blue rear right
     ];
 
     svg
@@ -259,27 +290,75 @@ const DroneD3: React.FC<DroneD3Props> = ({
       .attr("r", 3)
       .attr("fill", (d: LedData) => d.color);
 
-    // Antenna
+    // Antenna (at the rear)
     svg
       .append("line")
-      .attr("x1", centerX + 50)
-      .attr("y1", centerY - 18)
-      .attr("x2", centerX + 50)
-      .attr("y2", centerY - 35)
+      .attr("x1", centerX)
+      .attr("y1", centerY - 55)
+      .attr("x2", centerX)
+      .attr("y2", centerY - 80)
       .attr("stroke", "#64748b")
       .attr("stroke-width", 2);
 
     svg
       .append("circle")
-      .attr("cx", centerX + 50)
-      .attr("cy", centerY - 35)
+      .attr("cx", centerX)
+      .attr("cy", centerY - 80)
       .attr("r", 3)
       .attr("fill", "#ef4444");
 
+    // Render FRONT propellers (bottom 2: indices 0 & 1 at positive Y, bottom of screen)
+    // These will appear in front of the body
+    const frontPropellers = [propellers[0], propellers[1]];
+    const frontPropellerGroup = svg
+      .selectAll<SVGGElement, PropellerData>(".propeller-front")
+      .data(frontPropellers)
+      .enter()
+      .append("g")
+      .attr("class", "propeller propeller-front");
+
+    // Motor housing (circles) for front propellers
+    frontPropellerGroup
+      .append("circle")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("r", 12)
+      .attr("fill", "#1e293b")
+      .attr("stroke", "#0f172a")
+      .attr("stroke-width", 2);
+
+    // Motor center for front propellers
+    frontPropellerGroup
+      .append("circle")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("r", 5)
+      .attr("fill", "#374151");
+
+    // Propeller blades for front propellers
+    frontPropellerGroup
+      .append("ellipse")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("rx", 20)
+      .attr("ry", 4)
+      .attr("fill", "#9ca3af")
+      .attr("opacity", 0.7);
+
+    frontPropellerGroup
+      .append("ellipse")
+      .attr("cx", (d: PropellerData) => d.x)
+      .attr("cy", (d: PropellerData) => d.y)
+      .attr("rx", 4)
+      .attr("ry", 20)
+      .attr("fill", "#9ca3af")
+      .attr("opacity", 0.7);
+
     // Animations
-    // Propeller spin
+    // Propeller spin for both groups
     const spin = () => {
-      propellerGroup
+      // Spin back propellers
+      backPropellerGroup
         .transition()
         .duration(800)
         .attrTween(
@@ -288,6 +367,16 @@ const DroneD3: React.FC<DroneD3Props> = ({
             `rotate(${t * 360} ${d.x} ${d.y})`,
         )
         .on("end", spin);
+
+      // Spin front propellers
+      frontPropellerGroup
+        .transition()
+        .duration(800)
+        .attrTween(
+          "transform",
+          (d: PropellerData) => (t: number) =>
+            `rotate(${t * 360} ${d.x} ${d.y})`,
+        );
     };
     spin();
 
@@ -335,7 +424,7 @@ const DroneD3: React.FC<DroneD3Props> = ({
           .duration(300)
           .style("transform", "scale(1)");
       });
-  }, [width, height]);
+  }, [width, height, isDark]);
 
   return (
     <svg

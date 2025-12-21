@@ -68,29 +68,6 @@ export default function ContactForm() {
         </svg>
       </div>
 
-      {/* Progress bar for futuristic feel */}
-      <div className="relative z-10 mb-8">
-        <div className="mb-4 flex items-center justify-center gap-2">
-          <div className="h-1 w-8 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
-          <span className="text-sm font-medium text-muted-foreground">
-            Step 1 of 1
-          </span>
-          <div className="h-1 w-8 rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
-        </div>
-        <div className="h-2 w-full rounded-full bg-primary/20">
-          <div className="h-full w-full rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)] transition-all duration-300" />
-        </div>
-      </div>
-
-      <div className="relative z-10 mb-8 text-center">
-        <h2 className="mb-3 text-3xl font-bold text-foreground">
-          Send Us a Message
-        </h2>
-        <p className="text-muted-foreground">
-          Fill out the form below and we'll respond as soon as possible
-        </p>
-      </div>
-
       <form action={formAction} className="relative z-10 space-y-6">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <div className="space-y-2">

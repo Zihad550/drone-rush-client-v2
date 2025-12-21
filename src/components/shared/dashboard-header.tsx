@@ -4,6 +4,7 @@ import { LogOut, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useTransition } from "react";
 import { logoutUser } from "@/app/actions/auth.actions";
+import { ModeToggle } from "@/components/shared/mode-toggle";
 import { Button } from "@/components/ui/button";
 import {
   admin_common_nav_items,
@@ -48,6 +49,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
         <h1 className="text-lg font-semibold md:text-xl">{pageTitle}</h1>
       </div>
       <div className="flex items-center gap-4">
+        <ModeToggle />
         <button
           type="button"
           onClick={handleLogout}

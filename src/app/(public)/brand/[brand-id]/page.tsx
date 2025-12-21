@@ -62,7 +62,7 @@ export default async function BrandPage({ params }: PageProps) {
   } catch (error) {
     console.error("Failed to fetch brand drones:", error);
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10 flex items-center justify-center px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-destructive">
@@ -93,7 +93,7 @@ export default async function BrandPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10 py-8">
       <SectionContainer>
         <div className="max-w-7xl mx-auto">
           {/* Go Back Button */}

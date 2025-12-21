@@ -43,8 +43,8 @@ export default function WhyUs() {
 
   return (
     <SectionContainer>
-      <div className="text-center">
-        <PublicSectionTitle variant="h4" className="text-[22px] md:text-[32px]">
+      <div className="text-left">
+        <PublicSectionTitle variant="h4">
           Why Choose Drone Rush?
         </PublicSectionTitle>
         <div className="mx-auto mb-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
@@ -77,10 +77,12 @@ export default function WhyUs() {
                     <Icon className="h-8 w-8 text-primary" />
                   </div>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-foreground">
+                <h3 className="mb-2 text-xl font-semibold text-foreground dark:text-white">
                   {service.service}
                 </h3>
-                <p className="text-muted-foreground">{service.description}</p>
+                <p className="text-muted-foreground dark:text-gray-200">
+                  {service.description}
+                </p>
               </div>
             );
           })}

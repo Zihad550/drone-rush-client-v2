@@ -8,7 +8,9 @@ const Products = ({ products }: { products: IDrone[] }) => (
         products.map((product) => <Drone key={product?._id} drone={product} />)
       ) : (
         <div className="col-span-12 py-16 flex justify-center items-center">
-          <p className="text-gray-500 text-lg opacity-70">No products found.</p>
+          <p className="text-gray-500 dark:text-gray-400 text-lg opacity-70">
+            No products found.
+          </p>
         </div>
       )}
     </div>

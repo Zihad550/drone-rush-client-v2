@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
+import MiniDrone from "@/components/shared/mini-drone";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
-import { ThemeProvider } from "@/providers/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,6 +36,7 @@ export default function RootLayout({
         <Providers>
           {children}
           <Toaster />
+          <MiniDrone />
         </Providers>
       </body>
     </html>

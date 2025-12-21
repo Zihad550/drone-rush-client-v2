@@ -57,10 +57,10 @@ const Features = () => {
                 />
               </div>
               <div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="mb-2 text-xl font-semibold text-foreground dark:text-white">
                   {feature.title}
                 </h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
+                <p className="text-sm text-muted-foreground dark:text-gray-300">
                   {feature.about}
                 </p>
               </div>

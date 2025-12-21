@@ -42,7 +42,7 @@ export default async function DroneDetailsPage({ params }: PageProps) {
   } catch (error) {
     console.error("Failed to fetch product:", error);
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10 flex items-center justify-center px-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl text-destructive">

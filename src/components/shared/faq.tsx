@@ -68,18 +68,18 @@ const FAQ = () => {
           {faqs.map((faq) => (
             <div
               key={faq.id}
-              className="overflow-hidden rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
+              className="overflow-hidden rounded-2xl border border-white/20 dark:border-red-500/30 bg-white/10 dark:bg-black/20 backdrop-blur-md shadow-xl shadow-blue-500/10 dark:shadow-red-500/10 transition-all duration-500"
             >
               <button
                 type="button"
                 onClick={() => toggleAccordion(faq.id)}
-                className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-gray-50 dark:hover:bg-gray-700"
+                className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-white/20 dark:hover:bg-black/30"
               >
-                <span className="font-medium text-gray-900 dark:text-white">
+                <span className="font-medium text-foreground dark:text-white">
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`h-5 w-5 flex-shrink-0 text-gray-500 transition-transform duration-200 ${
+                  className={`h-5 w-5 flex-shrink-0 text-muted-foreground transition-transform duration-200 ${
                     openId === faq.id ? "rotate-180" : ""
                   }`}
                 />
@@ -89,8 +89,8 @@ const FAQ = () => {
                   openId === faq.id ? "max-h-96" : "max-h-0"
                 }`}
               >
-                <div className="border-t border-gray-200 p-4 dark:border-gray-700">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                <div className="border-t border-white/20 dark:border-red-500/30 p-4">
+                  <p className="text-sm text-muted-foreground dark:text-gray-300">
                     {faq.answer}
                   </p>
                 </div>

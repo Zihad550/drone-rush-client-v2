@@ -24,7 +24,7 @@ const Brands = ({ brands }: BrandsProps) => {
         </div>
       ) : (
         <div className="flex min-h-[200px] items-center justify-center py-8">
-          <p className="text-lg text-gray-500 dark:text-gray-400">
+          <p className="text-lg text-muted-foreground dark:text-gray-300">
             No brands found.
           </p>
         </div>

@@ -1,6 +1,4 @@
 import Drones from "@/components/drones";
-import FAQ from "@/components/faq";
-import Features from "@/components/features";
 import SectionContainer from "@/components/shared/SectionContainer";
 import {
   Card,
@@ -9,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import ScrollAnimation from "@/components/ui/scroll-animation";
 import { getCookie } from "@/services/auth/cookie.service";
 import { verifyAccessToken } from "@/services/auth/token.service";
 import { getBrands } from "@/services/brand/brand.service";
@@ -58,7 +55,7 @@ export default async function DronesPage() {
   if (hasError) {
     return (
       <div className="animate-in fade-in duration-700">
-        <div className="bg-background min-h-screen py-4 md:py-8">
+        <div className="bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10 min-h-screen py-4 md:py-8">
           <SectionContainer>
             <div className="space-y-12">
               <Card className="border-destructive/50 bg-destructive/5">
@@ -78,14 +75,6 @@ export default async function DronesPage() {
                   </p>
                 </CardContent>
               </Card>
-
-              {/* Still show features and FAQ even if data loading fails */}
-              <ScrollAnimation>
-                <Features />
-              </ScrollAnimation>
-              <ScrollAnimation className="delay-100">
-                <FAQ />
-              </ScrollAnimation>
             </div>
           </SectionContainer>
         </div>

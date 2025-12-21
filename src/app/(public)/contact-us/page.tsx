@@ -4,8 +4,8 @@ import ContactForm from "@/components/pages/contact-us/contact-form";
 import ContactMap from "@/components/pages/contact-us/contact-map";
 import ContactUsBanner from "@/components/pages/contact-us/contact-us-banner";
 import FAQ from "@/components/pages/contact-us/faq";
+import PublicSectionTitle from "@/components/shared/public-section-title";
 import SectionContainer from "@/components/shared/SectionContainer";
-import Title from "@/components/title";
 
 export default function ContactUsPage() {
   return (
@@ -20,6 +20,14 @@ export default function ContactUsPage() {
       <SectionContainer className="flex flex-col gap-y-48">
         {/* Contact Form Section */}
         <div id="contact-form" className="opacity-100">
+          <div className="mb-8 text-left">
+            <PublicSectionTitle className="mb-3">
+              Send Us a Message
+            </PublicSectionTitle>
+            <p className="text-muted-foreground">
+              Fill out the form below and we'll respond as soon as possible
+            </p>
+          </div>
           <ContactForm />
           <div className="flex justify-center mt-10">
             <svg
@@ -43,11 +51,10 @@ export default function ContactUsPage() {
 
         {/* Why Choose Section - Futuristic */}
         <div className="opacity-100">
-          <div className="text-center">
-            <Title variant="h4" className="text-[22px] md:text-[32px]">
+          <div className="text-left">
+            <PublicSectionTitle variant="h4">
               Why Choose Drone Rush?
-            </Title>
-            <div className="mx-auto mb-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+            </PublicSectionTitle>
             <div className="mx-auto grid grid-cols-1 gap-8 md:grid-cols-3">
               <div className="group rounded-2xl border border-primary/20 bg-background/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_20px_rgba(var(--primary),0.2)]">
                 <div className="mb-4 flex justify-center">
@@ -71,10 +78,10 @@ export default function ContactUsPage() {
                     </svg>
                   </div>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-foreground">
+                <h3 className="mb-2 text-xl font-semibold text-foreground dark:text-white">
                   Expertise
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground dark:text-gray-200">
                   Years of experience in drone technology and industry-leading
                   support.
                 </p>
@@ -116,10 +123,10 @@ export default function ContactUsPage() {
                     </svg>
                   </div>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-foreground">
+                <h3 className="mb-2 text-xl font-semibold text-foreground dark:text-white">
                   Quality
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground dark:text-gray-200">
                   Premium drones and accessories from trusted manufacturers.
                 </p>
               </div>
@@ -167,10 +174,10 @@ export default function ContactUsPage() {
                     </svg>
                   </div>
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-foreground">
+                <h3 className="mb-2 text-xl font-semibold text-foreground dark:text-white">
                   Support
                 </h3>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground dark:text-gray-200">
                   24/7 customer service and technical assistance.
                 </p>
               </div>

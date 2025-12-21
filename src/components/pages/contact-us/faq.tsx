@@ -2,6 +2,7 @@
 
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import PublicSectionTitle from "@/components/shared/public-section-title";
 
 const faqs = [
   {
@@ -45,10 +46,10 @@ export default function FAQ() {
 
   return (
     <div className="mx-auto">
-      <div className="mb-12 text-center">
-        <h2 className="mb-4 text-3xl font-bold text-foreground md:text-4xl">
+      <div className="mb-12 text-left">
+        <PublicSectionTitle className="mb-4">
           Frequently Asked Questions
-        </h2>
+        </PublicSectionTitle>
         <p className="text-muted-foreground">
           Find answers to common questions about our drones and services
         </p>

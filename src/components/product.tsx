@@ -8,7 +8,7 @@ const Product = ({ drone }: { drone: IDrone }) => {
   return (
     <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 flex">
       <Link href={`/drones/${_id}`} className="w-full">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden h-full flex flex-col transition-transform hover:scale-105 cursor-pointer">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden h-full flex flex-col transition-transform hover:scale-105 cursor-pointer">
           <div className="relative w-full h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center p-4">
             <Image
               src={img}
@@ -22,14 +22,14 @@ const Product = ({ drone }: { drone: IDrone }) => {
             <h3 className="font-semibold text-lg mb-2 line-clamp-2 min-h-[3.6rem] leading-tight">
               {name}
             </h3>
-            <p className="text-gray-600 text-sm mb-4 line-clamp-3 min-h-[4rem] leading-relaxed">
+            <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-3 min-h-[4rem] leading-relaxed">
               {description}
             </p>
             <div className="mt-auto flex justify-between items-center">
               <span className="text-xl font-bold text-primary">
                 ${price.toFixed(2)}
               </span>
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+              <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
                 Free Shipping
               </span>
             </div>

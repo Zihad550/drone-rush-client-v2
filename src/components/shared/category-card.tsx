@@ -19,17 +19,17 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
   return (
     <Card
       onClick={handleCardClick}
-      className="group relative h-full cursor-pointer overflow-hidden rounded-2xl border-0 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/25 bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-6"
+      className="group relative h-full cursor-pointer overflow-hidden rounded-3xl border border-white/20 dark:border-red-500/30 shadow-xl shadow-blue-500/10 dark:shadow-red-500/10 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl hover:shadow-cyan-500/20 dark:hover:shadow-red-500/20 hover:border-cyan-400/50 dark:hover:border-red-400/50 hover:scale-105 bg-white/90 dark:bg-black/30 backdrop-blur-md py-4"
     >
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 dark:from-red-500/20 dark:via-black/10 dark:to-red-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl" />
 
-      <h3 className="relative text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300 text-center">
+      <h3 className="relative text-xl font-bold text-foreground dark:text-white text-center drop-shadow-sm">
         {name}
       </h3>
 
       {/* Subtle glow effect */}
-      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-cyan-500/0 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10" />
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/0 via-cyan-500/0 to-purple-500/0 dark:from-red-500/0 dark:via-black/0 dark:to-red-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10" />
     </Card>
   );
 };

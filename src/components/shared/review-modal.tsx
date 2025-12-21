@@ -68,7 +68,7 @@ export function ReviewModal({ product, children }: ReviewModalProps) {
                     className={`h-6 w-6 ${
                       star <= rating
                         ? "fill-yellow-400 text-yellow-400"
-                        : "text-gray-300"
+                        : "text-gray-300 dark:text-gray-400"
                     }`}
                   />
                 </button>

@@ -9,6 +9,7 @@ import { useWishlist } from "@/lib/wishlist-context";
 import type { IUser } from "@/types/global";
 import CartLink from "../cart-link";
 import Logo from "../logo";
+import { ModeToggle } from "../mode-toggle";
 import SectionContainer from "../SectionContainer";
 import UserMenu from "./user-menu";
 
@@ -38,7 +39,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
 
   return (
     <div className="flex flex-col">
-      <header className="sticky top-0 left-0 z-50 w-full bg-slate-900/75 backdrop-blur-md border-b border-white/10 shadow-lg">
+      <header className="sticky top-0 left-0 z-50 w-full bg-background/75 backdrop-blur-md border-b border-border shadow-lg">
         <SectionContainer>
           <div className="flex items-center justify-between h-16">
             {/* Logo and Mobile Menu Button */}
@@ -48,7 +49,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
               </div>
               <button
                 type="button"
-                className="sm:hidden p-2 text-white hover:bg-white/10 rounded-md mr-2"
+                className="sm:hidden p-2 text-foreground hover:bg-accent rounded-md mr-2"
                 onClick={handleMobileMenuToggle}
                 aria-label="Open menu"
               >
@@ -60,7 +61,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
             </div>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden sm:flex flex-grow justify-center items-center gap-1 md:gap-4 ml-0 md:ml-4">
+            <nav className="hidden sm:flex flex-grow justify-center items-center gap-2 md:gap-4 ml-0 md:ml-4">
               {navItems.map((item) => {
                 const isActive = pathname === item.path;
                 return (
@@ -68,11 +69,13 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                     key={item.path}
                     href={item.path}
                     className={cn(
-                      "text-white font-semibold text-xs md:text-base px-3 py-1 md:px-5 md:py-2 rounded-lg transition-all duration-300 relative overflow-hidden",
-                      "hover:shadow-[0_8px_25px_-5px_rgba(59,130,246,0.4)] hover:-translate-y-0.5",
-                      isActive
-                        ? "bg-gradient-to-r from-blue-500 to-cyan-500 shadow-[0_8px_25px_-5px_rgba(59,130,246,0.5)]"
-                        : "hover:bg-white/10",
+                      "text-foreground dark:text-white font-medium text-sm md:text-base transition-all duration-200 relative pb-1",
+                      "hover:text-primary dark:hover:text-primary",
+                      "before:absolute before:bottom-0 before:left-0 before:w-full before:h-0.5",
+                      "before:bg-gradient-to-r before:from-blue-500 before:to-cyan-500 dark:before:from-red-500 dark:before:to-red-600",
+                      "before:scale-x-0 hover:before:scale-x-100 before:transition-transform before:duration-200",
+                      isActive &&
+                        "before:scale-x-100 text-primary dark:text-primary",
                     )}
                   >
                     {item.name}
@@ -83,6 +86,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
 
             {/* User Actions */}
             <div className="flex items-center gap-2">
+              <ModeToggle />
               {user ? (
                 <>
                   {user.role !== "admin" && user.role !== "superAdmin" && (
@@ -92,15 +96,15 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                     <Link
                       href="/dashboard/user/wishlist"
                       className={cn(
-                        "relative text-white hover:text-blue-300 transition-colors p-2 rounded-lg hover:bg-white/10",
+                        "relative text-foreground dark:text-white hover:text-primary dark:hover:text-primary transition-colors p-2 rounded-lg hover:bg-accent dark:hover:bg-white/10",
                         pathname === "/dashboard/user/wishlist" &&
-                          "text-blue-300 bg-white/10",
+                          "text-primary dark:text-primary bg-accent dark:bg-white/10",
                       )}
                       title="Wishlist"
                     >
                       <Heart className="w-5 h-5" />
                       {wishlist.length > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                        <span className="absolute -top-1 -right-1 bg-destructive text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
                           {wishlist.length}
                         </span>
                       )}
@@ -113,9 +117,11 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                 <Link
                   href="/login"
                   className={cn(
-                    "text-white font-semibold text-base block mx-3 px-6 py-2 rounded-lg",
-                    "bg-white/15 backdrop-blur-md border border-white/10 shadow-sm",
-                    "transition-all duration-300 hover:bg-white/25 hover:-translate-y-0.5 hover:shadow-md",
+                    "text-blue-700 dark:text-red-400 font-semibold text-base block mx-3 px-6 py-2 transition-all duration-200 relative",
+                    "hover:text-blue-800 dark:hover:text-red-300",
+                    "before:absolute before:bottom-2 before:left-6 before:right-6 before:h-0.5",
+                    "before:bg-gradient-to-r before:from-blue-500 before:to-cyan-500 dark:before:from-red-500 dark:before:to-red-600",
+                    "before:scale-x-0 hover:before:scale-x-100 before:transition-transform before:duration-200",
                   )}
                 >
                   Login
@@ -134,13 +140,13 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
             className="fixed inset-0 bg-black/50 backdrop-blur-sm"
             onClick={handleMobileMenuToggle}
           />
-          <div className="relative w-64 h-full bg-slate-900/90 backdrop-blur-md border-r border-white/10 shadow-2xl p-4 flex flex-col">
+          <div className="relative w-64 h-full bg-card/90 dark:bg-black/80 backdrop-blur-md border-r border-border shadow-2xl p-4 flex flex-col">
             <div className="flex justify-between items-center mb-6">
               <Logo />
               <button
                 type="button"
                 onClick={handleMobileMenuToggle}
-                className="text-white hover:bg-white/10 p-1 rounded"
+                className="text-foreground dark:text-white hover:bg-accent dark:hover:bg-white/10 p-1 rounded"
               >
                 <X className="w-6 h-6" />
               </button>
@@ -154,10 +160,13 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                     href={item.path}
                     onClick={handleMobileMenuToggle}
                     className={cn(
-                      "text-white font-semibold text-base px-4 py-3 rounded-lg transition-all duration-300",
-                      isActive
-                        ? "bg-gradient-to-r from-blue-500 to-cyan-500"
-                        : "hover:bg-white/10",
+                      "text-foreground dark:text-white font-semibold text-base px-4 py-3 transition-all duration-200 relative",
+                      "hover:text-primary dark:hover:text-primary",
+                      "before:absolute before:bottom-2 before:left-4 before:right-4 before:h-0.5",
+                      "before:bg-gradient-to-r before:from-blue-500 before:to-cyan-500 dark:before:from-red-500 dark:before:to-red-600",
+                      "before:scale-x-0 hover:before:scale-x-100 before:transition-transform before:duration-200",
+                      isActive &&
+                        "before:scale-x-100 text-primary dark:text-primary",
                     )}
                   >
                     {item.name}
@@ -165,7 +174,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
                 );
               })}
             </nav>
-            <div className="mt-auto border-t border-white/10 pt-4 flex justify-center gap-4">
+            <div className="mt-auto border-t border-border pt-4 flex justify-center gap-4">
               {/* Social icons placeholder */}
             </div>
           </div>

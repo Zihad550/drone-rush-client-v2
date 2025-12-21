@@ -15,9 +15,6 @@ import { getCategories } from "@/services/category/category.service";
 import { getDrones } from "@/services/drone/drone.service";
 
 export default async function Home() {
-  const date = new Date();
-  const title = `The Best Drones for ${date.getFullYear()}`;
-
   // Check authentication status server-side
   const accessToken = await getCookie("accessToken");
   let isLoggedIn = false;
@@ -45,7 +42,7 @@ export default async function Home() {
   const categories = await getCategories();
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       {/* Banner Section */}
       <Banner />
 
@@ -54,35 +51,23 @@ export default async function Home() {
         <div className="space-y-12 md:space-y-16 lg:space-y-20">
           {/* Products Section */}
           <section className="pt-8 md:pt-12">
-            <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
-              {title}
-            </h2>
             <Products products={products.data} isLoggedIn={isLoggedIn} />
           </section>
 
           {/* Brands Section */}
           <section className="pt-8 md:pt-12">
-            <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
-              Explore Brands
-            </h2>
             <Brands brands={brands.data} />
           </section>
 
           {/* Categories Section */}
           {categories.data && categories.data.length > 0 && (
             <section className="pt-8 md:pt-12">
-              <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
-                Explore Categories
-              </h2>
               <Categories categories={categories.data} />
             </section>
           )}
 
           {/* Reviews Section */}
           <section className="pt-8 md:pt-12">
-            <h2 className="mb-8 md:mb-10 text-center text-4xl font-bold text-gray-900 dark:text-white">
-              Customer Reviews
-            </h2>
             <ReviewsCarousel />
           </section>
 
