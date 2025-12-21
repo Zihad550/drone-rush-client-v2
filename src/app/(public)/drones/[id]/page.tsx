@@ -75,7 +75,7 @@ export default async function DroneDetailsPage({ params }: PageProps) {
     return notFound();
   }
 
-  const { img, name, description, price, brand, reviews } = product;
+  const { img, name, description, price, brand, category, reviews } = product;
 
   // Calculate review metrics
   const reviewCount = reviews?.length || 0;
@@ -110,12 +110,28 @@ export default async function DroneDetailsPage({ params }: PageProps) {
                     <h1 className="text-3xl font-bold text-primary mb-2">
                       {name}
                     </h1>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                       <span>Brand:</span>
-                      <Badge variant="secondary">
+                      <Badge
+                        variant="outline"
+                        className="border-blue-500 text-blue-700 dark:border-red-500 dark:text-white"
+                      >
                         {typeof brand === "string" ? brand : brand.name}
                       </Badge>
                     </div>
+                    {category && (
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <span>Category:</span>
+                        <Badge
+                          variant="outline"
+                          className="border-blue-500 text-blue-700 dark:border-red-500 dark:text-white"
+                        >
+                          {typeof category === "string"
+                            ? category
+                            : category.name}
+                        </Badge>
+                      </div>
+                    )}
                   </div>
 
                   {/* Rating */}

@@ -6,6 +6,7 @@ import FAQ from "@/components/shared/faq";
 import Features from "@/components/shared/features";
 import Newsletter from "@/components/shared/newsletter";
 import Products from "@/components/shared/products";
+import PublicSectionTitle from "@/components/shared/public-section-title";
 import ReviewsCarousel from "@/components/shared/reviews-carousel";
 import SectionContainer from "@/components/shared/SectionContainer";
 import { getCookie } from "@/services/auth/cookie.service";
@@ -51,6 +52,7 @@ export default async function Home() {
         <div className="space-y-12 md:space-y-16 lg:space-y-20">
           {/* Products Section */}
           <section className="pt-8 md:pt-12">
+            <PublicSectionTitle>Best Products</PublicSectionTitle>
             <Products products={products.data} isLoggedIn={isLoggedIn} />
           </section>
 

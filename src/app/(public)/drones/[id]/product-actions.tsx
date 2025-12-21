@@ -95,24 +95,24 @@ export function ProductActions({ droneId }: ProductActionsProps) {
           <>
             <Button
               size="lg"
-              className={`flex-1 ${isInCart(droneId) ? "bg-blue-500 text-white hover:bg-blue-600" : "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500"}`}
+              className={`flex-1 bg-gradient-to-r from-blue-500 to-black/80 dark:from-black dark:to-red-500 shadow-[0_4px_14px_rgba(var(--primary),0.4)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.4)] hover:scale-105 hover:shadow-[0_6px_18px_rgba(var(--primary),0.6)] dark:hover:shadow-[0_6px_18px_rgba(0,0,0,0.6)] transition-all duration-300 text-white ${isInCart(droneId) ? "opacity-90" : "opacity-100"}`}
               onClick={handleCartAction}
               disabled={cartLoading}
-              variant={isInCart(droneId) ? "default" : "outline"}
+              variant="default"
             >
-              <ShoppingCart className="w-5 h-5 mr-2" />
+              <ShoppingCart className="w-5 h-5 mr-2 text-blue-500 dark:text-red-500" />
               {isInCart(droneId) ? "Remove from Cart" : "Add to Cart"}
             </Button>
 
             <Button
-              variant={isInWishlist(droneId) ? "default" : "outline"}
               size="lg"
-              className={`${isInWishlist(droneId) ? "bg-blue-500 hover:bg-blue-600 text-white" : "border-blue-500 text-blue-500 bg-white hover:bg-blue-50 hover:border-blue-600 hover:text-blue-500"}`}
+              className={`bg-gradient-to-r from-blue-500 to-black/80 dark:from-black dark:to-red-500 shadow-[0_4px_14px_rgba(var(--primary),0.4)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.4)] hover:scale-105 hover:shadow-[0_6px_18px_rgba(var(--primary),0.6)] dark:hover:shadow-[0_6px_18px_rgba(0,0,0,0.6)] transition-all duration-300 text-white ${isInWishlist(droneId) ? "opacity-90" : "opacity-100"}`}
               onClick={handleAddToWishlist}
               disabled={wishlistLoading}
+              variant="default"
             >
               <Heart
-                className={`w-5 h-5 mr-2 ${isInWishlist(droneId) ? "text-white fill-current" : "text-blue-500"}`}
+                className={`w-5 h-5 mr-2 text-blue-500 dark:text-red-500 ${isInWishlist(droneId) ? "fill-current" : ""}`}
               />
               {isInWishlist(droneId) ? "In Wishlist" : "Add to Wishlist"}
             </Button>

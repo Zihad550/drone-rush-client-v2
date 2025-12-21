@@ -3,7 +3,7 @@
 import ContactForm from "@/components/pages/contact-us/contact-form";
 import ContactMap from "@/components/pages/contact-us/contact-map";
 import ContactUsBanner from "@/components/pages/contact-us/contact-us-banner";
-import FAQ from "@/components/pages/contact-us/faq";
+import FAQ from "@/components/shared/faq";
 import PublicSectionTitle from "@/components/shared/public-section-title";
 import SectionContainer from "@/components/shared/SectionContainer";
 
@@ -187,7 +187,50 @@ export default function ContactUsPage() {
 
         {/* FAQ Section */}
         <div className="opacity-100">
-          <FAQ />
+          <FAQ
+            faqs={[
+              {
+                id: 1,
+                question: "What types of drones do you offer?",
+                answer:
+                  "We offer a wide range of drones including consumer, professional, and industrial models from leading manufacturers. Our selection includes quadcopters, fixed-wing drones, and specialized drones for photography, surveying, and delivery.",
+              },
+              {
+                id: 2,
+                question: "Do you provide drone training and certification?",
+                answer:
+                  "Yes, we offer comprehensive drone training programs and certification courses. Our expert instructors will guide you through FAA regulations, flight safety, and advanced piloting techniques to ensure you're fully prepared.",
+              },
+              {
+                id: 3,
+                question: "What is your warranty policy?",
+                answer:
+                  "We provide manufacturer warranties on all our drones, typically ranging from 1-2 years. Additionally, we offer our own service warranty for repairs and maintenance, ensuring your investment is protected.",
+              },
+              {
+                id: 4,
+                question: "Can you customize drones for specific applications?",
+                answer:
+                  "Absolutely! We specialize in customizing drones for various industries including agriculture, construction, search and rescue, and filmmaking. Our team will work with you to design the perfect solution.",
+              },
+              {
+                id: 5,
+                question: "How do I maintain my drone?",
+                answer:
+                  "Regular maintenance is crucial for drone longevity. We recommend cleaning after each flight, checking propeller balance, updating firmware, and professional servicing every 50-100 flight hours. Our technicians are available for maintenance services.",
+              },
+              {
+                id: 6,
+                question: "What are your shipping and return policies?",
+                answer:
+                  "We ship worldwide with fast, tracked delivery. Most orders arrive within 3-7 business days. We offer a 30-day return policy on unused items, and our customer service team will assist you throughout the process.",
+              },
+            ]}
+            title="Frequently Asked Questions"
+            showVideo={false}
+            layout="full"
+            variant="patterned"
+          />
         </div>
 
         {/* Map Section */}

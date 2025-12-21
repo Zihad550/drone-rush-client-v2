@@ -77,10 +77,30 @@ export async function registerUser(_currentState: unknown, formData: FormData) {
 }
 
 export async function loginUser(_currentState: unknown, formData: FormData) {
-  const payload = {
+  let payload = {
     email: formData.get("email") as string,
     password: formData.get("password") as string,
   };
+
+  // Handle demo login
+  const demo = formData.get("demo") as string;
+  if (demo === "admin") {
+    if (!process.env.DEMO_ADMIN_EMAIL || !process.env.DEMO_ADMIN_PASSWORD) {
+      throw new Error("Demo admin credentials not configured");
+    }
+    payload = {
+      email: process.env.DEMO_ADMIN_EMAIL,
+      password: process.env.DEMO_ADMIN_PASSWORD,
+    };
+  } else if (demo === "user") {
+    if (!process.env.DEMO_USER_EMAIL || !process.env.DEMO_USER_PASSWORD) {
+      throw new Error("Demo user credentials not configured");
+    }
+    payload = {
+      email: process.env.DEMO_USER_EMAIL,
+      password: process.env.DEMO_USER_PASSWORD,
+    };
+  }
   const validator = zodValidator(payload, loginZodSchema);
   if (!validator.success) return validator;
   try {
