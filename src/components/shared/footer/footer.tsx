@@ -10,37 +10,32 @@ const Footer = () => {
     {
       id: 1,
       name: "About Us",
-      link: "",
+      link: "/about-us",
     },
     {
       id: 2,
       name: "Explore",
-      link: "",
+      link: "/drones",
     },
     {
       id: 3,
       name: "Privacy Policy",
-      link: "",
+      link: "/privacy-policy",
     },
     {
       id: 4,
       name: "Terms & Conditions",
-      link: "",
+      link: "/terms",
     },
     {
       id: 5,
       name: "Contact Us",
-      link: "",
-    },
-    {
-      id: 6,
-      name: "Support Center",
-      link: "",
+      link: "/contact-us",
     },
     {
       id: 7,
       name: "Careers",
-      link: "",
+      link: "/careers",
     },
   ];
 
@@ -49,33 +44,33 @@ const Footer = () => {
     {
       id: 1,
       name: "Sign In",
-      link: "",
+      link: "/signin",
     },
-    // {
-    //   id: 2,
-    //   name: "View Cart",
-    //   link: "",
-    // },
-    // {
-    //   id: 3,
-    //   name: "My Wishlist",
-    //   link: "",
-    // },
     {
-      id: 4,
-      name: "Track My Order",
-      link: "",
+      id: 2,
+      name: "View Cart",
+      link: "/dashboard/user/cart",
     },
+    {
+      id: 3,
+      name: "My Wishlist",
+      link: "/dashboard/user/wishlist",
+    },
+    // {
+    //   id: 4,
+    //   name: "Track My Order",
+    //   link: "/track-order",
+    // },
     {
       id: 5,
       name: "Shipping Details",
-      link: "",
+      link: "/dashboard/user/shipping",
     },
-    {
-      id: 6,
-      name: "Compare Products",
-      link: "",
-    },
+    // {
+    //   id: 6,
+    //   name: "Compare Products",
+    //   link: "/compare",
+    // },
   ];
 
   // corporate related navs
@@ -83,12 +78,12 @@ const Footer = () => {
     {
       id: 3,
       name: "Accessibility",
-      link: "",
+      link: "/accessibility",
     },
     {
       id: 4,
       name: "Promotions",
-      link: "",
+      link: "/promotions",
     },
   ];
 
@@ -177,7 +172,7 @@ const Footer = () => {
           </p>
           <div className="flex justify-center gap-4 mt-2">
             <Link
-              href="/privacy"
+              href="/privacy-policy"
               className="text-xs text-foreground hover:text-primary transition-colors"
             >
               Privacy Policy

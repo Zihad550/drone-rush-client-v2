@@ -41,3 +41,12 @@ export const brandZodSchema = z.object({
 export const categoryZodSchema = z.object({
   name: z.string().min(1, "Category name is required"),
 });
+
+export const forgotPasswordZodSchema = z.object({
+  email: z.string().email("Invalid Email"),
+});
+
+export const resetPasswordZodSchema = z.object({
+  newPassword: z.string().min(8, "Password must be at least 8 characters"),
+  oldPassword: z.string().min(8, "Password must be at least 8 characters"),
+});

@@ -130,6 +130,7 @@ function DroneSvg() {
 
   return (
     <svg viewBox="0 0 500 420" className="w-full h-full drop-shadow-2xl">
+      <title>Spinner</title>
       <PropellerGroup data={[propellers[2], propellers[3]]} isBack />
 
       <g>

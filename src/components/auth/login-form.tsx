@@ -1,7 +1,7 @@
 "use client";
 import { Key, Mail } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import DemoLoginButtons from "@/components/auth/demo-login-buttons";
@@ -23,6 +23,7 @@ export default function LoginForm() {
     initialState,
   );
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { refreshAuth } = useAuth();
 
   useEffect(() => {
@@ -34,10 +35,15 @@ export default function LoginForm() {
   useEffect(() => {
     if (state?.success) {
       refreshAuth().then(() => {
-        router.push("/");
+        const redirectParam = searchParams.get("redirect");
+        let redirectUrl = "/";
+        if (redirectParam?.startsWith("/") && !redirectParam.includes("//")) {
+          redirectUrl = redirectParam;
+        }
+        router.push(redirectUrl);
       });
     }
-  }, [state?.success, refreshAuth, router]);
+  }, [state?.success, refreshAuth, router, searchParams]);
 
   // Extract field-specific errors if available
   const fieldErrors = state?.errors || {};
@@ -99,13 +105,21 @@ export default function LoginForm() {
           )}
         </div>
 
-        <div className="text-center">
+        <div className="text-center space-y-2">
           <Link href="/register">
             <Button
               variant="link"
               className="text-sm text-muted-foreground cursor-pointer"
             >
               New User? Please Register
+            </Button>
+          </Link>
+          <Link href="/forgot-password">
+            <Button
+              variant="link"
+              className="text-sm text-muted-foreground cursor-pointer"
+            >
+              Forgot Password?
             </Button>
           </Link>
         </div>

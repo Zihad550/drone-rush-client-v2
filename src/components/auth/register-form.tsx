@@ -27,10 +27,15 @@ export default function RegisterForm() {
   useEffect(() => {
     if (state?.success) {
       refreshAuth().then(() => {
-        router.push("/");
+        const redirectParam = searchParams.get("redirect");
+        let redirectUrl = "/";
+        if (redirectParam?.startsWith("/") && !redirectParam.includes("//")) {
+          redirectUrl = redirectParam;
+        }
+        router.push(redirectUrl);
       });
     }
-  }, [state?.success, refreshAuth, router]);
+  }, [state?.success, refreshAuth, router, searchParams]);
 
   // Extract field-specific errors if available
   const fieldErrors = state?.errors || {};

@@ -28,7 +28,9 @@ export function ProductActions({ droneId }: ProductActionsProps) {
 
   const handleAddToWishlist = async () => {
     if (!isLoggedIn) {
-      router.push("/login");
+      router.push(
+        `/login?redirect=${encodeURIComponent(window.location.pathname)}`,
+      );
       return;
     }
     if (wishlistLoading) return;
@@ -49,7 +51,9 @@ export function ProductActions({ droneId }: ProductActionsProps) {
 
   const handleCartAction = async () => {
     if (!isLoggedIn) {
-      router.push("/login");
+      router.push(
+        `/login?redirect=${encodeURIComponent(window.location.pathname)}`,
+      );
       return;
     }
     if (cartLoading) return;

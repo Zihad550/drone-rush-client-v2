@@ -2,7 +2,12 @@
 import { parse as parseCookie } from "cookie";
 import { serverFetch } from "@/lib/server-fetch";
 import { zodValidator } from "@/lib/zod-validator";
-import { loginZodSchema, registerZodSchema } from "@/utils/zod-schema";
+import {
+  forgotPasswordZodSchema,
+  loginZodSchema,
+  registerZodSchema,
+  resetPasswordZodSchema,
+} from "@/utils/zod-schema";
 import { getCookie, setCookie } from "./cookie.service";
 
 export async function registerUser(_currentState: unknown, formData: FormData) {
@@ -225,6 +230,88 @@ export async function getNewAccessToken() {
       tokenRefreshed: false,
       success: false,
       message: error instanceof Error ? error.message : "Token refresh failed",
+    };
+  }
+}
+
+export async function forgotPasswordUser(
+  _currentState: unknown,
+  formData: FormData,
+) {
+  const payload = {
+    email: formData.get("email") as string,
+  };
+  const validator = zodValidator(payload, forgotPasswordZodSchema);
+  if (!validator.success) return validator;
+  try {
+    const res = await serverFetch.post(`/auth/forgot-password`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validator.data),
+    });
+    const data = await res.json();
+    if (!data?.success) return data;
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: "Something went wrong!",
+      };
+    }
+
+    return {
+      success: true,
+      message:
+        "Email sent successfully. Please check your inbox for reset instructions.",
+    };
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to send reset email",
+    };
+  }
+}
+
+export async function resetPasswordUser(
+  _currentState: unknown,
+  formData: FormData,
+) {
+  const token = formData.get("token") as string;
+  const payload = {
+    newPassword: formData.get("newPassword") as string,
+    oldPassword: formData.get("oldPassword") as string,
+  };
+  const validator = zodValidator(payload, resetPasswordZodSchema);
+  if (!validator.success) return validator;
+  try {
+    const res = await serverFetch.patch(`/auth/reset-password`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+      body: JSON.stringify(validator.data),
+    });
+    const data = await res.json();
+    if (!data?.success) return data;
+
+    if (!res.ok) {
+      return {
+        success: false,
+        message: "Something went wrong!",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Password reset successfully.",
+    };
+  } catch (error: unknown) {
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Failed to reset password",
     };
   }
 }
