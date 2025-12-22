@@ -57,13 +57,13 @@ export default async function Home() {
           </section>
 
           {/* Brands Section */}
-          <section className="pt-8 md:pt-12">
+          <section id="brands" className="pt-8 md:pt-12">
             <Brands brands={brands.data} />
           </section>
 
           {/* Categories Section */}
           {categories.data && categories.data.length > 0 && (
-            <section className="pt-8 md:pt-12">
+            <section id="categories" className="pt-8 md:pt-12">
               <Categories categories={categories.data} />
             </section>
           )}

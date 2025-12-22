@@ -36,10 +36,10 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const [wishlist, setWishlist] = useState<IWishlist[]>([]);
   const [loading, setLoading] = useState(false);
   const [wishlistIds, setWishlistIds] = useState<Set<string>>(new Set());
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   const refreshWishlist = useCallback(async () => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn || user?.role !== "user") return;
 
     try {
       setLoading(true);
@@ -53,7 +53,7 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, user?.role]);
 
   const addToWishlistHandler = async (droneId: string) => {
     try {
@@ -80,13 +80,13 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const isInWishlist = (droneId: string) => wishlistIds.has(droneId);
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && user?.role === "user") {
       refreshWishlist();
     } else {
-      setWishlist([]); // Clear wishlist when user logs out
+      setWishlist([]); // Clear wishlist when user logs out or is not a regular user
       setWishlistIds(new Set());
     }
-  }, [isLoggedIn, refreshWishlist]);
+  }, [isLoggedIn, user?.role, refreshWishlist]);
 
   const value: WishlistContextType = {
     wishlist,

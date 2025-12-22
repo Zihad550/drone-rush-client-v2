@@ -1,7 +1,6 @@
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import Products from "@/components/shared/products";
 import SectionContainer from "@/components/shared/SectionContainer";
 import { Button } from "@/components/ui/button";
@@ -79,7 +78,7 @@ export default async function BrandPage({ params }: PageProps) {
                 <Link href={`/brand/${brandId}`}>Try Again</Link>
               </Button>
               <Button variant="outline" asChild className="w-full">
-                <Link href="/">Go Home</Link>
+                <Link href="/#brands">Go Home</Link>
               </Button>
             </div>
           </CardContent>
@@ -89,7 +88,23 @@ export default async function BrandPage({ params }: PageProps) {
   }
 
   if (!dronesData || !brandInfo) {
-    return notFound();
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/20 dark:from-red-500/10 dark:to-black/10 flex items-center justify-center px-4">
+        <Card className="w-full max-w-md">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">No Drones Found</CardTitle>
+            <CardDescription>
+              No drones are currently available for this brand.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button variant="outline" asChild className="w-full">
+              <Link href="/#brands">Go Home</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
@@ -99,7 +114,7 @@ export default async function BrandPage({ params }: PageProps) {
           {/* Go Back Button */}
           <div className="mb-6">
             <Button variant="outline" asChild className="gap-2">
-              <Link href="/">
+              <Link href="/#brands">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Home
               </Link>

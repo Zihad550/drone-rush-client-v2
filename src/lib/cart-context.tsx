@@ -43,10 +43,10 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<ICartItem[]>([]);
   const [loading, setLoading] = useState(false);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
 
   const refreshCart = useCallback(async () => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn || user?.role !== "user") return;
 
     try {
       setLoading(true);
@@ -58,7 +58,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, user?.role]);
 
   const addToCartHandler = async (droneId: string, quantity: number = 1) => {
     try {
@@ -134,12 +134,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isLoggedIn && user?.role === "user") {
       refreshCart();
     } else {
-      setCart([]); // Clear cart when user logs out
+      setCart([]); // Clear cart when user logs out or is not a regular user
     }
-  }, [isLoggedIn, refreshCart]);
+  }, [isLoggedIn, user?.role, refreshCart]);
 
   const value: CartContextType = {
     cart,

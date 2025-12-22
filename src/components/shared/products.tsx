@@ -1,6 +1,5 @@
 import type IDrone from "@/types/drone.type";
 import DroneCard from "./drone-card";
-import PublicSectionTitle from "./public-section-title";
 
 interface ProductsProps {
   products: IDrone[];

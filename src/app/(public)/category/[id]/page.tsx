@@ -32,8 +32,6 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   // Fetch categories to get category name
   const categories = await getCategories();
-  console.log("Fetched categories:", categories.data);
-  console.log("Requested ID:", id);
   const category = categories.data.find((cat) => cat._id === id);
 
   if (!category) {
@@ -65,7 +63,7 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
           {/* Go Back Button */}
           <div className="mb-6">
             <Button variant="outline" asChild className="gap-2">
-              <Link href="/">
+              <Link href="/#categories">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Home
               </Link>
