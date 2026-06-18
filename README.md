@@ -79,3 +79,6 @@ A modern e-commerce platform for buying and selling drones, built with Next.js.
 5. Proceed to checkout for orders and payments.
 
 6. View analytics, reviews, and contact support.
+
+## Submit a pull request
+If you'd like to contribute, please fork the repository and submit a pull request.
