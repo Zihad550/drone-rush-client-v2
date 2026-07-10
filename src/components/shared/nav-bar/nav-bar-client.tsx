@@ -47,6 +47,7 @@ const NavBarClient = ({ user }: NavBarClientProps) => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "All Drones", path: "/drones" },
+    { name: "Find My Drone", path: "/find-my-drone" },
     { name: "About Us", path: "/about-us" },
     { name: "Contact Us", path: "/contact-us" },
   ];
