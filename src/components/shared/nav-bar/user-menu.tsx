@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, LogOut, User } from "lucide-react";
+import { ChevronDown, LayoutDashboard, LogOut, User } from "lucide-react";
 import Link from "next/link";
 import { useTransition } from "react";
 import { logoutUser } from "@/app/actions/auth.actions";
@@ -9,6 +9,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -21,6 +22,8 @@ interface UserMenuProps {
 
 const UserMenu = ({ user }: UserMenuProps) => {
   const [isPending, startTransition] = useTransition();
+
+  const isAdmin = user?.role === "admin" || user?.role === "superAdmin";
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -35,45 +38,41 @@ const UserMenu = ({ user }: UserMenuProps) => {
         <DropdownMenuTrigger asChild>
           <button
             type="button"
-            className="flex h-8 w-8 items-center justify-center rounded-full bg-muted text-muted-foreground dark:bg-white/10 dark:text-white hover:bg-accent dark:hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:ring-offset-background"
+            className="group flex items-center gap-2 rounded-full border border-dr-bd-2 bg-dr-surface py-1 pr-2.5 pl-1 text-dr-text transition-colors hover:border-dr-bd-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-dr-red/50"
           >
             <span className="sr-only">Open user menu</span>
-            <User className="h-5 w-5" />
+            <span className="flex h-[30px] w-[30px] items-center justify-center rounded-full bg-gradient-to-br from-[#ff6377] to-[#c81733] text-white">
+              <User className="h-4 w-4" />
+            </span>
+            <ChevronDown className="h-[15px] w-[15px] text-dr-text-2 transition-transform duration-200 group-data-[state=open]:rotate-180" />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           align="end"
-          className="w-56 bg-popover text-popover-foreground space-y-3"
+          sideOffset={12}
+          className="w-56 rounded-[14px] border-dr-bd-2 bg-dr-surface p-2 text-dr-text shadow-[0_20px_44px_rgba(0,0,0,.4)]"
         >
-          {user?.role === "admin" ? (
-            <DropdownMenuItem asChild>
-              <Link
-                href="/dashboard/admin"
-                className="text-foreground dark:text-white font-medium text-sm md:text-base transition-all duration-200 relative pb-1 cursor-pointer w-full hover:text-primary dark:hover:text-primary before:absolute before:bottom-0 before:left-0 before:w-full before:h-0.5 before:bg-gradient-to-r before:from-blue-500 before:to-cyan-500 dark:before:from-red-500 dark:before:to-red-600 before:scale-x-0 hover:before:scale-x-100 before:transition-transform before:duration-200"
-              >
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                <span>Dashboard</span>
-              </Link>
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem asChild>
-              <Link
-                href="/dashboard/user"
-                className="text-foreground dark:text-white font-medium text-sm md:text-base transition-all duration-200 relative pb-1 cursor-pointer w-full hover:text-primary dark:hover:text-primary before:absolute before:bottom-0 before:left-0 before:w-full before:h-0.5 before:bg-gradient-to-r before:from-blue-500 before:to-cyan-500 dark:before:from-red-500 dark:before:to-red-600 before:scale-x-0 hover:before:scale-x-100 before:transition-transform before:duration-200"
-              >
-                <LayoutDashboard className="mr-2 h-4 w-4" />
-                <span>Dashboard</span>
-              </Link>
-            </DropdownMenuItem>
-          )}
-
+          <DropdownMenuItem asChild>
+            <Link
+              href={isAdmin ? "/dashboard/admin" : "/dashboard/user"}
+              className={
+                isAdmin
+                  ? "flex w-full cursor-pointer items-center gap-3 rounded-[9px] px-3 py-2.5 font-poppins text-[13.5px] font-semibold text-dr-red"
+                  : "flex w-full cursor-pointer items-center gap-3 rounded-[9px] px-3 py-2.5 font-poppins text-[13.5px] font-medium"
+              }
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              <span>{isAdmin ? "Admin Dashboard" : "Dashboard"}</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator className="bg-dr-bd-1" />
           <DropdownMenuItem
             onClick={handleLogout}
-            className="cursor-pointer text-foreground dark:text-white font-medium text-sm md:text-base transition-all duration-200 relative pb-1 hover:text-primary dark:hover:text-primary before:absolute before:bottom-0 before:left-0 before:w-full before:h-0.5 before:bg-gradient-to-r before:from-blue-500 before:to-cyan-500 dark:before:from-red-500 dark:before:to-red-600 before:scale-x-0 hover:before:scale-x-100 before:transition-transform before:duration-200"
+            className="flex cursor-pointer items-center gap-3 rounded-[9px] px-3 py-2.5 font-poppins text-[13.5px] font-medium text-dr-text-3"
             disabled={isPending}
           >
-            <LogOut className="mr-2 h-4 w-4" />
-            <span>Logout</span>
+            <LogOut className="h-4 w-4" />
+            <span>Sign out</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

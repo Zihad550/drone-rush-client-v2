@@ -40,6 +40,7 @@ interface DronesProps {
     limit: number;
     total_page: number;
   };
+  initialSearchTerm?: string;
 }
 
 function Drones({
@@ -49,12 +50,15 @@ function Drones({
   isLoggedIn,
   products: initialProducts,
   initialMeta,
+  initialSearchTerm,
 }: DronesProps) {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState<string[]>([]);
   const [brand, setBrand] = useState<string[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(initialSearchTerm ?? "");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(
+    initialSearchTerm ?? "",
+  );
   const [categorySearch, setCategorySearch] = useState("");
   const [brandSearch, setBrandSearch] = useState("");
   const [minPrice, setMinPrice] = useState("");
@@ -74,6 +78,11 @@ function Drones({
     }, 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
+
+  // Sync when the nav search navigates to /drones?searchTerm=… while already mounted
+  useEffect(() => {
+    setSearchTerm(initialSearchTerm ?? "");
+  }, [initialSearchTerm]);
 
   useEffect(() => {
     if (

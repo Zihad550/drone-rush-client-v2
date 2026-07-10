@@ -13,7 +13,12 @@ import { getBrands } from "@/services/brand/brand.service";
 import { getCategories } from "@/services/category/category.service";
 import { getDrones } from "@/services/drone/drone.service";
 
-export default async function DronesPage() {
+export default async function DronesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ searchTerm?: string }>;
+}) {
+  const { searchTerm } = await searchParams;
   let categoriesData: Awaited<ReturnType<typeof getCategories>> | null = null;
   let brandsData: Awaited<ReturnType<typeof getBrands>> | null = null;
   let hasError = false;
@@ -94,6 +99,7 @@ export default async function DronesPage() {
               isLoggedIn={isLoggedIn}
               products={products.data}
               initialMeta={products.meta}
+              initialSearchTerm={searchTerm}
             />
           </div>
         </SectionContainer>
