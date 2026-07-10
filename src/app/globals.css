@@ -10,6 +10,8 @@
   --font-mono: var(--font-geist-mono);
   --font-roboto-slab: var(--font-roboto-slab);
   --font-poppins: var(--font-poppins);
+  --font-chakra: var(--font-chakra);
+  --font-dm-mono: var(--font-dm-mono);
   --color-dr-red: var(--dr-red);
   --color-dr-red-strong: var(--dr-red-strong);
   --color-dr-nav: var(--dr-nav);
@@ -244,6 +246,47 @@
 
 .animation-delay-800 {
   animation-delay: 0.8s;
+}
+
+/* DroneRush v2 — signature red gradient + ambient glow */
+.dr-red-grad {
+  background: linear-gradient(135deg, #ef2b45, #c31832);
+}
+
+.dr-ambient-glow {
+  background:
+    radial-gradient(circle at 78% 12%, rgba(239, 43, 69, 0.1), transparent 55%),
+    radial-gradient(
+      circle at 20% 90%,
+      rgba(47, 107, 255, 0.08),
+      transparent 50%
+    ), var(--background);
+}
+
+:root.dark .dr-ambient-glow {
+  background:
+    radial-gradient(circle at 78% 12%, rgba(239, 43, 69, 0.22), transparent 55%),
+    radial-gradient(
+      circle at 20% 90%,
+      rgba(47, 107, 255, 0.16),
+      transparent 50%
+    ), var(--background);
+}
+
+@keyframes dr-glow {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+.animate-dr-glow {
+  animation: dr-glow 3s cubic-bezier(0.22, 0.61, 0.36, 1) infinite;
 }
 
 /* Navigation link gradients */

@@ -16,9 +16,9 @@ const FooterNav = ({ navs, title, subtitle }: IFooterNavProps) => {
   return (
     <div>
       <h3
-        className={`mb-4 md:mb-6 ${
+        className={`mb-4 md:mb-6 font-poppins ${
           title ? "text-xl font-semibold" : "text-sm font-medium"
-        } text-primary dark:text-white`}
+        } text-dr-text`}
       >
         {title || subtitle}
       </h3>
@@ -27,7 +27,7 @@ const FooterNav = ({ navs, title, subtitle }: IFooterNavProps) => {
         <div key={nav.id} className="mb-2">
           <Link
             href={nav.link}
-            className="text-foreground dark:text-gray-300 text-sm hover:text-primary dark:hover:text-blue-300 hover:ml-2 transition-all duration-300 inline-block"
+            className="text-dr-text-2 text-sm hover:text-dr-red hover:ml-2 transition-all duration-300 inline-block"
           >
             {nav.name}
           </Link>

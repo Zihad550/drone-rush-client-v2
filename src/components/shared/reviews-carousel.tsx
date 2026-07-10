@@ -61,7 +61,9 @@ const ReviewsCarousel = () => {
   return (
     <SectionContainer>
       <div className="relative w-full">
-        <PublicSectionTitle>Customer Reviews</PublicSectionTitle>
+        <PublicSectionTitle eyebrow="What pilots say">
+          Customer Reviews
+        </PublicSectionTitle>
         {/* Subtle background pattern */}
         <div className="absolute inset-0" />
 
@@ -139,11 +141,11 @@ const ReviewsCarousel = () => {
         {/* Custom Navigation Buttons */}
         <button
           type="button"
-          className="swiper-button-prev absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/80 p-3 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-xl dark:bg-gray-900/80 dark:hover:bg-gray-900"
+          className="swiper-button-prev absolute left-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-dr-bd-3 bg-dr-surface p-3 shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-dr-red hover:text-dr-red"
           aria-label="Previous review"
         >
           <svg
-            className="h-5 w-5 text-foreground dark:text-gray-300"
+            className="h-5 w-5 text-dr-text-2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -159,11 +161,11 @@ const ReviewsCarousel = () => {
         </button>
         <button
           type="button"
-          className="swiper-button-next absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/80 p-3 shadow-lg backdrop-blur-sm transition-all duration-300 hover:bg-white hover:shadow-xl dark:bg-gray-900/80 dark:hover:bg-gray-900"
+          className="swiper-button-next absolute right-2 top-1/2 z-10 -translate-y-1/2 rounded-full border border-dr-bd-3 bg-dr-surface p-3 shadow-lg backdrop-blur-sm transition-all duration-300 hover:border-dr-red hover:text-dr-red"
           aria-label="Next review"
         >
           <svg
-            className="h-5 w-5 text-foreground dark:text-gray-300"
+            className="h-5 w-5 text-dr-text-2"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

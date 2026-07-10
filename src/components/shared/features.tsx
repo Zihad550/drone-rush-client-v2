@@ -7,21 +7,21 @@ const Features = () => {
       id: 1,
       title: "Mobile Device Supported",
       about:
-        "When an unknown printer took a galley of type and scrambled it to make.",
+        "Control and monitor your drone from any modern smartphone or tablet with our companion app.",
       icon: "/assets/feature3-1.png",
     },
     {
       id: 2,
       title: "Highly Secure & Safe",
       about:
-        "When an unknown printer took a galley of type and scrambled it to make.",
+        "Encrypted flight data and geofencing keep your equipment and footage protected at all times.",
       icon: "/assets/feature3-2.png",
     },
     {
       id: 3,
       title: "Fast & Reliable",
       about:
-        "When an unknown printer took a galley of type and scrambled it to make.",
+        "Same-day dispatch and rigorously tested hardware you can depend on, mission after mission.",
       icon: "/assets/feature3-3.png",
     },
   ];
@@ -41,7 +41,7 @@ const Features = () => {
 
         {/* Right - Features List */}
         <div className="flex flex-col justify-center space-y-8">
-          <PublicSectionTitle className="text-center md:text-left">
+          <PublicSectionTitle eyebrow="Why DroneRush">
             Features
           </PublicSectionTitle>
 

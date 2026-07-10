@@ -20,7 +20,7 @@ function CtaButton({
   className,
 }: CtaButtonProps) {
   const buttonClasses =
-    "bg-gradient-to-r from-blue-500 to-black/80 dark:from-black dark:to-red-500 shadow-[0_4px_14px_rgba(var(--primary),0.4)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.4)] hover:scale-105 hover:shadow-[0_6px_18px_rgba(var(--primary),0.6)] dark:hover:shadow-[0_6px_18px_rgba(0,0,0,0.6)] transition-all duration-300 px-6 py-3 text-base font-medium";
+    "dr-red-grad text-white font-poppins shadow-[0_8px_26px_rgba(239,43,69,0.32)] hover:scale-105 hover:shadow-[0_12px_30px_rgba(239,43,69,0.45)] transition-all duration-300 px-6 py-3 text-base font-semibold";
 
   const content = (
     <>

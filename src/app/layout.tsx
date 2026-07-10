@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Poppins, Roboto_Slab } from "next/font/google";
+import {
+  Chakra_Petch,
+  DM_Mono,
+  Geist,
+  Geist_Mono,
+  Poppins,
+  Roboto_Slab,
+} from "next/font/google";
 import { Providers } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
@@ -25,6 +32,19 @@ const poppins = Poppins({
   weight: ["400", "500", "600", "700"],
 });
 
+// DroneRush v2 display + eyebrow faces
+const chakraPetch = Chakra_Petch({
+  variable: "--font-chakra",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+});
+
+const dmMono = DM_Mono({
+  variable: "--font-dm-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
 export const metadata: Metadata = {
   title: "Drone Rush",
   description: "Drone e-commerce platform",
@@ -41,7 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${robotoSlab.variable} ${poppins.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${robotoSlab.variable} ${poppins.variable} ${chakraPetch.variable} ${dmMono.variable} antialiased`}
       >
         <Providers>
           {children}

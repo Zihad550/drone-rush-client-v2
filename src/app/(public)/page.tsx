@@ -45,14 +45,19 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-background">
       {/* Banner Section */}
-      <Banner />
+      <Banner
+        imageSrc={products.data?.[0]?.img}
+        imageAlt={products.data?.[0]?.name}
+      />
 
       {/* Main Content */}
       <SectionContainer className="py-12 md:py-16 lg:py-20">
         <div className="space-y-12 md:space-y-16 lg:space-y-20">
           {/* Products Section */}
           <section className="pt-8 md:pt-12">
-            <PublicSectionTitle>Best Products</PublicSectionTitle>
+            <PublicSectionTitle eyebrow="Top rated">
+              Best Products
+            </PublicSectionTitle>
             <Products products={products.data} isLoggedIn={isLoggedIn} />
           </section>
 

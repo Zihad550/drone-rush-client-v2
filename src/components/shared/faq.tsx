@@ -129,11 +129,11 @@ function FAQ({
 
   return (
     <section ref={containerRef} className="mb-20">
-      <PublicSectionTitle>{title}</PublicSectionTitle>
+      <PublicSectionTitle eyebrow="Answers">{title}</PublicSectionTitle>
 
-      <div className="w-full bg-muted rounded-full h-2 mb-4">
+      <div className="w-full bg-dr-bd-2 rounded-full h-2 mb-4">
         <div
-          className="bg-primary h-2 rounded-full transition-all duration-300"
+          className="dr-red-grad h-2 rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
         ></div>
       </div>
@@ -172,8 +172,8 @@ function FAQ({
               key={faq.id}
               className={
                 variant === "patterned"
-                  ? `relative overflow-hidden rounded-2xl border border-primary/20 bg-background/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 ${index === currentIndex ? "ring-2 ring-primary" : ""}`
-                  : `overflow-hidden rounded-2xl border border-white/20 dark:border-red-500/30 bg-white/10 dark:bg-black/20 backdrop-blur-md shadow-xl shadow-blue-500/10 dark:shadow-red-500/10 transition-all duration-500 ${index === currentIndex ? "ring-2 ring-primary" : ""}`
+                  ? `relative overflow-hidden rounded-2xl border border-dr-red/20 bg-background/50 backdrop-blur-sm transition-all duration-300 hover:border-dr-red/40 ${index === currentIndex ? "ring-2 ring-dr-red" : ""}`
+                  : `overflow-hidden rounded-2xl border border-dr-bd-2 bg-dr-surface shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-dr-red/45 ${index === currentIndex ? "ring-2 ring-dr-red" : ""}`
               }
             >
               {variant === "patterned" && (
@@ -215,8 +215,8 @@ function FAQ({
                   onClick={() => toggleAccordion(faq.id, index)}
                   className={
                     variant === "patterned"
-                      ? "flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-primary/5"
-                      : "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-white/20 dark:hover:bg-black/30"
+                      ? "flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-dr-red/5"
+                      : "flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-dr-red/5"
                   }
                   aria-expanded={openId === faq.id}
                   aria-controls={`faq-answer-${faq.id}`}
@@ -224,8 +224,8 @@ function FAQ({
                   <span
                     className={
                       variant === "patterned"
-                        ? "text-lg font-semibold text-foreground"
-                        : "font-medium text-foreground dark:text-white"
+                        ? "text-lg font-semibold text-dr-text"
+                        : "font-poppins font-medium text-dr-text"
                     }
                   >
                     {faq.question}
@@ -234,9 +234,7 @@ function FAQ({
                     className={`h-5 w-5 flex-shrink-0 transition-transform duration-200 ${
                       openId === faq.id ? "rotate-180" : ""
                     } ${
-                      variant === "patterned"
-                        ? "text-primary"
-                        : "text-muted-foreground"
+                      variant === "patterned" ? "text-dr-red" : "text-dr-text-3"
                     }`}
                   />
                 </button>
@@ -249,15 +247,15 @@ function FAQ({
                   <div
                     className={
                       variant === "patterned"
-                        ? "border-t border-primary/10 px-6 pb-6 pt-4"
-                        : "border-t border-white/20 dark:border-red-500/30 p-4"
+                        ? "border-t border-dr-bd-1 px-6 pb-6 pt-4"
+                        : "border-t border-dr-bd-2 p-4"
                     }
                   >
                     <p
                       className={
                         variant === "patterned"
-                          ? "text-muted-foreground leading-relaxed"
-                          : "text-sm text-muted-foreground dark:text-gray-300"
+                          ? "text-dr-text-2 leading-relaxed"
+                          : "text-sm text-dr-text-2"
                       }
                     >
                       {faq.answer}

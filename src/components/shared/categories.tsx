@@ -9,7 +9,7 @@ interface CategoriesProps {
 const Categories = ({ categories }: CategoriesProps) => {
   return (
     <div className="mt-16">
-      <PublicSectionTitle>Categories</PublicSectionTitle>
+      <PublicSectionTitle eyebrow="Shop by type">Categories</PublicSectionTitle>
       {categories && categories.length > 0 ? (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-3 xl:grid-cols-4">
           {categories.map((category) => (
