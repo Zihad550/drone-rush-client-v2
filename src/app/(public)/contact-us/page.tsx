@@ -131,7 +131,6 @@ export default function ContactUsPage() {
           showVideo={false}
           layout="full"
           variant="patterned"
-          hijackScroll={false}
         />
       </section>
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import PublicSectionTitle from "./public-section-title";
 
 interface FAQItem {
@@ -16,8 +16,6 @@ interface FAQProps {
   showVideo?: boolean;
   layout?: "split" | "full";
   variant?: "default" | "patterned";
-  /** When true, scrolling over the section steps through items instead of scrolling the page. */
-  hijackScroll?: boolean;
 }
 
 const defaultFaqs: FAQItem[] = [
@@ -59,89 +57,16 @@ function FAQ({
   showVideo = true,
   layout = "split",
   variant = "default",
-  hijackScroll = true,
 }: FAQProps) {
   const [openId, setOpenId] = useState<number | null>(1);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [isInView, setIsInView] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const containerRef = useRef<HTMLElement>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsInView(entry.isIntersecting);
-      },
-      { threshold: 0.5 },
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const newProgress =
-      faqs.length > 1 ? (currentIndex / (faqs.length - 1)) * 100 : 0;
-    setProgress(newProgress);
-  }, [currentIndex, faqs.length]);
-
-  useEffect(() => {
-    if (!hijackScroll) return;
-
-    let timeoutId: NodeJS.Timeout;
-
-    const handleWheel = (e: WheelEvent) => {
-      if (isInView) {
-        const delta = e.deltaY > 0 ? 1 : -1;
-        const newIndex = currentIndex + delta;
-        const atBoundary =
-          (delta > 0 && currentIndex === faqs.length - 1) ||
-          (delta < 0 && currentIndex === 0);
-
-        if (atBoundary) {
-          // Allow normal scroll, don't prevent
-          return;
-        }
-
-        e.preventDefault();
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          if (newIndex >= 0 && newIndex < faqs.length) {
-            setCurrentIndex(newIndex);
-            setOpenId(faqs[newIndex].id);
-          }
-        }, 100);
-      }
-    };
-
-    if (isInView) {
-      window.addEventListener("wheel", handleWheel, { passive: false });
-    }
-
-    return () => {
-      window.removeEventListener("wheel", handleWheel);
-      clearTimeout(timeoutId);
-    };
-  }, [isInView, currentIndex, faqs, hijackScroll]);
-
-  const toggleAccordion = (id: number, index: number) => {
+  const toggleAccordion = (id: number) => {
     setOpenId(openId === id ? null : id);
-    setCurrentIndex(index);
   };
 
   return (
-    <section ref={containerRef} className="mb-20">
+    <section className="mb-20">
       <PublicSectionTitle eyebrow="Answers">{title}</PublicSectionTitle>
-
-      <div className="w-full bg-dr-bd-2 rounded-full h-2 mb-4">
-        <div
-          className="dr-red-grad h-2 rounded-full transition-all duration-300"
-          style={{ width: `${progress}%` }}
-        ></div>
-      </div>
 
       <div
         className={
@@ -174,13 +99,13 @@ function FAQ({
               : "space-y-4"
           }
         >
-          {faqs.map((faq, index) => (
+          {faqs.map((faq) => (
             <div
               key={faq.id}
               className={
                 variant === "patterned"
-                  ? `relative overflow-hidden rounded-2xl border border-dr-red/20 bg-background/50 backdrop-blur-sm transition-all duration-300 hover:border-dr-red/40 ${index === currentIndex ? "ring-2 ring-dr-red" : ""}`
-                  : `overflow-hidden rounded-2xl border border-dr-bd-2 bg-dr-surface shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-dr-red/45 ${index === currentIndex ? "ring-2 ring-dr-red" : ""}`
+                  ? "relative overflow-hidden rounded-2xl border border-dr-red/20 bg-background/50 backdrop-blur-sm transition-all duration-300 hover:border-dr-red/40"
+                  : "overflow-hidden rounded-2xl border border-dr-bd-2 bg-dr-surface shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 hover:border-dr-red/45"
               }
             >
               {variant === "patterned" && (
@@ -219,7 +144,7 @@ function FAQ({
               <div className={variant === "patterned" ? "relative z-10" : ""}>
                 <button
                   type="button"
-                  onClick={() => toggleAccordion(faq.id, index)}
+                  onClick={() => toggleAccordion(faq.id)}
                   className={
                     variant === "patterned"
                       ? "flex w-full items-center justify-between p-6 text-left transition-colors hover:bg-dr-red/5"

@@ -83,7 +83,6 @@ export default function AccessibilityPage() {
           showVideo={false}
           layout="full"
           variant="patterned"
-          hijackScroll={false}
         />
       </section>
     </div>
