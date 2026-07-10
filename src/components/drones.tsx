@@ -1,12 +1,9 @@
 "use client";
 
-import { Filter, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import Products from "@/components/shared/products";
 import Spinner from "@/components/spinner";
-import Title from "@/components/title";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
   Pagination,
@@ -17,16 +14,26 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import ScrollAnimation from "@/components/ui/scroll-animation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { getDrones } from "@/services/drone/drone.service";
 import type IDrone from "@/types/drone.type";
 
 const PRODUCTS_PER_PAGE = 8;
+const DEFAULT_SORT = "-quantity";
+const SORT_OPTIONS = [
+  { value: "-quantity", label: "Featured" },
+  { value: "price", label: "Price: Low to High" },
+  { value: "-price", label: "Price: High to Low" },
+  { value: "-createdAt", label: "Newest" },
+  { value: "name", label: "Name: A–Z" },
+];
 
 interface DronesProps {
   categories: { _id: string; name: string }[];
@@ -59,8 +66,7 @@ function Drones({
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(
     initialSearchTerm ?? "",
   );
-  const [categorySearch, setCategorySearch] = useState("");
-  const [brandSearch, setBrandSearch] = useState("");
+  const [sort, setSort] = useState(DEFAULT_SORT);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [products, setProducts] = useState<IDrone[]>(initialProducts || []);
@@ -93,6 +99,7 @@ function Drones({
       !debouncedSearchTerm &&
       !minPrice &&
       !maxPrice &&
+      sort === DEFAULT_SORT &&
       page === 1
     ) {
       setProducts(initialProducts);
@@ -105,7 +112,7 @@ function Drones({
       setLoading(true);
       const params = {
         page,
-        sort: "-quantity",
+        sort,
         limit: PRODUCTS_PER_PAGE,
         ...(category.length > 0 && { category }),
         ...(brand.length > 0 && { brand }),
@@ -131,212 +138,262 @@ function Drones({
     debouncedSearchTerm,
     minPrice,
     maxPrice,
+    sort,
     userId,
     initialProducts,
     initialMeta,
   ]);
 
+  const hasFilters =
+    category.length > 0 ||
+    brand.length > 0 ||
+    !!searchTerm ||
+    !!minPrice ||
+    !!maxPrice;
+
+  const clearAll = () => {
+    setCategory([]);
+    setBrand([]);
+    setSearchTerm("");
+    setMinPrice("");
+    setMaxPrice("");
+    setPage(1);
+  };
+
+  const activeChips: { key: string; label: string; onRemove: () => void }[] = [
+    ...category.map((id) => ({
+      key: `cat-${id}`,
+      label: categories.find((c) => c._id === id)?.name ?? "Category",
+      onRemove: () => {
+        setCategory(category.filter((c) => c !== id));
+        setPage(1);
+      },
+    })),
+    ...brand.map((id) => ({
+      key: `brand-${id}`,
+      label: brands.find((b) => b._id === id)?.name ?? "Brand",
+      onRemove: () => {
+        setBrand(brand.filter((b) => b !== id));
+        setPage(1);
+      },
+    })),
+    ...(searchTerm
+      ? [
+          {
+            key: "search",
+            label: `“${searchTerm}”`,
+            onRemove: () => {
+              setSearchTerm("");
+              setPage(1);
+            },
+          },
+        ]
+      : []),
+    ...(minPrice
+      ? [
+          {
+            key: "min",
+            label: `Min $${minPrice}`,
+            onRemove: () => {
+              setMinPrice("");
+              setPage(1);
+            },
+          },
+        ]
+      : []),
+    ...(maxPrice
+      ? [
+          {
+            key: "max",
+            label: `Max $${maxPrice}`,
+            onRemove: () => {
+              setMaxPrice("");
+              setPage(1);
+            },
+          },
+        ]
+      : []),
+  ];
+
   return (
     <>
       {/* Filters Section */}
       <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
-        <div className="sticky top-4 z-10 p-3 md:p-4 rounded-2xl mb-4 bg-white/75 dark:bg-black/30 backdrop-blur-md shadow-lg border border-gray-100 dark:border-gray-700">
-          <div className="flex flex-col sm:flex-row items-center gap-2 mb-2">
-            <div className="flex items-center gap-2 mr-4">
-              <Filter className="text-primary w-7 h-7" />
-              <span className="text-xl font-bold text-primary">Filters</span>
-            </div>
-          </div>
-          {/* filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 items-end">
-            <div className="relative xl:col-span-2">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4" />
-              <Input
-                type="text"
-                placeholder="Search drones, brands, categories..."
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setPage(1);
-                }}
-                className="pl-10 w-full"
-              />
-            </div>
-
-            <Input
-              type="number"
-              placeholder="Min Price"
-              value={minPrice}
-              onChange={(e) => {
-                setMinPrice(e.target.value);
+        {/* Top row: label + Sort by (mirrors the storefront catalog header) */}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <span className="font-chakra text-lg font-bold tracking-wide text-dr-text">
+            Filters
+          </span>
+          <div className="flex items-center gap-2.5 rounded-xl border border-dr-bd-2 bg-dr-surface py-1.5 pl-4 pr-1.5">
+            <span className="whitespace-nowrap font-dm-mono text-[11px] uppercase tracking-[0.18em] text-dr-text-2">
+              Sort by
+            </span>
+            <Select
+              value={sort}
+              onValueChange={(v) => {
+                setSort(v);
                 setPage(1);
               }}
-              className="w-full"
-            />
+            >
+              <SelectTrigger className="h-9 w-[168px] border-dr-bd-3 bg-dr-field text-sm">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {SORT_OPTIONS.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
 
-            <Input
-              type="number"
-              placeholder="Max Price"
-              value={maxPrice}
-              onChange={(e) => {
-                setMaxPrice(e.target.value);
+        {/* Category chip rail */}
+        {categories && categories.length > 0 && (
+          <div className="mb-4 flex flex-wrap gap-2.5">
+            <button
+              type="button"
+              onClick={() => {
+                setCategory([]);
                 setPage(1);
               }}
-              className="w-full"
-            />
-
-            {categories && (
-              <div className="space-y-2">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      {category.length > 0
-                        ? `${category.length} selected`
-                        : "Select Categories"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80">
-                    <div className="space-y-2">
-                      <Input
-                        placeholder="Search categories..."
-                        value={categorySearch}
-                        onChange={(e) => setCategorySearch(e.target.value)}
-                      />
-                      <div className="max-h-40 overflow-y-auto space-y-2">
-                        {categories
-                          .filter((cat) =>
-                            cat.name
-                              .toLowerCase()
-                              .includes(categorySearch.toLowerCase()),
-                          )
-                          .map((cat) => (
-                            <div
-                              key={cat._id}
-                              className="flex items-center space-x-2"
-                            >
-                              <Checkbox
-                                id={`cat-${cat._id}`}
-                                checked={category.includes(cat._id)}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    setCategory([...category, cat._id]);
-                                  } else {
-                                    setCategory(
-                                      category.filter((id) => id !== cat._id),
-                                    );
-                                  }
-                                  setPage(1);
-                                }}
-                              />
-                              <label
-                                htmlFor={`cat-${cat._id}`}
-                                className="text-sm text-foreground dark:text-white"
-                              >
-                                {cat.name}
-                              </label>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            )}
-
-            {brands && (
-              <div className="space-y-2">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="w-full justify-start">
-                      {brand.length > 0
-                        ? `${brand.length} selected`
-                        : "Select Brands"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80">
-                    <div className="space-y-2">
-                      <Input
-                        placeholder="Search brands..."
-                        value={brandSearch}
-                        onChange={(e) => setBrandSearch(e.target.value)}
-                      />
-                      <div className="max-h-40 overflow-y-auto space-y-2">
-                        {brands
-                          .filter((b) =>
-                            b.name
-                              .toLowerCase()
-                              .includes(brandSearch.toLowerCase()),
-                          )
-                          .map((b) => (
-                            <div
-                              key={b._id}
-                              className="flex items-center space-x-2"
-                            >
-                              <Checkbox
-                                id={`brand-${b._id}`}
-                                checked={brand.includes(b._id)}
-                                onCheckedChange={(checked) => {
-                                  if (checked) {
-                                    setBrand([...brand, b._id]);
-                                  } else {
-                                    setBrand(
-                                      brand.filter((id) => id !== b._id),
-                                    );
-                                  }
-                                  setPage(1);
-                                }}
-                              />
-                              <label
-                                htmlFor={`brand-${b._id}`}
-                                className="text-sm text-foreground dark:text-white"
-                              >
-                                {b.name}
-                              </label>
-                            </div>
-                          ))}
-                      </div>
-                    </div>
-                  </PopoverContent>
-                </Popover>
-              </div>
-            )}
-
-            {(category.length > 0 ||
-              brand.length > 0 ||
-              searchTerm ||
-              minPrice ||
-              maxPrice) && (
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setCategory([]);
-                  setBrand([]);
-                  setCategorySearch("");
-                  setBrandSearch("");
-                  setSearchTerm("");
-                  setMinPrice("");
-                  setMaxPrice("");
-                  setPage(1);
-                }}
-                className="ml-4"
-              >
-                <X className="w-4 h-4 mr-2" />
-                Clear Filters
-              </Button>
-            )}
+              className={`rounded-full px-4 py-2 font-poppins text-[13px] font-medium leading-none whitespace-nowrap transition-all duration-200 ${
+                category.length === 0
+                  ? "dr-red-grad border border-transparent text-white shadow-[0_6px_18px_rgba(239,43,69,0.28)]"
+                  : "border border-dr-bd-3 bg-dr-surface text-dr-text-2 hover:border-dr-red/45"
+              }`}
+            >
+              All categories
+            </button>
+            {categories.map((cat) => {
+              const active = category.includes(cat._id);
+              return (
+                <button
+                  key={cat._id}
+                  type="button"
+                  onClick={() => {
+                    setCategory(
+                      active
+                        ? category.filter((id) => id !== cat._id)
+                        : [...category, cat._id],
+                    );
+                    setPage(1);
+                  }}
+                  className={`rounded-full px-4 py-2 font-poppins text-[13px] font-medium leading-none whitespace-nowrap transition-all duration-200 ${
+                    active
+                      ? "dr-red-grad border border-transparent text-white shadow-[0_6px_18px_rgba(239,43,69,0.28)]"
+                      : "border border-dr-bd-3 bg-dr-surface text-dr-text-2 hover:border-dr-red/45"
+                  }`}
+                >
+                  {cat.name}
+                </button>
+              );
+            })}
           </div>
+        )}
+
+        {/* Search · price · brand grid */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[1.9fr_0.8fr_0.8fr_1.1fr]">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-dr-text-3" />
+            <Input
+              type="text"
+              placeholder="Search drones, brands, categories..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setPage(1);
+              }}
+              className="w-full pl-10"
+            />
+          </div>
+
+          <Input
+            type="number"
+            placeholder="Min $"
+            value={minPrice}
+            onChange={(e) => {
+              setMinPrice(e.target.value);
+              setPage(1);
+            }}
+            className="w-full"
+          />
+
+          <Input
+            type="number"
+            placeholder="Max $"
+            value={maxPrice}
+            onChange={(e) => {
+              setMaxPrice(e.target.value);
+              setPage(1);
+            }}
+            className="w-full"
+          />
+
+          {brands && (
+            <Select
+              value={brand[0] ?? "all"}
+              onValueChange={(v) => {
+                setBrand(v === "all" ? [] : [v]);
+                setPage(1);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="All brands" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All brands</SelectItem>
+                {brands.map((b) => (
+                  <SelectItem key={b._id} value={b._id}>
+                    {b.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
       </div>
       <ScrollAnimation className="delay-100">
         <div>
-          <Title>All Available Drones</Title>
+          {/* Results count bar — mirrors the storefront catalog */}
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-dr-bd-1 pb-4">
+            <span className="text-[13px] text-dr-text-2">
+              <span className="font-semibold text-dr-text">
+                {meta?.total ?? products.length}
+              </span>{" "}
+              {(meta?.total ?? products.length) === 1 ? "drone" : "drones"}
+            </span>
+            {hasFilters && (
+              <div className="flex flex-wrap items-center gap-2">
+                {activeChips.map((chip) => (
+                  <button
+                    key={chip.key}
+                    type="button"
+                    onClick={chip.onRemove}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-dr-red/30 bg-dr-red/10 py-1.5 pl-3 pr-2 text-[12.5px] text-dr-text transition-colors hover:border-dr-red/50"
+                  >
+                    {chip.label}
+                    <X className="h-3 w-3 text-dr-red" />
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={clearAll}
+                  className="cursor-pointer px-1 py-1.5 text-[12.5px] text-dr-text-3 underline underline-offset-[3px] hover:text-dr-text"
+                >
+                  Clear all
+                </button>
+              </div>
+            )}
+          </div>
           {loading ? (
             <Spinner />
           ) : products.length > 0 ? (
             <Products products={products} isLoggedIn={isLoggedIn} />
           ) : (
-            <div className="text-center py-12">
-              <p className="text-lg text-muted-foreground">
+            <div className="rounded-[18px] border border-dr-bd-2 bg-dr-surface/60 py-16 text-center">
+              <p className="text-lg text-dr-text-2">
                 No drones found for the applied filters.
               </p>
             </div>

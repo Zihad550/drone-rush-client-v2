@@ -21,9 +21,7 @@ const Products = ({ products, isLoggedIn }: ProductsProps) => {
         </div>
       ) : (
         <div className="flex min-h-[200px] items-center justify-center py-8">
-          <p className="text-lg text-muted-foreground dark:text-gray-300">
-            No products found.
-          </p>
+          <p className="text-lg text-dr-text-2">No products found.</p>
         </div>
       )}
     </div>

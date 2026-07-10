@@ -171,7 +171,7 @@ const DroneCard = ({
 
       {/* Product Info */}
       <CardContent className="flex flex-col p-4">
-        <h3 className="mb-2 line-clamp-2 min-h-[3rem] text-lg font-semibold text-foreground">
+        <h3 className="mb-2 line-clamp-2 min-h-[3rem] font-poppins text-lg font-semibold text-dr-text">
           {name}
         </h3>
 
@@ -179,10 +179,10 @@ const DroneCard = ({
         {averageRating > 0 && (
           <div className="mb-2 flex items-center gap-1">
             <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-            <span className="text-sm font-medium text-foreground">
+            <span className="text-sm font-medium text-dr-text">
               {averageRating.toFixed(1)}
             </span>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-dr-text-2">
               ({reviewCount} reviews)
             </span>
           </div>
@@ -201,7 +201,7 @@ const DroneCard = ({
           </Badge>
         </div>
 
-        <p className="mb-3 line-clamp-3 min-h-[4.5rem] text-sm text-muted-foreground">
+        <p className="mb-3 line-clamp-3 min-h-[4.5rem] text-sm text-dr-text-2">
           {description}
         </p>
 
@@ -218,7 +218,7 @@ const DroneCard = ({
 
           <div className="flex flex-col items-end gap-1">
             {!isOutOfStock && (
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-dr-text-2">
                 In Stock: {quantity}
               </span>
             )}
@@ -228,7 +228,7 @@ const DroneCard = ({
                   ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                   : isOutOfStock
                     ? "bg-destructive text-destructive-foreground"
-                    : "text-muted-foreground"
+                    : "text-dr-text-2"
               }`}
             >
               {isInCart(_id)

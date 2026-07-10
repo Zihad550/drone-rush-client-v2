@@ -158,7 +158,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="border-t border-dr-bd-2 mt-10 pt-4 text-center">
-          <p className="text-sm text-dr-text-3">
+          <p className="text-sm text-dr-text-2">
             &copy; {new Date().getFullYear()} Drone Rush. All rights reserved.
           </p>
           <div className="flex justify-center gap-4 mt-2">
