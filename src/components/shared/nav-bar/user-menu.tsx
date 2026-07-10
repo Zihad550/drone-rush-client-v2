@@ -18,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
 import { getMyProfile } from "@/services/user/user.service";
 
 interface UserMenuProps {
@@ -106,17 +107,11 @@ const UserMenu = ({ user }: UserMenuProps) => {
 
           {/* Items */}
           <div className="p-2">
+            {/* My Account (Profile) — available to everyone, admins included */}
             <DropdownMenuItem asChild>
-              <Link
-                href={isAdmin ? "/dashboard/admin" : "/dashboard/user"}
-                className={itemClass}
-              >
-                {isAdmin ? (
-                  <LayoutDashboard className="h-4 w-4" />
-                ) : (
-                  <UserRound className="h-4 w-4" />
-                )}
-                <span>{isAdmin ? "Admin Dashboard" : "My Account"}</span>
+              <Link href="/dashboard/user" className={itemClass}>
+                <UserRound className="h-4 w-4" />
+                <span>My Account</span>
               </Link>
             </DropdownMenuItem>
 
@@ -135,6 +130,18 @@ const UserMenu = ({ user }: UserMenuProps) => {
                   </Link>
                 </DropdownMenuItem>
               </>
+            )}
+
+            {isAdmin && (
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/dashboard/admin"
+                  className={cn(itemClass, "text-dr-red focus:bg-dr-red/10")}
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  <span>Admin Dashboard</span>
+                </Link>
+              </DropdownMenuItem>
             )}
           </div>
 

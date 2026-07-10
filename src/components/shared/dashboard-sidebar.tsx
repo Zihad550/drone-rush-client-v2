@@ -4,7 +4,11 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/shared/logo";
-import { getNavItems, type UserRole } from "@/lib/nav-config";
+import {
+  adminAccountNavItems,
+  getNavItems,
+  type UserRole,
+} from "@/lib/nav-config";
 import { cn } from "@/lib/utils";
 
 interface DashboardSidebarProps {
@@ -19,9 +23,13 @@ export default function DashboardSidebar({
   role,
 }: DashboardSidebarProps) {
   const pathname = usePathname();
-  const navItems = getNavItems(role);
+  const isAdminRole = role === "admin" || role === "superAdmin";
 
-  const sectionLabel = role === "user" ? "Pilot account" : "Control center";
+  // An admin only ever sees this (user) shell on their own profile page, where
+  // the design shows a trimmed account nav + a link back to the admin console.
+  const navItems = isAdminRole ? adminAccountNavItems : getNavItems(role);
+
+  const sectionLabel = isAdminRole ? "Account" : "Pilot account";
 
   return (
     <>

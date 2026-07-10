@@ -2,6 +2,7 @@ import {
   ArrowLeft,
   BarChart,
   Heart,
+  LayoutGrid,
   LayoutList,
   Mail,
   Package,
@@ -90,6 +91,25 @@ export const commonNavItems: NavItem[] = [
     title: "Go back",
     href: "/",
     icon: ArrowLeft,
+  },
+];
+
+/**
+ * Account nav shown when an admin/superAdmin views their own profile page.
+ * Per the v2 design, admins reach the Profile page but not the customer-only
+ * sections (orders, wishlist, cart, addresses); they get a link back to the
+ * admin console instead.
+ */
+export const adminAccountNavItems: NavItem[] = [
+  {
+    title: "Profile",
+    href: "/dashboard/user",
+    icon: UserRound,
+  },
+  {
+    title: "Admin Dashboard",
+    href: "/dashboard/admin",
+    icon: LayoutGrid,
   },
 ];
 
