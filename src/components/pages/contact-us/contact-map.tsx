@@ -1,27 +1,24 @@
-import PublicSectionTitle from "@/components/shared/public-section-title";
-
 export default function ContactMap() {
   return (
-    <div className="mx-auto">
-      <div className="mb-12 text-left">
-        <PublicSectionTitle className="mb-4">Find Us</PublicSectionTitle>
-        <p className="text-muted-foreground">
+    <section className="mx-auto max-w-[1180px] px-10">
+      <div className="mb-8">
+        <h2 className="inline-block font-chakra text-[32px] font-bold text-dr-text">
+          Find Us
+          <span className="mt-2 block h-[3px] w-[110px] rounded-sm bg-gradient-to-r from-dr-red to-transparent" />
+        </h2>
+        <p className="mt-3 max-w-[560px] text-[15px] leading-[1.7] text-dr-text-2">
           Visit our office or contact us for personalized assistance
         </p>
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-background/50 backdrop-blur-sm">
+      <div className="relative overflow-hidden rounded-[18px] border border-dr-bd-2 bg-dr-surface">
         {/* Radar overlay */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
           <div className="relative">
-            {/* Outer rings */}
-            <div className="absolute inset-0 rounded-full border-2 border-primary/30 animate-ping" />
-            <div className="absolute inset-0 rounded-full border border-primary/20 scale-75 animate-pulse" />
-            <div className="absolute inset-0 rounded-full border border-primary/10 scale-50 animate-pulse" />
-
-            {/* Pulsing dot */}
-            <div className="relative h-6 w-6 rounded-full bg-primary shadow-lg shadow-primary/50 animate-pulse">
-              <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-75" />
+            <div className="absolute inset-0 animate-ping rounded-full border-2 border-dr-red/30" />
+            <div className="absolute inset-0 scale-75 animate-pulse rounded-full border border-dr-red/20" />
+            <div className="relative h-6 w-6 animate-pulse rounded-full bg-dr-red shadow-[0_0_20px_rgba(239,43,69,0.6)]">
+              <div className="absolute inset-0 animate-ping rounded-full bg-dr-red opacity-75" />
             </div>
           </div>
         </div>
@@ -37,10 +34,9 @@ export default function ContactMap() {
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             title="Drone Rush Office Location"
-            className="rounded-2xl"
           />
         </div>
       </div>
-    </div>
+    </section>
   );
 }

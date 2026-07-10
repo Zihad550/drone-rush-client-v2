@@ -16,6 +16,8 @@ interface FAQProps {
   showVideo?: boolean;
   layout?: "split" | "full";
   variant?: "default" | "patterned";
+  /** When true, scrolling over the section steps through items instead of scrolling the page. */
+  hijackScroll?: boolean;
 }
 
 const defaultFaqs: FAQItem[] = [
@@ -57,6 +59,7 @@ function FAQ({
   showVideo = true,
   layout = "split",
   variant = "default",
+  hijackScroll = true,
 }: FAQProps) {
   const [openId, setOpenId] = useState<number | null>(1);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -86,6 +89,8 @@ function FAQ({
   }, [currentIndex, faqs.length]);
 
   useEffect(() => {
+    if (!hijackScroll) return;
+
     let timeoutId: NodeJS.Timeout;
 
     const handleWheel = (e: WheelEvent) => {
@@ -120,7 +125,7 @@ function FAQ({
       window.removeEventListener("wheel", handleWheel);
       clearTimeout(timeoutId);
     };
-  }, [isInView, currentIndex, faqs]);
+  }, [isInView, currentIndex, faqs, hijackScroll]);
 
   const toggleAccordion = (id: number, index: number) => {
     setOpenId(openId === id ? null : id);
@@ -164,7 +169,9 @@ function FAQ({
         {/* FAQ Accordions */}
         <div
           className={
-            layout === "split" ? "flex flex-col justify-center space-y-3" : ""
+            layout === "split"
+              ? "flex flex-col justify-center space-y-3"
+              : "space-y-4"
           }
         >
           {faqs.map((faq, index) => (

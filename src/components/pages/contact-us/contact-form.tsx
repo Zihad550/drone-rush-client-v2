@@ -1,14 +1,15 @@
 "use client";
 
-import { Mail, MessageSquare, Send, User } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import InlineSpinner from "@/components/inline-spinner";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { submitContactForm } from "@/services/contact/contact.service";
+
+const labelCls =
+  "font-dm-mono text-[11px] uppercase tracking-[0.16em] text-dr-text-3";
+const fieldCls =
+  "w-full rounded-[12px] border bg-dr-surface px-[15px] py-[13px] text-[15px] text-dr-text outline-none transition-colors placeholder:text-dr-text-3 focus:border-dr-red";
 
 export default function ContactForm() {
   const [state, formAction, isPending] = useActionState(
@@ -36,149 +37,101 @@ export default function ContactForm() {
   );
   const hasErrors = state && !state.success;
 
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-background via-background/95 to-primary/5 p-8 shadow-[0_0_30px_rgba(var(--primary),0.1)] backdrop-blur-sm md:p-12">
-      {/* Hexagonal border overlay */}
-      <div className="absolute inset-0 opacity-10">
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 400 300"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <pattern
-              id="hex-border"
-              x="0"
-              y="0"
-              width="50"
-              height="43.3"
-              patternUnits="userSpaceOnUse"
-            >
-              <polygon
-                points="25,0 50,14.43 50,43.3 25,57.73 0,43.3 0,14.43"
-                fill="none"
-                stroke="var(--primary)"
-                strokeWidth="0.5"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hex-border)" />
-          <title>Hexagonal border pattern</title>
-        </svg>
-      </div>
+  const borderFor = (field: string) =>
+    fieldErrors[field] ? "border-dr-red" : "border-dr-bd-3";
 
-      <form action={formAction} className="relative z-10 space-y-6">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="name">Full Name</Label>
-            <div className="relative">
-              <div className="absolute left-2 top-2.5 rounded-full bg-primary/10 p-1">
-                <User className="h-4 w-4 text-primary" />
-              </div>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="John Doe"
-                required
-                className={`pl-10 transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.name ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
-                aria-invalid={!!fieldErrors.name}
-                aria-describedby={fieldErrors.name ? "name-error" : undefined}
-              />
-            </div>
+  return (
+    <div className="rounded-[18px] border border-dr-bd-2 bg-dr-surface p-8 md:p-10">
+      <form action={formAction} className="space-y-5">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <label className="flex flex-col gap-[7px]">
+            <span className={labelCls}>Full Name</span>
+            <input
+              name="name"
+              type="text"
+              placeholder="John Doe"
+              required
+              className={`${fieldCls} ${borderFor("name")}`}
+              aria-invalid={!!fieldErrors.name}
+              aria-describedby={fieldErrors.name ? "name-error" : undefined}
+            />
             {fieldErrors.name && (
-              <p
+              <span
                 id="name-error"
-                className="text-sm text-destructive"
+                className="text-[12.5px] text-dr-red"
                 role="alert"
               >
                 {fieldErrors.name}
-              </p>
+              </span>
             )}
-          </div>
+          </label>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email Address</Label>
-            <div className="relative">
-              <div className="absolute left-2 top-2.5 rounded-full bg-primary/10 p-1">
-                <Mail className="h-4 w-4 text-primary" />
-              </div>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="john@example.com"
-                required
-                className={`pl-10 transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.email ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
-                aria-invalid={!!fieldErrors.email}
-                aria-describedby={fieldErrors.email ? "email-error" : undefined}
-              />
-            </div>
+          <label className="flex flex-col gap-[7px]">
+            <span className={labelCls}>Email Address</span>
+            <input
+              name="email"
+              type="email"
+              placeholder="john@example.com"
+              required
+              className={`${fieldCls} ${borderFor("email")}`}
+              aria-invalid={!!fieldErrors.email}
+              aria-describedby={fieldErrors.email ? "email-error" : undefined}
+            />
             {fieldErrors.email && (
-              <p
+              <span
                 id="email-error"
-                className="text-sm text-destructive"
+                className="text-[12.5px] text-dr-red"
                 role="alert"
               >
                 {fieldErrors.email}
-              </p>
+              </span>
             )}
-          </div>
+          </label>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="subject">Subject</Label>
-          <div className="relative">
-            <div className="absolute left-2 top-2.5 rounded-full bg-primary/10 p-1">
-              <MessageSquare className="h-4 w-4 text-primary" />
-            </div>
-            <Input
-              id="subject"
-              name="subject"
-              type="text"
-              placeholder="How can we help you?"
-              required
-              className={`pl-10 transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.subject ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
-              aria-invalid={!!fieldErrors.subject}
-              aria-describedby={
-                fieldErrors.subject ? "subject-error" : undefined
-              }
-            />
-          </div>
+        <label className="flex flex-col gap-[7px]">
+          <span className={labelCls}>Subject</span>
+          <input
+            name="subject"
+            type="text"
+            placeholder="How can we help you?"
+            required
+            className={`${fieldCls} ${borderFor("subject")}`}
+            aria-invalid={!!fieldErrors.subject}
+            aria-describedby={fieldErrors.subject ? "subject-error" : undefined}
+          />
           {fieldErrors.subject && (
-            <p
+            <span
               id="subject-error"
-              className="text-sm text-destructive"
+              className="text-[12.5px] text-dr-red"
               role="alert"
             >
               {fieldErrors.subject}
-            </p>
+            </span>
           )}
-        </div>
+        </label>
 
-        <div className="space-y-2">
-          <Label htmlFor="message">Message</Label>
-          <Textarea
-            id="message"
+        <label className="flex flex-col gap-[7px]">
+          <span className={labelCls}>Message</span>
+          <textarea
             name="message"
             placeholder="Tell us more about your inquiry..."
             required
             rows={6}
-            className={`resize-none transition-all duration-300 focus:shadow-[0_0_15px_rgba(var(--primary),0.3)] ${fieldErrors.message ? "border-destructive focus:border-destructive" : "focus:border-primary"}`}
+            className={`${fieldCls} resize-none ${borderFor("message")}`}
             aria-invalid={!!fieldErrors.message}
             aria-describedby={fieldErrors.message ? "message-error" : undefined}
           />
           {fieldErrors.message && (
-            <p
+            <span
               id="message-error"
-              className="text-sm text-destructive"
+              className="text-[12.5px] text-dr-red"
               role="alert"
             >
               {fieldErrors.message}
-            </p>
+            </span>
           )}
-        </div>
+        </label>
 
         {/* Aria-live region for form status announcements */}
         <div aria-live="polite" aria-atomic="true" className="sr-only">
@@ -190,10 +143,10 @@ export default function ContactForm() {
           {isPending && "Sending message..."}
         </div>
 
-        <Button
+        <button
           type="submit"
           disabled={isPending}
-          className="w-full cursor-pointer shadow-[0_0_20px_rgba(var(--primary),0.3)] transition-all duration-300 hover:shadow-[0_0_30px_rgba(var(--primary),0.5)] hover:scale-105"
+          className="dr-red-grad inline-flex w-full items-center justify-center gap-2.5 rounded-[9px] px-[26px] py-3.5 font-poppins text-sm font-semibold text-white shadow-[0_10px_26px_rgba(239,43,69,0.35)] transition-opacity disabled:opacity-70"
         >
           {isPending ? (
             <>
@@ -203,10 +156,10 @@ export default function ContactForm() {
           ) : (
             <>
               Send Message
-              <Send className="ml-2 h-4 w-4" />
+              <ArrowRight className="h-[15px] w-[15px]" strokeWidth={2.5} />
             </>
           )}
-        </Button>
+        </button>
       </form>
     </div>
   );

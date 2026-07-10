@@ -21,107 +21,69 @@ export default function ContactInfoCards() {
   };
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-      <div className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-background/50 p-4 backdrop-blur-sm shadow-[0_0_20px_rgba(var(--primary),0.1)] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(var(--primary),0.3)]">
-        {/* Hexagonal overlay */}
-        <div className="absolute inset-0 opacity-5">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <polygon
-              points="50,0 100,25 100,75 50,100 0,75 0,25"
-              fill="currentColor"
-              className="text-primary"
-            />
-            <title>Hexagonal overlay</title>
-          </svg>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      {/* Email */}
+      <div className="group rounded-[13px] border border-dr-bd-1 bg-dr-surface p-4 transition-colors hover:border-dr-red/30">
+        <div
+          className="mb-3 flex h-10 w-[38px] items-center justify-center border border-dr-red/30 bg-gradient-to-b from-dr-red/[0.16] to-transparent text-dr-red"
+          style={{
+            clipPath: "polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)",
+          }}
+        >
+          <Mail className="h-[18px] w-[18px]" strokeWidth={2} />
         </div>
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="rounded-full bg-primary/10 p-2 group-hover:bg-primary/20 transition-colors">
-            <Mail className="h-5 w-5 text-primary" />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-medium text-muted-foreground">Email</p>
-            <button
-              type="button"
-              onClick={() =>
-                copyToClipboard("jehadhossain008@gmail.com", setCopiedEmail)
-              }
-              className="text-base font-semibold text-foreground hover:text-primary transition-colors"
-            >
-              {copiedEmail ? "Copied!" : "jehadhossain008@gmail.com"}
-            </button>
-          </div>
-        </div>
+        <p className="font-dm-mono text-[10px] uppercase tracking-[0.16em] text-dr-text-3">
+          Email
+        </p>
+        <button
+          type="button"
+          onClick={() =>
+            copyToClipboard("jehadhossain008@gmail.com", setCopiedEmail)
+          }
+          className="mt-0.5 block break-all text-left font-poppins text-[13px] font-semibold text-dr-text transition-colors hover:text-dr-red"
+        >
+          {copiedEmail ? "Copied!" : "jehadhossain008@gmail.com"}
+        </button>
       </div>
 
-      <div className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-background/50 p-4 backdrop-blur-sm shadow-[0_0_20px_rgba(var(--primary),0.1)] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(var(--primary),0.3)]">
-        {/* Hexagonal overlay */}
-        <div className="absolute inset-0 opacity-5">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <polygon
-              points="50,0 100,25 100,75 50,100 0,75 0,25"
-              fill="currentColor"
-              className="text-primary"
-            />
-            <title>Hexagonal overlay</title>
-          </svg>
+      {/* Phone */}
+      <div className="group rounded-[13px] border border-dr-bd-1 bg-dr-surface p-4 transition-colors hover:border-dr-red/30">
+        <div
+          className="mb-3 flex h-10 w-[38px] items-center justify-center border border-dr-red/30 bg-gradient-to-b from-dr-red/[0.16] to-transparent text-dr-red"
+          style={{
+            clipPath: "polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)",
+          }}
+        >
+          <Phone className="h-[18px] w-[18px]" strokeWidth={2} />
         </div>
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="rounded-full bg-primary/10 p-2 group-hover:bg-primary/20 transition-colors">
-            <Phone className="h-5 w-5 text-primary" />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-medium text-muted-foreground">Phone</p>
-            <button
-              type="button"
-              onClick={() => copyToClipboard("+8801855629170", setCopiedPhone)}
-              className="text-base font-semibold text-foreground hover:text-primary transition-colors"
-            >
-              {copiedPhone ? "Copied!" : "+88 01855629170"}
-            </button>
-          </div>
-        </div>
+        <p className="font-dm-mono text-[10px] uppercase tracking-[0.16em] text-dr-text-3">
+          Phone
+        </p>
+        <button
+          type="button"
+          onClick={() => copyToClipboard("+8801855629170", setCopiedPhone)}
+          className="mt-0.5 block text-left font-poppins text-[13px] font-semibold text-dr-text transition-colors hover:text-dr-red"
+        >
+          {copiedPhone ? "Copied!" : "+88 01855629170"}
+        </button>
       </div>
 
-      <div className="group relative overflow-hidden rounded-2xl border border-primary/20 bg-background/50 p-4 backdrop-blur-sm shadow-[0_0_20px_rgba(var(--primary),0.1)] transition-all duration-300 hover:border-primary/40 hover:shadow-[0_0_30px_rgba(var(--primary),0.3)]">
-        {/* Hexagonal overlay */}
-        <div className="absolute inset-0 opacity-5">
-          <svg
-            width="100%"
-            height="100%"
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <polygon
-              points="50,0 100,25 100,75 50,100 0,75 0,25"
-              fill="currentColor"
-              className="text-primary"
-            />
-            <title>Hexagonal overlay</title>
-          </svg>
+      {/* Business hours */}
+      <div className="group rounded-[13px] border border-dr-bd-1 bg-dr-surface p-4 transition-colors hover:border-dr-red/30">
+        <div
+          className="mb-3 flex h-10 w-[38px] items-center justify-center border border-dr-red/30 bg-gradient-to-b from-dr-red/[0.16] to-transparent text-dr-red"
+          style={{
+            clipPath: "polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)",
+          }}
+        >
+          <Clock className="h-[18px] w-[18px]" strokeWidth={2} />
         </div>
-        <div className="relative z-10 flex items-center gap-3">
-          <div className="rounded-full bg-primary/10 p-2 group-hover:bg-primary/20 transition-colors">
-            <Clock className="h-5 w-5 text-primary" />
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-medium text-muted-foreground">
-              Business Hours
-            </p>
-            <p className="text-base font-semibold text-foreground">
-              10:00–18:00 GMT+6 (Mon–Fri)
-            </p>
-          </div>
-        </div>
+        <p className="font-dm-mono text-[10px] uppercase tracking-[0.16em] text-dr-text-3">
+          Business Hours
+        </p>
+        <p className="mt-0.5 font-poppins text-[13px] font-semibold text-dr-text">
+          10:00&ndash;18:00 GMT+6 (Mon&ndash;Fri)
+        </p>
       </div>
     </div>
   );
