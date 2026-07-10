@@ -35,8 +35,8 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background px-6 shadow-sm">
-      <div className="flex items-center gap-4">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-dr-bd-1 bg-dr-nav px-5 backdrop-blur-md sm:px-8">
+      <div className="flex items-center gap-3">
         <Button
           variant="ghost"
           size="icon"
@@ -46,18 +46,20 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle menu</span>
         </Button>
-        <h1 className="text-lg font-semibold md:text-xl">{pageTitle}</h1>
+        <h1 className="font-chakra text-lg font-bold tracking-[-0.3px] text-dr-text md:text-xl">
+          {pageTitle}
+        </h1>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-3">
         <ModeToggle />
         <button
           type="button"
           onClick={handleLogout}
-          className="cursor-pointer text-red-600 focus:text-red-600 flex items-center"
+          className="flex cursor-pointer items-center gap-2 rounded-full border border-dr-bd-2 px-3.5 py-2 font-poppins text-[13px] font-semibold text-dr-text transition-colors hover:border-dr-red/40 hover:text-dr-red disabled:opacity-60"
           disabled={isPending}
         >
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Logout</span>
+          <LogOut className="h-4 w-4" />
+          <span className="hidden sm:inline">Logout</span>
         </button>
       </div>
     </header>

@@ -2,9 +2,9 @@
 
 import { Heart, ShoppingCart, Trash2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import DashboardPageHeader from "@/components/pages/dashboard/user/dashboard-page-header";
 import { useCart } from "@/lib/cart-context";
 import { useWishlist } from "@/lib/wishlist-context";
 
@@ -32,81 +32,91 @@ export default function WishlistPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (!wishlist || wishlist.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-96 space-y-4">
-        <Heart className="h-16 w-16 text-muted-foreground" />
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold text-muted-foreground">
-            Your wishlist is empty
-          </h2>
-          <p className="text-muted-foreground">
-            Start adding products you love!
-          </p>
-        </div>
+      <div className="flex h-96 items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-dr-red"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">My Wishlist</h1>
-        <p className="text-muted-foreground">Products you've saved for later</p>
-      </div>
+    <div className="mx-auto max-w-[1180px] space-y-7">
+      <DashboardPageHeader
+        eyebrow="Saved fleet"
+        title="My wishlist"
+        description="Drones you've saved to launch later."
+      />
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {wishlist.map((item) => (
-          <Card key={item._id} className="overflow-hidden">
-            <CardHeader className="p-0">
-              <div className="relative h-48">
+      {!wishlist || wishlist.length === 0 ? (
+        <div className="flex flex-col items-center justify-center gap-4 rounded-[18px] border border-dr-bd-1 bg-dr-surface py-20 text-center">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full border border-dr-red/25 bg-dr-red/[0.1] text-dr-red">
+            <Heart className="h-7 w-7" strokeWidth={1.75} />
+          </span>
+          <div>
+            <h2 className="font-chakra text-xl font-bold text-dr-text">
+              Your wishlist is empty
+            </h2>
+            <p className="mt-1 text-sm text-dr-text-3">
+              Start adding drones you love.
+            </p>
+          </div>
+          <Link
+            href="/drones"
+            className="dr-red-grad mt-1 inline-flex items-center rounded-[10px] px-5 py-2.5 font-poppins text-sm font-semibold text-white shadow-[0_10px_26px_rgba(239,43,69,0.32)]"
+          >
+            Browse drones
+          </Link>
+        </div>
+      ) : (
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {wishlist.map((item) => (
+            <div
+              key={item._id}
+              className="group overflow-hidden rounded-[16px] border border-dr-bd-1 bg-dr-surface transition-colors hover:border-dr-red/30"
+            >
+              <div className="relative h-48 overflow-hidden bg-dr-field">
                 <Image
                   src={item.drone.img}
                   alt={item.drone.name}
                   fill
-                  className="object-cover"
+                  sizes="(max-width:768px) 100vw, 33vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.04]"
                 />
               </div>
-            </CardHeader>
-            <CardContent className="p-4">
-              <CardTitle className="line-clamp-2 mb-2">
-                {item.drone.name}
-              </CardTitle>
-              <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
-                {item.drone.description}
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-lg font-bold text-primary">
-                  ${item.drone.price.toFixed(2)}
-                </span>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleAddToCart(item.drone._id)}
-                  >
-                    <ShoppingCart className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleRemoveFromWishlist(item.drone._id)}
-                    className="text-destructive hover:text-destructive"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+              <div className="p-4">
+                <h3 className="line-clamp-1 font-poppins text-[15px] font-semibold text-dr-text">
+                  {item.drone.name}
+                </h3>
+                <p className="mt-1 line-clamp-2 text-[13px] leading-relaxed text-dr-text-3">
+                  {item.drone.description}
+                </p>
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="font-chakra text-xl font-bold text-dr-text">
+                    ${item.drone.price.toFixed(2)}
+                  </span>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => handleAddToCart(item.drone._id)}
+                      aria-label="Add to cart"
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-dr-bd-2 text-dr-text transition-colors hover:border-dr-red/40 hover:text-dr-red"
+                    >
+                      <ShoppingCart className="h-4 w-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveFromWishlist(item.drone._id)}
+                      aria-label="Remove from wishlist"
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-dr-red/30 text-dr-red transition-colors hover:bg-dr-red/[0.1]"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,3 +1,12 @@
+import {
+  CheckCircle2,
+  Heart,
+  Package,
+  ShoppingCart,
+  Star,
+  Wallet,
+} from "lucide-react";
+import DashboardPageHeader from "../dashboard-page-header";
 import AnalyticsCharts from "./AnalyticsCharts";
 import MetricCard from "./MetricCard";
 
@@ -19,47 +28,55 @@ export default function AnalyticsDashboard({
   analytics,
 }: AnalyticsDashboardProps) {
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">Your analytics overview</p>
-      </div>
+    <div className="mx-auto max-w-[1180px] space-y-7">
+      <DashboardPageHeader
+        eyebrow="Flight log"
+        title="Pilot dashboard"
+        description="Your orders, spend and fleet activity at a glance."
+      />
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title="Total Orders"
           value={analytics.totalOrders}
           description="All time orders"
+          icon={Package}
         />
         <MetricCard
-          title="Completed Orders"
+          title="Completed"
           value={analytics.completedOrders}
-          description="Successfully completed"
+          description="Successfully delivered"
+          icon={CheckCircle2}
         />
         <MetricCard
           title="Total Spent"
           value={`$${analytics.totalSpent.toFixed(2)}`}
           description="On completed orders"
+          icon={Wallet}
         />
         <MetricCard
-          title="Total Reviews"
+          title="Reviews"
           value={analytics.totalReviews}
           description="Reviews submitted"
+          icon={Star}
         />
         <MetricCard
-          title="Average Rating"
+          title="Avg. Rating"
           value={analytics.averageRating.toFixed(1)}
           description="Out of 5 stars"
+          icon={Star}
         />
         <MetricCard
-          title="Wishlist Items"
+          title="Wishlist"
           value={analytics.wishlistCount}
-          description="Items in wishlist"
+          description="Saved for later"
+          icon={Heart}
         />
         <MetricCard
-          title="Cart Items"
+          title="In Cart"
           value={analytics.cartCount}
-          description="Items in cart"
+          description="Ready to check out"
+          icon={ShoppingCart}
         />
       </div>
 

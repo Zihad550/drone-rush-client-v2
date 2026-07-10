@@ -2,7 +2,6 @@ import {
   ArrowLeft,
   BarChart,
   Heart,
-  LayoutDashboard,
   LayoutList,
   Mail,
   Package,
@@ -10,6 +9,7 @@ import {
   ShoppingCart,
   Tag,
   Truck,
+  UserRound,
 } from "lucide-react";
 
 export type UserRole = "user" | "admin" | "superAdmin";
@@ -58,9 +58,9 @@ export const admin_common_nav_items: NavItem[] = [
 
 export const userNavItems: NavItem[] = [
   {
-    title: "Dashboard",
+    title: "Profile",
     href: "/dashboard/user",
-    icon: LayoutDashboard,
+    icon: UserRound,
   },
   {
     title: "My Orders",

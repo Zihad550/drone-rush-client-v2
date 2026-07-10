@@ -1,9 +1,6 @@
-import { ArrowLeft, Shield } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import ResetPasswordForm from "@/components/auth/reset-password-form";
-import SectionContainer from "@/components/shared/SectionContainer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ResetPasswordPageProps {
   searchParams: Promise<{ token?: string }>;
@@ -20,97 +17,52 @@ export default async function ResetPasswordPage({
   }
 
   return (
-    <SectionContainer
-      paddingX={false}
-      className="py-10 relative bg-gradient-to-br from-background to-muted/20 min-h-screen"
+    <div
+      className="min-h-screen bg-dr-field px-6 py-[26px] sm:px-10"
+      style={{
+        background:
+          "radial-gradient(circle at 78% 12%,rgba(239,43,69,.10),transparent 55%),var(--dr-field)",
+      }}
     >
       <Link
         href="/login"
-        className="absolute top-4 left-4 flex items-center text-foreground hover:text-primary transition-all duration-200 hover:scale-105"
+        className="text-[15px] text-dr-text-2 transition-colors hover:text-dr-red"
       >
-        <ArrowLeft className="mr-2 h-4 w-4" />
         Back to Login
       </Link>
-      <div className="flex justify-center items-center min-h-[80vh]">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-          <div className="flex flex-col justify-center">
-            <Card className="w-full shadow-lg border-0 bg-gradient-to-br from-card to-card/95 transition-all duration-300 hover:shadow-xl hover:scale-[1.01]">
-              <CardHeader className="text-center">
-                <div className="flex justify-center mb-2">
-                  <Shield className="h-12 w-12 text-primary" />
-                </div>
-                <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-                  Reset Password
-                </CardTitle>
-                <p className="text-muted-foreground mt-2">
-                  Enter your old password and choose a new one to reset your
-                  account.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <ResetPasswordForm token={token} />
-              </CardContent>
-            </Card>
+
+      <div className="mt-20 flex items-center justify-center">
+        <div className="w-full max-w-[420px] rounded-[14px] border border-dr-bd-1 bg-dr-surface p-[34px]">
+          {/* Lock chip */}
+          <div className="mx-auto mb-[18px] flex h-[52px] w-[52px] items-center justify-center rounded-[13px] bg-dr-red/[0.12] text-dr-red">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              role="img"
+              aria-label="Lock"
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 9.9-1" />
+            </svg>
           </div>
-          <div className="hidden md:flex items-center justify-center">
-            <div className="relative w-full h-[400px] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-lg flex items-center justify-center overflow-hidden">
-              <svg
-                viewBox="0 0 400 300"
-                className="w-full h-full max-w-sm max-h-64"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                role="img"
-                aria-labelledby="reset-password-illustration"
-              >
-                <title id="reset-password-illustration">
-                  Illustration of password reset
-                </title>
-                <rect
-                  x="50"
-                  y="80"
-                  width="300"
-                  height="180"
-                  rx="20"
-                  fill="currentColor"
-                  className="text-muted-foreground/20"
-                />
-                <path
-                  d="M100 120 L200 140 L300 120 L300 220 L100 220 Z"
-                  fill="currentColor"
-                  className="text-muted-foreground/30"
-                />
-                <circle
-                  cx="200"
-                  cy="160"
-                  r="20"
-                  fill="currentColor"
-                  className="text-primary"
-                />
-                <path
-                  d="M190 150 L200 170 L210 150"
-                  stroke="currentColor"
-                  strokeWidth="3"
-                  className="text-card"
-                />
-                <path
-                  d="M150 100 L150 70 L180 70 L180 100"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                  fill="none"
-                  className="text-primary"
-                />
-                <circle
-                  cx="180"
-                  cy="60"
-                  r="8"
-                  fill="currentColor"
-                  className="text-primary"
-                />
-              </svg>
-            </div>
-          </div>
+
+          <h1 className="text-center font-poppins text-2xl font-bold text-dr-text">
+            Reset your password
+          </h1>
+          <p className="mx-auto mb-6 mt-2 max-w-[320px] text-center text-[13.5px] leading-[1.55] text-dr-text-3">
+            Enter your current password and choose a new one to secure your
+            account.
+          </p>
+
+          <ResetPasswordForm token={token} />
         </div>
       </div>
-    </SectionContainer>
+    </div>
   );
 }

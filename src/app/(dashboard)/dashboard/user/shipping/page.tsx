@@ -1,16 +1,10 @@
 "use client";
 
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Loader2, MapPin, Plus, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import DashboardPageHeader from "@/components/pages/dashboard/user/dashboard-page-header";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -31,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import { useCart } from "@/lib/cart-context";
 import { serverFetch } from "@/lib/server-fetch";
+import { cn } from "@/lib/utils";
 import {
   createShippingInfo,
   deleteShippingInfo,
@@ -206,19 +201,21 @@ const ShippingPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Shipping Information</CardTitle>
-          <CardDescription>Manage your shipping addresses.</CardDescription>
-        </CardHeader>
-        <CardContent>
+    <div className="mx-auto max-w-[1180px] space-y-7">
+      <DashboardPageHeader
+        eyebrow="Delivery"
+        title="Shipping information"
+        description="Manage your delivery addresses and check out."
+        action={
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="mb-4">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Shipping Info
-              </Button>
+              <button
+                type="button"
+                className="dr-red-grad inline-flex items-center gap-2 rounded-[10px] px-5 py-2.5 font-poppins text-sm font-semibold text-white shadow-[0_10px_26px_rgba(239,43,69,0.32)]"
+              >
+                <Plus className="h-4 w-4" />
+                Add address
+              </button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -312,103 +309,139 @@ const ShippingPage = () => {
               </form>
             </DialogContent>
           </Dialog>
+        }
+      />
 
-          {shippingInfo.length > 0 && (
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-4">
-                Select Shipping Address for Checkout
-              </h3>
-              <div className="space-y-2">
+      {shippingInfo.length > 0 && (
+        <div className="rounded-[16px] border border-dr-bd-1 bg-dr-surface p-5">
+          <div className="mb-4 flex items-center gap-2">
+            <span className="h-[2px] w-5 rounded-sm bg-dr-red" />
+            <h3 className="font-poppins text-sm font-semibold text-dr-text">
+              Select address for checkout
+            </h3>
+          </div>
+          <div className="space-y-2">
+            {shippingInfo.map((info) => {
+              const active = selectedShippingId === info._id;
+              return (
+                <label
+                  key={info._id}
+                  htmlFor={`sel-${info._id}`}
+                  className={cn(
+                    "flex cursor-pointer items-center gap-3 rounded-[12px] border p-3.5 transition-colors",
+                    active
+                      ? "border-dr-red/40 bg-dr-red/[0.07]"
+                      : "border-dr-bd-1 hover:border-dr-bd-3",
+                  )}
+                >
+                  <input
+                    type="radio"
+                    id={`sel-${info._id}`}
+                    name="shipping"
+                    value={info._id}
+                    checked={active}
+                    onChange={(e) => setSelectedShippingId(e.target.value)}
+                    className="h-4 w-4 cursor-pointer accent-dr-red"
+                  />
+                  <span className="flex-1 text-[13px] text-dr-text-2">
+                    {info.street}, {info.city}, {info.state}, {info.zipCode},{" "}
+                    {info.country}
+                    <span className="ml-2 font-dm-mono text-[10px] uppercase tracking-wide text-dr-text-3">
+                      {info.paymentMethod}
+                    </span>
+                  </span>
+                </label>
+              );
+            })}
+          </div>
+          <button
+            type="button"
+            onClick={handleCheckout}
+            disabled={!selectedShippingId || checkoutLoading}
+            className="dr-red-grad mt-4 flex w-full items-center justify-center gap-2 rounded-[10px] px-5 py-3 font-poppins text-sm font-semibold text-white shadow-[0_10px_26px_rgba(239,43,69,0.32)] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {checkoutLoading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Processing&hellip;
+              </>
+            ) : (
+              `Continue to checkout ($${getTotalPrice().toFixed(2)})`
+            )}
+          </button>
+        </div>
+      )}
+
+      <div className="overflow-hidden rounded-[16px] border border-dr-bd-1 bg-dr-surface">
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <Loader2 className="h-8 w-8 animate-spin text-dr-red" />
+          </div>
+        ) : shippingInfo.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-16 text-center">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full border border-dr-red/25 bg-dr-red/[0.1] text-dr-red">
+              <MapPin className="h-6 w-6" strokeWidth={1.75} />
+            </span>
+            <p className="text-sm text-dr-text-3">
+              No saved addresses yet. Add one to check out.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[560px] caption-bottom text-sm">
+              <thead>
+                <tr className="border-b border-dr-bd-1">
+                  {["Address", "Payment", "Actions"].map((h) => (
+                    <th
+                      key={h}
+                      className="px-5 py-3.5 text-left font-dm-mono text-[10px] font-bold uppercase tracking-[0.18em] text-dr-text-3"
+                    >
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
                 {shippingInfo.map((info) => (
-                  <div
+                  <tr
                     key={info._id}
-                    className="flex items-center space-x-2 border rounded p-3"
+                    className="border-b border-dr-bd-1 transition-colors last:border-0 hover:bg-dr-bd-1/40"
                   >
-                    <input
-                      type="radio"
-                      id={info._id}
-                      name="shipping"
-                      value={info._id}
-                      checked={selectedShippingId === info._id}
-                      onChange={(e) => setSelectedShippingId(e.target.value)}
-                      className="cursor-pointer"
-                    />
-                    <Label htmlFor={info._id} className="flex-1 cursor-pointer">
+                    <td className="px-5 py-4 text-[13px] text-dr-text-2">
                       {info.street}, {info.city}, {info.state}, {info.zipCode},{" "}
-                      {info.country} - {info.paymentMethod}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-              <Button
-                className="w-full mt-4"
-                size="lg"
-                onClick={handleCheckout}
-                disabled={!selectedShippingId || checkoutLoading}
-              >
-                {checkoutLoading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Processing...
-                  </>
-                ) : (
-                  `Continue to Checkout ($${getTotalPrice().toFixed(2)})`
-                )}
-              </Button>
-            </div>
-          )}
-
-          {loading ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            </div>
-          ) : shippingInfo.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              No shipping info found.
-            </div>
-          ) : (
-            <div className="rounded-md border">
-              <table className="w-full caption-bottom text-sm">
-                <thead>
-                  <tr className="border-b">
-                    <th className="h-12 px-4 text-left">Address</th>
-                    <th className="h-12 px-4 text-left">Payment Method</th>
-                    <th className="h-12 px-4 text-left">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {shippingInfo.map((info) => (
-                    <tr key={info._id} className="border-b">
-                      <td className="p-4">
-                        {info.street}, {info.city}, {info.state}, {info.zipCode}
-                        , {info.country}
-                      </td>
-                      <td className="p-4">{info.paymentMethod}</td>
-                      <td className="p-4">
-                        <Button
-                          variant="outline"
-                          size="sm"
+                      {info.country}
+                    </td>
+                    <td className="px-5 py-4">
+                      <span className="inline-flex items-center rounded-full border border-dr-bd-2 px-2.5 py-1 font-dm-mono text-[10px] font-bold uppercase tracking-[0.12em] text-dr-text-2">
+                        {info.paymentMethod}
+                      </span>
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
                           onClick={() => handleEdit(info)}
-                          className="mr-2"
+                          className="inline-flex items-center rounded-[9px] border border-dr-bd-2 px-3 py-1.5 font-poppins text-[13px] font-semibold text-dr-text transition-colors hover:border-dr-red/40 hover:text-dr-red"
                         >
                           Edit
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => handleDelete(info._id)}
+                          aria-label="Delete address"
+                          className="inline-flex items-center rounded-[9px] border border-dr-red/30 p-2 text-dr-red transition-colors hover:bg-dr-red/[0.1]"
                         >
                           <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

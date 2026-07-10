@@ -5,6 +5,7 @@ import {
   BarElement,
   CategoryScale,
   Chart as ChartJS,
+  type ChartOptions,
   Legend,
   LinearScale,
   LineElement,
@@ -14,7 +15,6 @@ import {
 } from "chart.js";
 import { useTheme } from "next-themes";
 import { Bar, Line, Pie } from "react-chartjs-2";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 ChartJS.register(
   CategoryScale,
@@ -33,6 +33,26 @@ interface AnalyticsChartsProps {
   ratingCounts: { [key: number]: number };
 }
 
+function ChartCard({
+  title,
+  children,
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-[16px] border border-dr-bd-1 bg-dr-surface p-5">
+      <div className="mb-4 flex items-center gap-2">
+        <span className="h-[2px] w-5 rounded-sm bg-dr-red" />
+        <h3 className="font-poppins text-sm font-semibold text-dr-text">
+          {title}
+        </h3>
+      </div>
+      <div className="h-[240px]">{children}</div>
+    </div>
+  );
+}
+
 export default function AnalyticsCharts({
   orderStatusCounts,
   ratingCounts,
@@ -48,32 +68,39 @@ export default function AnalyticsCharts({
   );
   const ratingData = Object.values(ratingCounts);
 
-  // Theme-aware colors
-  const barColor = isDark
-    ? "rgba(96, 165, 250, 0.6)"
-    : "rgba(59, 130, 246, 0.6)"; // blue
-  const lineBorderColor = isDark
-    ? "rgba(96, 165, 250, 1)"
-    : "rgba(59, 130, 246, 1)";
-  const lineBgColor = isDark
-    ? "rgba(96, 165, 250, 0.2)"
-    : "rgba(59, 130, 246, 0.2)";
+  const red = "#ef2b45";
+  const tickColor = isDark ? "#b3b0ba" : "#55515e";
+  const gridColor = isDark ? "rgba(255,255,255,0.06)" : "rgba(20,16,28,0.07)";
 
-  const pieColors = isDark
-    ? [
-        "rgba(96, 165, 250, 0.6)", // blue
-        "rgba(34, 197, 94, 0.6)", // green
-        "rgba(252, 165, 165, 0.6)", // red
-        "rgba(253, 224, 71, 0.6)", // yellow
-        "rgba(196, 181, 253, 0.6)", // purple
-      ]
-    : [
-        "rgba(59, 130, 246, 0.6)", // blue
-        "rgba(16, 185, 129, 0.6)", // green
-        "rgba(245, 101, 101, 0.6)", // red
-        "rgba(251, 191, 36, 0.6)", // yellow
-        "rgba(139, 92, 246, 0.6)", // purple
-      ];
+  // Throttle-red centric palette with semantic accents
+  const pieColors = ["#ef2b45", "#f5a623", "#1f9d5c", "#2f6bff", "#c31832"];
+
+  const baseOptions: ChartOptions<"bar" | "line"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: {
+        ticks: { color: tickColor, font: { size: 11 } },
+        grid: { color: gridColor },
+      },
+      y: {
+        ticks: { color: tickColor, font: { size: 11 }, precision: 0 },
+        grid: { color: gridColor },
+      },
+    },
+  };
+
+  const pieOptions: ChartOptions<"pie"> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: { color: tickColor, font: { size: 11 }, boxWidth: 12 },
+      },
+    },
+  };
 
   const barData = {
     labels: orderStatusLabels,
@@ -81,7 +108,9 @@ export default function AnalyticsCharts({
       {
         label: "Orders",
         data: orderStatusData,
-        backgroundColor: barColor,
+        backgroundColor: red,
+        borderRadius: 6,
+        maxBarThickness: 42,
       },
     ],
   };
@@ -92,48 +121,37 @@ export default function AnalyticsCharts({
       {
         data: ratingData,
         backgroundColor: pieColors,
+        borderWidth: 0,
       },
     ],
   };
 
   const lineData = {
-    labels: orderStatusLabels, // Placeholder, can be dates later
+    labels: orderStatusLabels,
     datasets: [
       {
         label: "Order Trends",
         data: orderStatusData,
-        borderColor: lineBorderColor,
-        backgroundColor: lineBgColor,
+        borderColor: red,
+        backgroundColor: "rgba(239,43,69,0.15)",
+        fill: true,
+        tension: 0.35,
+        pointBackgroundColor: red,
       },
     ],
   };
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Card>
-        <CardHeader>
-          <CardTitle>Order Status Distribution</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Bar data={barData} />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Review Ratings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Pie data={pieData} />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Order Trends</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Line data={lineData} />
-        </CardContent>
-      </Card>
+      <ChartCard title="Order Status Distribution">
+        <Bar data={barData} options={baseOptions as ChartOptions<"bar">} />
+      </ChartCard>
+      <ChartCard title="Review Ratings">
+        <Pie data={pieData} options={pieOptions} />
+      </ChartCard>
+      <ChartCard title="Order Trends">
+        <Line data={lineData} options={baseOptions as ChartOptions<"line">} />
+      </ChartCard>
     </div>
   );
 }

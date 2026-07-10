@@ -41,8 +41,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="flex h-screen items-center justify-center bg-dr-field">
+        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-dr-red"></div>
       </div>
     );
   }
@@ -52,15 +52,15 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen bg-muted/10">
+    <div className="dr-ambient-glow relative flex min-h-screen bg-dr-field">
       <DashboardSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         role={role}
       />
-      <div className="flex flex-1 flex-col lg:pl-64 transition-all duration-300">
+      <div className="flex flex-1 flex-col transition-all duration-300 lg:pl-64">
         <DashboardHeader onMenuClick={() => setSidebarOpen(true)} />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 px-5 py-7 sm:px-8">{children}</main>
       </div>
     </div>
   );

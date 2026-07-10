@@ -4,7 +4,6 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "@/components/shared/logo";
-import { Button } from "@/components/ui/button";
 import { getNavItems, type UserRole } from "@/lib/nav-config";
 import { cn } from "@/lib/utils";
 
@@ -22,13 +21,15 @@ export default function DashboardSidebar({
   const pathname = usePathname();
   const navItems = getNavItems(role);
 
+  const sectionLabel = role === "user" ? "Pilot account" : "Control center";
+
   return (
     <>
       {/* Mobile Overlay */}
       <button
         className={cn(
-          "fixed inset-0 z-40 bg-background/80 backdrop-blur-sm transition-all duration-100 lg:hidden",
-          open ? "opacity-100" : "opacity-0 pointer-events-none",
+          "fixed inset-0 z-40 bg-dr-field/80 backdrop-blur-sm transition-all duration-100 lg:hidden",
+          open ? "opacity-100" : "pointer-events-none opacity-0",
         )}
         onClick={onClose}
         onKeyDown={(e) => {
@@ -44,25 +45,28 @@ export default function DashboardSidebar({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed top-0 left-0 z-50 h-screen w-64 border-r bg-background transition-transform duration-300 ease-in-out lg:translate-x-0",
+          "fixed left-0 top-0 z-50 h-screen w-64 border-r border-dr-bd-1 bg-dr-surface transition-transform duration-300 ease-in-out lg:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center justify-between px-6 border-b">
+        <div className="flex h-16 items-center justify-between border-b border-dr-bd-1 px-6">
           <Logo />
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
+          <button
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-dr-text-3 transition-colors hover:bg-dr-bd-1 hover:text-dr-text lg:hidden"
             onClick={onClose}
+            aria-label="Close menu"
           >
             <X className="h-5 w-5" />
-          </Button>
+          </button>
         </div>
 
-        <div className="flex flex-col gap-4 py-4">
-          <nav className="grid gap-1 px-2">
-            {navItems.map((item, _index) => {
+        <div className="flex flex-col gap-4 py-5">
+          <p className="px-5 font-dm-mono text-[10px] font-bold uppercase tracking-[0.22em] text-dr-text-3">
+            {sectionLabel}
+          </p>
+          <nav className="grid gap-1 px-3">
+            {navItems.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
 
@@ -71,42 +75,29 @@ export default function DashboardSidebar({
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
+                    "group relative flex items-center gap-3 rounded-[11px] px-3 py-2.5 font-poppins text-sm font-medium transition-colors",
                     isActive
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground",
+                      ? "bg-dr-red/[0.12] text-dr-text"
+                      : "text-dr-text-3 hover:bg-dr-bd-1 hover:text-dr-text",
                   )}
-                  onClick={() => onClose()} // Close on mobile when clicked
+                  onClick={() => onClose()}
                 >
-                  <Icon className="h-4 w-4" />
+                  {isActive && (
+                    <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-sm bg-dr-red" />
+                  )}
+                  <Icon
+                    className={cn(
+                      "h-[18px] w-[18px] transition-colors",
+                      isActive
+                        ? "text-dr-red"
+                        : "text-dr-text-3 group-hover:text-dr-text",
+                    )}
+                  />
                   {item.title}
                 </Link>
               );
             })}
           </nav>
-
-          {/*<div className="px-2 mt-4">
-             <div className="h-[1px] bg-border mb-4" />
-             <nav className="grid gap-1">
-                {commonNavItems.map((item, index) => {
-                    const Icon = item.icon;
-                    const isActive = pathname === item.href;
-                    return (
-                        <Link
-                        key={index}
-                        href={item.href}
-                        className={cn(
-                            "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground",
-                            isActive ? "bg-accent text-accent-foreground" : "text-muted-foreground"
-                        )}
-                        >
-                        <Icon className="h-4 w-4" />
-                        {item.title}
-                        </Link>
-                    )
-                })}
-             </nav>
-          </div>*/}
         </div>
       </aside>
     </>
