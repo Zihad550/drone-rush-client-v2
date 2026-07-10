@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import {
   Chakra_Petch,
   DM_Mono,
+  DM_Sans,
   Geist,
   Geist_Mono,
   Poppins,
@@ -45,6 +46,13 @@ const dmMono = DM_Mono({
   weight: ["400", "500"],
 });
 
+// DroneRush v2 body copy face (default document font)
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+});
+
 export const metadata: Metadata = {
   title: "Drone Rush",
   description: "Drone e-commerce platform",
@@ -61,7 +69,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${robotoSlab.variable} ${poppins.variable} ${chakraPetch.variable} ${dmMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${robotoSlab.variable} ${poppins.variable} ${chakraPetch.variable} ${dmMono.variable} ${dmSans.variable} antialiased`}
       >
         <Providers>
           {children}

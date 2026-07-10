@@ -3,121 +3,52 @@
 import AboutUsBanner from "@/components/pages/about-us/about-us-banner";
 import OurTeam from "@/components/pages/about-us/our-team";
 import WhyUs from "@/components/pages/about-us/why-us";
-import PublicSectionTitle from "@/components/shared/public-section-title";
 import ReviewsCarousel from "@/components/shared/reviews-carousel";
-import SectionContainer from "@/components/shared/SectionContainer";
 import ScrollAnimation from "@/components/ui/scroll-animation";
 
 export default function AboutUsPage() {
   return (
-    <div className="relative animate-fade-in bg-background pb-8 md:pb-16">
-      {/* Banner */}
-      <div className="relative min-h-screen ">
-        <div className="relative after:absolute after:-bottom-10 after:left-1/2 after:h-px after:w-3/5 after:-translate-x-1/2 after:rounded-lg after:bg-gradient-to-r after:from-transparent after:via-primary/20 after:to-transparent after:content-[''] after:shadow-[0_0_20px_rgba(var(--primary),0.3)]">
-          <AboutUsBanner />
-        </div>
-      </div>
+    <div className="animate-fade-in bg-background">
+      {/* Hero */}
+      <AboutUsBanner />
 
       {/* Mission Statement */}
-      <SectionContainer>
-        <ScrollAnimation>
-          <div className="my-20 md:my-24 lg:my-32">
-            <div className="text-left">
-              <div className="mx-auto max-w-5xl rounded-2xl border border-primary/20 bg-gradient-to-br from-background via-background/95 to-primary/5 p-8 shadow-[0_0_30px_rgba(var(--primary),0.1)] backdrop-blur-sm md:p-12">
-                <PublicSectionTitle variant="h2">
-                  About Drone Rush
-                </PublicSectionTitle>
-                <div className="mx-auto mb-6 h-1 w-32 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
-                <h6 className="max-w-4xl text-lg font-normal text-muted-foreground dark:text-gray-200 md:text-[22px] text-left">
-                  At Drone Rush, we are passionate about delivering cutting-edge
-                  drone technology and exceptional service. Our mission is to
-                  empower individuals and businesses with innovative aerial
-                  solutions, ensuring quality, reliability, and a commitment to
-                  excellence in everything we do.
-                </h6>
-              </div>
-            </div>
+      <ScrollAnimation>
+        <section className="mx-auto max-w-[820px] px-10 pb-[60px] pt-5">
+          <div className="rounded-2xl border border-dr-bd-2 bg-dr-surface p-[38px] text-center">
+            <h2 className="inline-block font-chakra text-[30px] font-bold text-dr-text">
+              About Drone Rush
+              <span className="mx-auto mt-2 block h-[3px] w-[140px] rounded-sm bg-gradient-to-r from-white to-dr-red" />
+            </h2>
+            <div className="mx-auto my-[22px] h-px w-20 bg-gradient-to-r from-transparent via-dr-red to-transparent" />
+            <p className="mx-auto max-w-[600px] text-[15px] leading-[1.75] text-dr-text-2">
+              At Drone Rush, we are passionate about delivering cutting-edge
+              drone technology and exceptional service. Our mission is to
+              empower individuals and businesses with innovative aerial
+              solutions, ensuring quality, reliability, and a commitment to
+              excellence in everything we do.
+            </p>
           </div>
-        </ScrollAnimation>
-      </SectionContainer>
-
-      {/* Futuristic Divider */}
-      <div className="my-20 md:my-24 lg:my-32 flex justify-center">
-        <svg
-          width="200"
-          height="20"
-          viewBox="0 0 200 20"
-          xmlns="http://www.w3.org/2000/svg"
-          className="text-primary/30"
-        >
-          <path
-            d="M0,10 Q50,0 100,10 T200,10"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            className="animate-pulse"
-          />
-          <title>Decorative wave divider</title>
-        </svg>
-      </div>
+        </section>
+      </ScrollAnimation>
 
       {/* Why Us */}
       <ScrollAnimation>
-        <div className="my-20 md:my-24 lg:my-32">
+        <div className="py-[30px]">
           <WhyUs />
         </div>
       </ScrollAnimation>
 
-      {/* Futuristic Divider */}
-      <div className="my-20 md:my-24 lg:my-32 flex justify-center">
-        <svg
-          width="200"
-          height="20"
-          viewBox="0 0 200 20"
-          xmlns="http://www.w3.org/2000/svg"
-          className="text-primary/30"
-        >
-          <path
-            d="M0,10 Q50,0 100,10 T200,10"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            className="animate-pulse"
-          />
-          <title>Decorative wave divider</title>
-        </svg>
-      </div>
-
       {/* Our Team */}
       <ScrollAnimation>
-        <div className="my-20 md:my-24 lg:my-32">
+        <div className="py-[30px]">
           <OurTeam />
         </div>
       </ScrollAnimation>
 
-      {/* Futuristic Divider */}
-      <div className="my-20 md:my-24 lg:my-32 flex justify-center">
-        <svg
-          width="200"
-          height="20"
-          viewBox="0 0 200 20"
-          xmlns="http://www.w3.org/2000/svg"
-          className="text-primary/30"
-        >
-          <path
-            d="M0,10 Q50,0 100,10 T200,10"
-            stroke="currentColor"
-            strokeWidth="2"
-            fill="none"
-            className="animate-pulse"
-          />
-          <title>Decorative wave divider</title>
-        </svg>
-      </div>
-
-      {/* Testimonials */}
+      {/* Customer Reviews */}
       <ScrollAnimation>
-        <div className="my-20 md:my-24 lg:my-32">
+        <div className="pb-[76px] pt-[30px]">
           <ReviewsCarousel />
         </div>
       </ScrollAnimation>
