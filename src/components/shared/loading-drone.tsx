@@ -20,7 +20,7 @@ export function LoadingDrone({
       const timer = setTimeout(() => {
         setShouldRender(false);
         if (onAnimationComplete) onAnimationComplete();
-      }, 800);
+      }, 450);
       return () => clearTimeout(timer);
     } else if (isLoading) {
       setShouldRender(true);
@@ -32,276 +32,197 @@ export function LoadingDrone({
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm transition-opacity duration-500 ${!isLoading ? "opacity-0" : "opacity-100"}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center bg-dr-field/80 backdrop-blur-md transition-opacity duration-300 ${!isLoading ? "opacity-0" : "opacity-100"}`}
     >
       <style>{`
-        @keyframes drone-hover {
-          0%, 100% { transform: translateY(0) scale(1); }
-          50% { transform: translateY(-20px) scale(1.02); }
-        }
-        @keyframes propeller-spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes led-pulse {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 1; }
-        }
-        @keyframes drone-fly-away {
-          to {
-            transform: translate(500px, -1000px) rotate(15deg) scale(0.5);
-            opacity: 0;
-          }
-        }
-        .drone-animate-hover {
-          animation: drone-hover 2s ease-in-out infinite;
-        }
-        .drone-animate-exit {
-          animation: drone-fly-away 0.8s ease-in forwards !important;
-        }
-        .propeller-spin {
-          animation: propeller-spin 0.2s linear infinite;
-        }
-        .led-pulse {
-          animation: led-pulse 1s infinite;
-        }
-        .text-pulse {
-          animation: led-pulse 1.5s infinite;
+        @keyframes dr-radar-sweep { to { transform: rotate(360deg); } }
+        @keyframes dr-rotor { to { transform: rotate(360deg); } }
+        @keyframes dr-ring-pulse { 0%,100% { opacity: 0.25; } 50% { opacity: 0.5; } }
+        @keyframes dr-lock { 0%,100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.82); } }
+        @keyframes dr-dots { 0%,20% { opacity: 0; } 50%,100% { opacity: 1; } }
+        .dr-sweep { transform-origin: 200px 200px; animation: dr-radar-sweep 1.6s linear infinite; }
+        .dr-rotor { animation: dr-rotor 0.32s linear infinite; }
+        .dr-rotor-slow { animation: dr-rotor 0.5s linear infinite; }
+        .dr-ring-pulse { animation: dr-ring-pulse 2.4s ease-in-out infinite; }
+        .dr-lock { animation: dr-lock 1.4s ease-in-out infinite; transform-origin: 200px 200px; }
+        .dr-load-exit { animation: dr-lock 1.4s ease-in-out infinite; }
+        .dr-dot { animation: dr-dots 1.4s steps(1) infinite; }
+        .dr-dot-2 { animation-delay: 0.25s; }
+        .dr-dot-3 { animation-delay: 0.5s; }
+        @media (prefers-reduced-motion: reduce) {
+          .dr-sweep, .dr-rotor, .dr-rotor-slow, .dr-ring-pulse, .dr-lock, .dr-dot { animation-duration: 3s; animation-iteration-count: infinite; }
+          .dr-rotor, .dr-rotor-slow { animation: none; }
         }
       `}</style>
 
-      <div className="relative w-64 h-64">
-        <div
-          className={`w-full h-full drone-animate-hover ${isExiting ? "drone-animate-exit" : ""}`}
-        >
-          <DroneSvg />
-        </div>
+      <div
+        className={`relative flex w-56 flex-col items-center transition-all duration-300 ease-out ${isExiting ? "scale-95 opacity-0" : "scale-100 opacity-100"}`}
+      >
+        <QuadHud />
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-primary font-medium tracking-widest text-sm text-pulse">
-          LOADING...
+        <div className="mt-8 flex items-center gap-[0.22em] font-dm-mono text-[11px] uppercase tracking-[0.32em] text-dr-text-3">
+          <span>Loading</span>
+          <span className="dr-dot text-dr-red">.</span>
+          <span className="dr-dot dr-dot-2 text-dr-red">.</span>
+          <span className="dr-dot dr-dot-3 text-dr-red">.</span>
         </div>
       </div>
     </div>
   );
 }
 
-function DroneSvg() {
-  const centerX = 250;
-  const centerY = 210;
-  const armLength = 90;
-  const armAngle = 45;
-
-  const armPositions = [
-    { angle: armAngle, color: "#1e3a8a" },
-    { angle: 180 - armAngle, color: "#1e3a8a" },
-    { angle: 180 + armAngle, color: "#1e3a8a" },
-    { angle: 360 - armAngle, color: "#1e3a8a" },
-  ];
-
-  const propellers = armPositions.map((arm) => {
-    const rad = (arm.angle * Math.PI) / 180;
-    return {
-      x: centerX + Math.cos(rad) * armLength,
-      y: centerY + Math.sin(rad) * armLength,
-    };
+function QuadHud() {
+  const c = 200;
+  const arm = 96;
+  const ring = 150;
+  const rotors = [45, 135, 225, 315].map((deg) => {
+    const rad = (deg * Math.PI) / 180;
+    return { x: c + Math.cos(rad) * arm, y: c + Math.sin(rad) * arm, deg };
   });
-
-  const bodyPoints = [
-    [centerX, centerY - 65],
-    [centerX - 35, centerY - 35],
-    [centerX - 30, centerY + 45],
-    [centerX, centerY + 75],
-    [centerX + 30, centerY + 45],
-    [centerX + 35, centerY - 35],
-  ]
-    .map((p) => p.join(","))
-    .join(" ");
-
-  const topDetailPoints = [
-    [centerX, centerY - 55],
-    [centerX - 28, centerY - 28],
-    [centerX - 24, centerY + 38],
-    [centerX, centerY + 65],
-    [centerX + 24, centerY + 38],
-    [centerX + 28, centerY - 28],
-  ]
-    .map((p) => p.join(","))
-    .join(" ");
+  const circ = 2 * Math.PI * ring;
 
   return (
-    <svg viewBox="0 0 500 420" className="w-full h-full drop-shadow-2xl">
-      <title>Spinner</title>
-      <PropellerGroup data={[propellers[2], propellers[3]]} isBack />
+    <svg viewBox="0 0 400 400" className="h-52 w-52" aria-hidden="true">
+      <title>Loading</title>
 
-      <g>
-        {armPositions.map((arm, i) => {
-          const rad = (arm.angle * Math.PI) / 180;
-          const endX = centerX + Math.cos(rad) * armLength;
-          const endY = centerY + Math.sin(rad) * armLength;
-          return (
-            <g key={i}>
-              <line
-                x1={centerX}
-                y1={centerY}
-                x2={endX}
-                y2={endY}
-                stroke={arm.color}
-                strokeWidth="5"
-                strokeLinecap="round"
-              />
-              <line
-                x1={centerX + Math.cos(rad) * 20}
-                y1={centerY + Math.sin(rad) * 20}
-                x2={centerX + Math.cos(rad) * 50}
-                y2={centerY + Math.sin(rad) * 50}
-                stroke="#06b6d4"
-                strokeWidth="3"
-                strokeLinecap="round"
-              />
-            </g>
-          );
-        })}
+      {/* radar rings — faint, pulsing */}
+      <g
+        className="dr-ring-pulse text-dr-text-3"
+        stroke="currentColor"
+        fill="none"
+      >
+        <circle cx={c} cy={c} r={ring} strokeWidth="1" opacity="0.35" />
+        <circle cx={c} cy={c} r={ring - 46} strokeWidth="1" opacity="0.22" />
       </g>
 
-      <g>
-        <polygon
-          points={bodyPoints}
-          fill="#2563eb"
-          stroke="#1e40af"
-          strokeWidth="2"
-        />
-        <polygon points={topDetailPoints} fill="#1e40af" opacity="0.6" />
-        <polygon
-          points={`${centerX - 8},${centerY + 55} ${centerX},${centerY + 72} ${centerX + 8},${centerY + 55}`}
-          fill="#1e3a8a"
-          opacity="0.8"
-        />
+      {/* cardinal ticks */}
+      <g
+        className="text-dr-text-3"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        opacity="0.4"
+      >
+        <line x1={c} y1={c - ring - 6} x2={c} y2={c - ring + 8} />
+        <line x1={c} y1={c + ring - 8} x2={c} y2={c + ring + 6} />
+        <line x1={c - ring - 6} y1={c} x2={c - ring + 8} y2={c} />
+        <line x1={c + ring - 8} y1={c} x2={c + ring + 6} y2={c} />
       </g>
 
-      <g stroke="#475569" strokeWidth="3">
-        <line
-          x1={centerX - 40}
-          y1={centerY + 18}
-          x2={centerX - 40}
-          y2={centerY + 35}
+      {/* signature: red scanning sweep */}
+      <g className="dr-sweep text-dr-red">
+        <circle
+          cx={c}
+          cy={c}
+          r={ring}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeDasharray={`${circ * 0.16} ${circ}`}
         />
         <line
-          x1={centerX + 40}
-          y1={centerY + 18}
-          x2={centerX + 40}
-          y2={centerY + 35}
-        />
-        <circle
-          cx={centerX - 40}
-          cy={centerY + 35}
-          r="4"
-          fill="#1e293b"
-          stroke="none"
-        />
-        <circle
-          cx={centerX + 40}
-          cy={centerY + 35}
-          r="4"
-          fill="#1e293b"
-          stroke="none"
-        />
-      </g>
-
-      <g fill="#1e293b">
-        <rect
-          x={centerX - 15}
-          y={centerY + 35}
-          width="30"
-          height="8"
-          rx="2"
-          fill="#475569"
-        />
-        <rect
-          x={centerX - 18}
-          y={centerY + 43}
-          width="36"
-          height="22"
-          rx="4"
-          stroke="#0f172a"
+          x1={c}
+          y1={c}
+          x2={c + ring}
+          y2={c}
+          stroke="currentColor"
           strokeWidth="1.5"
-        />
-        <circle cx={centerX} cy={centerY + 54} r="8" fill="#0f172a" />
-        <circle
-          cx={centerX}
-          cy={centerY + 54}
-          r="6"
-          fill="#1e3a8a"
-          opacity="0.6"
+          opacity="0.28"
         />
       </g>
 
-      <Led x={centerX - 25} y={centerY + 40} color="#ef4444" />
-      <Led x={centerX + 25} y={centerY + 40} color="#10b981" />
-      <Led x={centerX - 25} y={centerY - 35} color="#3b82f6" />
-      <Led x={centerX + 25} y={centerY - 35} color="#3b82f6" />
+      {/* quad arms */}
+      <g
+        className="text-dr-text-3"
+        stroke="currentColor"
+        strokeWidth="4"
+        strokeLinecap="round"
+        opacity="0.7"
+      >
+        {rotors.map((r) => (
+          <line key={r.deg} x1={c} y1={c} x2={r.x} y2={r.y} />
+        ))}
+      </g>
 
-      <line
-        x1={centerX}
-        y1={centerY - 55}
-        x2={centerX}
-        y2={centerY - 80}
-        stroke="#64748b"
-        strokeWidth="2"
-      />
-      <circle cx={centerX} cy={centerY - 80} r="3" fill="#ef4444" />
-
-      <PropellerGroup data={[propellers[0], propellers[1]]} />
-    </svg>
-  );
-}
-
-function PropellerGroup({
-  data,
-  isBack = false,
-}: {
-  data: { x: number; y: number }[];
-  isBack?: boolean;
-}) {
-  return (
-    <>
-      {data.map((d, i) => (
-        <g key={i}>
+      {/* motors + spinning rotors */}
+      {rotors.map((r, i) => (
+        <g key={r.deg}>
           <circle
-            cx={d.x}
-            cy={d.y}
-            r="12"
-            fill="#1e293b"
-            stroke="#0f172a"
-            strokeWidth="2"
+            cx={r.x}
+            cy={r.y}
+            r="22"
+            className="text-dr-bd-4"
+            fill="var(--dr-field)"
+            stroke="currentColor"
+            strokeWidth="1.5"
           />
-          <circle cx={d.x} cy={d.y} r="5" fill="#374151" />
           <g
-            style={{ transformOrigin: `${d.x}px ${d.y}px` }}
-            className="propeller-spin"
+            style={{ transformOrigin: `${r.x}px ${r.y}px` }}
+            className={
+              i < 2 ? "dr-rotor text-dr-text-2" : "dr-rotor-slow text-dr-text-2"
+            }
           >
-            <ellipse
-              cx={d.x}
-              cy={d.y}
-              rx="20"
-              ry="4"
-              fill="#9ca3af"
-              opacity={isBack ? 0.5 : 0.7}
+            <rect
+              x={r.x - 20}
+              y={r.y - 2.5}
+              width="40"
+              height="5"
+              rx="2.5"
+              fill="currentColor"
+              opacity="0.85"
             />
-            <ellipse
-              cx={d.x}
-              cy={d.y}
-              rx="4"
-              ry="20"
-              fill="#9ca3af"
-              opacity={isBack ? 0.5 : 0.7}
+            <rect
+              x={r.x - 2.5}
+              y={r.y - 20}
+              width="5"
+              height="40"
+              rx="2.5"
+              fill="currentColor"
+              opacity="0.85"
             />
           </g>
+          <circle
+            cx={r.x}
+            cy={r.y}
+            r="4"
+            className="text-dr-text"
+            fill="currentColor"
+          />
         </g>
       ))}
-    </>
-  );
-}
 
-function Led({ x, y, color }: { x: number; y: number; color: string }) {
-  return <circle cx={x} cy={y} r="3" fill={color} className="led-pulse" />;
+      {/* central body */}
+      <rect
+        x={c - 30}
+        y={c - 30}
+        width="60"
+        height="60"
+        rx="14"
+        fill="var(--dr-surface)"
+        className="text-dr-bd-4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <rect
+        x={c - 18}
+        y={c - 18}
+        width="36"
+        height="36"
+        rx="8"
+        fill="none"
+        className="text-dr-text-3"
+        stroke="currentColor"
+        strokeWidth="1"
+        opacity="0.5"
+      />
+      {/* GPS-lock pulse */}
+      <circle
+        cx={c}
+        cy={c}
+        r="7"
+        className="dr-lock text-dr-red"
+        fill="currentColor"
+      />
+    </svg>
+  );
 }

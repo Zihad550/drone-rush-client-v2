@@ -7,7 +7,7 @@ const InlineSpinner = ({ size = "sm" }: { size?: "sm" | "md" | "lg" }) => {
 
   return (
     <div
-      className={`${sizeClasses[size]} border-2 border-primary border-t-transparent rounded-full animate-spin`}
+      className={`${sizeClasses[size]} border-2 border-dr-red border-t-transparent rounded-full animate-spin`}
     ></div>
   );
 };
