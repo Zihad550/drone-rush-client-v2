@@ -87,44 +87,49 @@ export function ProductActions({ droneId }: ProductActionsProps) {
   return (
     <ErrorBoundary
       fallback={
-        <div className="p-4 text-center border rounded-lg bg-muted/50">
-          <p className="text-sm text-muted-foreground mb-2">
+        <div className="mt-8 rounded-[14px] border border-dr-bd-2 bg-dr-surface p-4 text-center">
+          <p className="mb-2 text-sm text-dr-text-2">
             Product actions are temporarily unavailable.
           </p>
         </div>
       }
     >
-      <div className="flex flex-col sm:flex-row gap-4 pt-4">
+      <div className="flex flex-col gap-3 pt-8 sm:flex-row">
         {user?.role !== "admin" && user?.role !== "superAdmin" && (
           <>
             <Button
               size="lg"
-              className={`flex-1 bg-gradient-to-r from-blue-500 to-black/80 dark:from-black dark:to-red-500 shadow-[0_4px_14px_rgba(var(--primary),0.4)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.4)] hover:scale-105 hover:shadow-[0_6px_18px_rgba(var(--primary),0.6)] dark:hover:shadow-[0_6px_18px_rgba(0,0,0,0.6)] transition-all duration-300 text-white ${isInCart(droneId) ? "opacity-90" : "opacity-100"}`}
+              className={`flex-1 bg-dr-red text-white shadow-[0_4px_18px_rgba(239,43,69,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:bg-dr-red-strong hover:shadow-[0_6px_22px_rgba(239,43,69,0.5)] ${isInCart(droneId) ? "opacity-90" : "opacity-100"}`}
               onClick={handleCartAction}
               disabled={cartLoading}
               variant="default"
             >
-              <ShoppingCart className="w-5 h-5 mr-2 text-blue-500 dark:text-red-500" />
-              {isInCart(droneId) ? "Remove from Cart" : "Add to Cart"}
+              <ShoppingCart className="mr-2 h-5 w-5" />
+              {isInCart(droneId) ? "Remove from cart" : "Add to cart"}
             </Button>
 
             <Button
               size="lg"
-              className={`bg-gradient-to-r from-blue-500 to-black/80 dark:from-black dark:to-red-500 shadow-[0_4px_14px_rgba(var(--primary),0.4)] dark:shadow-[0_4px_14px_rgba(0,0,0,0.4)] hover:scale-105 hover:shadow-[0_6px_18px_rgba(var(--primary),0.6)] dark:hover:shadow-[0_6px_18px_rgba(0,0,0,0.6)] transition-all duration-300 text-white ${isInWishlist(droneId) ? "opacity-90" : "opacity-100"}`}
+              variant="outline"
+              className={`border-dr-bd-4 text-dr-text transition-all duration-300 hover:border-dr-red/50 hover:text-dr-red ${isInWishlist(droneId) ? "border-dr-red/50 text-dr-red" : ""}`}
               onClick={handleAddToWishlist}
               disabled={wishlistLoading}
-              variant="default"
             >
               <Heart
-                className={`w-5 h-5 mr-2 text-blue-500 dark:text-red-500 ${isInWishlist(droneId) ? "fill-current" : ""}`}
+                className={`mr-2 h-5 w-5 ${isInWishlist(droneId) ? "fill-current" : ""}`}
               />
-              {isInWishlist(droneId) ? "In Wishlist" : "Add to Wishlist"}
+              {isInWishlist(droneId) ? "In wishlist" : "Add to wishlist"}
             </Button>
           </>
         )}
 
-        <Button variant="outline" size="lg" onClick={handleShare}>
-          <Share2 className="w-5 h-5 mr-2" />
+        <Button
+          variant="outline"
+          size="lg"
+          className="border-dr-bd-4 text-dr-text transition-colors hover:border-dr-red/50 hover:text-dr-red"
+          onClick={handleShare}
+        >
+          <Share2 className="mr-2 h-5 w-5" />
           Share
         </Button>
       </div>
