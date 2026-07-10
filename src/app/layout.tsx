@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Roboto_Slab } from "next/font/google";
 import { Providers } from "@/components/providers";
-import MiniDrone from "@/components/shared/mini-drone";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
@@ -41,7 +40,6 @@ export default function RootLayout({
         <Providers>
           {children}
           <Toaster />
-          <MiniDrone />
         </Providers>
       </body>
     </html>
