@@ -27,7 +27,7 @@ const FooterNav = ({ navs, title, subtitle }: IFooterNavProps) => {
         <div key={nav.id} className="mb-2">
           <Link
             href={nav.link}
-            className="text-dr-text-2 text-sm hover:text-dr-red hover:ml-2 transition-all duration-300 inline-block"
+            className="text-dr-text-2 text-sm font-medium hover:text-dr-red hover:ml-2 transition-all duration-300 inline-block"
           >
             {nav.name}
           </Link>

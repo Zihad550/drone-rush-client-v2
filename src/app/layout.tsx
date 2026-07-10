@@ -46,11 +46,12 @@ const dmMono = DM_Mono({
   weight: ["400", "500"],
 });
 
-// DroneRush v2 body copy face (default document font)
+// DroneRush v2 body copy face (default document font).
+// Loaded as a variable font so body copy can sit at a slightly heavier
+// baseline (see `body { font-weight }` in globals.css) for better legibility.
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
 });
 
 export const metadata: Metadata = {

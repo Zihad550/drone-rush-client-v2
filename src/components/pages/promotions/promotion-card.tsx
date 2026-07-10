@@ -1,8 +1,8 @@
 "use client";
 
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import Link from "next/link";
 
 interface PromotionCardProps {
   title: string;
@@ -20,29 +20,35 @@ export default function PromotionCard({
   cta,
 }: PromotionCardProps) {
   return (
-    <Card className="group relative overflow-hidden bg-card/80 backdrop-blur-sm border border-primary/20 hover:border-primary/50 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(var(--primary),0.3)]">
-      <CardContent className="p-6">
-        <div className="relative mb-4 overflow-hidden rounded-lg">
-          <Image
-            src={image}
-            alt={title}
-            width={400}
-            height={250}
-            className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-          />
-          <div className="absolute top-2 right-2 bg-gradient-to-r from-primary to-secondary text-primary-foreground px-3 py-1 rounded-full text-sm font-bold animate-pulse">
-            {discount}
-          </div>
-        </div>
-        <h3 className="text-xl font-semibold mb-2 text-foreground group-hover:text-primary transition-colors">
+    <div className="group flex h-full flex-col overflow-hidden rounded-[13px] border border-dr-bd-1 bg-dr-surface transition-all duration-300 hover:-translate-y-1 hover:border-dr-red/40">
+      <div className="relative aspect-[16/10] overflow-hidden">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        <span className="absolute right-3 top-3 rounded-full bg-dr-red px-3 py-1 font-dm-mono text-[10px] font-bold uppercase tracking-[0.1em] text-white shadow-[0_6px_16px_rgba(239,43,69,0.4)]">
+          {discount}
+        </span>
+      </div>
+
+      <div className="flex flex-1 flex-col p-[22px]">
+        <h3 className="mb-2 font-poppins text-base font-semibold text-dr-text">
           {title}
         </h3>
-        <p className="text-muted-foreground mb-4">{description}</p>
-        <Button className="w-full bg-gradient-to-r from-primary to-secondary hover:from-primary/80 hover:to-secondary/80 text-primary-foreground font-medium py-2 px-4 rounded-lg transition-all duration-300 hover:shadow-lg">
+        <p className="mb-5 text-[13px] leading-[1.55] text-dr-text-3">
+          {description}
+        </p>
+        <Link
+          href="/drones"
+          className="mt-auto inline-flex items-center gap-2 font-poppins text-sm font-semibold text-dr-red transition-all duration-300 group-hover:gap-3"
+        >
           {cta}
-        </Button>
-      </CardContent>
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-    </Card>
+          <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+        </Link>
+      </div>
+    </div>
   );
 }

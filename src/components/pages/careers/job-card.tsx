@@ -1,5 +1,5 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ArrowRight, MapPin } from "lucide-react";
+import Link from "next/link";
 
 interface JobCardProps {
   title: string;
@@ -15,45 +15,32 @@ export default function JobCard({
   type,
 }: JobCardProps) {
   return (
-    <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-background via-background/95 to-primary/5 p-6 shadow-[0_0_30px_rgba(var(--primary),0.1)] backdrop-blur-sm hover:border-primary/40 hover:shadow-[0_0_40px_rgba(var(--primary),0.2)] transition-all duration-300">
-      <div className="mb-4 flex items-start justify-between">
-        <h3 className="text-xl font-semibold text-foreground">{title}</h3>
-        <Badge
-          variant="secondary"
-          className="bg-primary/10 text-primary hover:bg-primary/20"
-        >
+    <div className="group flex h-full flex-col rounded-[13px] border border-dr-bd-1 bg-dr-surface p-[26px] transition-all duration-300 hover:-translate-y-1 hover:border-dr-red/40">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <h3 className="font-poppins text-lg font-semibold text-dr-text">
+          {title}
+        </h3>
+        <span className="flex-none rounded-full border border-dr-red/25 bg-dr-red/[0.12] px-2.5 py-1 font-dm-mono text-[10px] font-bold uppercase tracking-[0.12em] text-dr-red">
           {type}
-        </Badge>
+        </span>
       </div>
-      <p className="mb-4 text-muted-foreground">{description}</p>
-      <div className="mb-4 flex items-center gap-2 text-sm text-muted-foreground">
-        <svg
-          className="h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          role="img"
-          aria-labelledby="location-title"
-        >
-          <title id="location-title">Location pin icon</title>
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-          />
-        </svg>
+
+      <p className="mb-4 text-[13px] leading-[1.55] text-dr-text-3">
+        {description}
+      </p>
+
+      <div className="mb-5 flex items-center gap-1.5 text-[13px] text-dr-text-2">
+        <MapPin className="h-4 w-4 text-dr-red" strokeWidth={2} />
         {location}
       </div>
-      <Button className="w-full bg-primary hover:bg-primary/90">
-        Apply Now
-      </Button>
+
+      <Link
+        href="/contact-us"
+        className="mt-auto inline-flex items-center gap-2 font-poppins text-sm font-semibold text-dr-red transition-all duration-300 group-hover:gap-3"
+      >
+        Apply now
+        <ArrowRight className="h-4 w-4" strokeWidth={2.5} />
+      </Link>
     </div>
   );
 }
