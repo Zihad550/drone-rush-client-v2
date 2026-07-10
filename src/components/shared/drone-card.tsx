@@ -178,7 +178,7 @@ const DroneCard = ({
         {/* Rating Display */}
         {averageRating > 0 && (
           <div className="mb-2 flex items-center gap-1">
-            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <Star className="h-4 w-4 fill-[#f5a623] text-[#f5a623]" />
             <span className="text-sm font-medium text-dr-text">
               {averageRating.toFixed(1)}
             </span>

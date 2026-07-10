@@ -36,7 +36,7 @@ export default async function ProfilePage() {
 
   if (!user) {
     return (
-      <div className="mx-auto flex h-96 max-w-[1180px] items-center justify-center rounded-[16px] border border-dr-bd-1 bg-dr-surface p-6">
+      <div className="mx-auto flex h-96 max-w-[1180px] items-center justify-center rounded-[18px] border border-dr-bd-1 bg-dr-surface p-6">
         <div className="space-y-2 text-center">
           <p className="font-poppins text-lg font-semibold text-dr-text">
             Unable to load your profile

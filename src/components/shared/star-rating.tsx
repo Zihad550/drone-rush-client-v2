@@ -21,10 +21,10 @@ const StarRating = ({ rating, size = "md" }: StarRatingProps) => {
           key={`rating-star-${i}`}
           className={`${sizeClasses[size]} ${
             i < Math.floor(rating)
-              ? "fill-yellow-400 text-yellow-400"
+              ? "fill-[#f5a623] text-[#f5a623]"
               : i < rating
-                ? "fill-yellow-400/50 text-yellow-400"
-                : "text-gray-300 dark:text-gray-600"
+                ? "fill-[#f5a623]/50 text-[#f5a623]"
+                : "text-dr-bd-4"
           }`}
         />
       ))}

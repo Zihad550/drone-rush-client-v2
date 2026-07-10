@@ -91,7 +91,7 @@ export default function UserProfile({ user }: UserProfileProps) {
       <DashboardPageHeader eyebrow="My account" title="Profile" />
 
       {/* Profile card */}
-      <div className="rounded-[16px] border border-dr-bd-1 bg-dr-surface p-[26px] pb-7">
+      <div className="rounded-[18px] border border-dr-bd-1 bg-dr-surface p-[26px] pb-7">
         {/* Avatar row */}
         <div className="mb-[26px] flex items-center gap-5">
           <span className="flex h-[74px] w-[74px] shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#ff6377] to-[#c81733] font-poppins text-[27px] font-bold text-white shadow-[0_8px_22px_rgba(239,43,69,.3)]">

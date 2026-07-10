@@ -165,7 +165,7 @@ export function DroneThumb({ size = 30 }: { size?: number }) {
 
 /** Card shell matching the design: rounded-16, dr-surface, dr-bd-1 border. */
 export const adminCardClass =
-  "rounded-[16px] border border-dr-bd-1 bg-dr-surface";
+  "rounded-[18px] border border-dr-bd-1 bg-dr-surface";
 
 /** Primary red-gradient CTA button used across the admin console. */
 export const adminPrimaryBtnClass =

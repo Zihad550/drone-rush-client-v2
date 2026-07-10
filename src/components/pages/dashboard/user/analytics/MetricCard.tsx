@@ -14,7 +14,7 @@ export default function MetricCard({
   icon: Icon,
 }: MetricCardProps) {
   return (
-    <div className="group relative overflow-hidden rounded-[16px] border border-dr-bd-1 bg-dr-surface p-5 transition-colors hover:border-dr-red/30">
+    <div className="group relative overflow-hidden rounded-[18px] border border-dr-bd-1 bg-dr-surface p-5 transition-colors hover:border-dr-red/30">
       <div className="flex items-start justify-between">
         <p className="font-dm-mono text-[10px] font-bold uppercase tracking-[0.18em] text-dr-text-3">
           {title}

@@ -71,7 +71,7 @@ export default function WishlistPage() {
           {wishlist.map((item) => (
             <div
               key={item._id}
-              className="group overflow-hidden rounded-[16px] border border-dr-bd-1 bg-dr-surface transition-colors hover:border-dr-red/30"
+              className="group overflow-hidden rounded-[18px] border border-dr-bd-1 bg-dr-surface transition-colors hover:border-dr-red/30"
             >
               <div className="relative h-48 overflow-hidden bg-dr-field">
                 <Image

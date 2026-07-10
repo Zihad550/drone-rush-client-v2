@@ -41,7 +41,7 @@ function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-[16px] border border-dr-bd-1 bg-dr-surface p-5">
+    <div className="rounded-[18px] border border-dr-bd-1 bg-dr-surface p-5">
       <div className="mb-4 flex items-center gap-2">
         <span className="h-[2px] w-5 rounded-sm bg-dr-red" />
         <h3 className="font-poppins text-sm font-semibold text-dr-text">

@@ -47,7 +47,7 @@ const Logo = ({ className }: LogoProps) => {
         </svg>
         <span className="font-poppins font-bold text-[21px] tracking-[-0.4px] text-dr-text">
           Drone
-          <span className="bg-gradient-to-r from-dr-red to-[#ef2b45] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-dr-red-soft to-[#ef2b45] bg-clip-text text-transparent">
             Rush
           </span>
         </span>

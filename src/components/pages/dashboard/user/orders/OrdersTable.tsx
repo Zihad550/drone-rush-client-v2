@@ -79,7 +79,7 @@ export default function OrdersTable({ orders }: OrdersTableProps) {
   };
 
   return (
-    <div className="overflow-hidden rounded-[16px] border border-dr-bd-1 bg-dr-surface">
+    <div className="overflow-hidden rounded-[18px] border border-dr-bd-1 bg-dr-surface">
       <div className="overflow-x-auto">
         <table className="w-full min-w-[860px] caption-bottom text-sm">
           <thead>

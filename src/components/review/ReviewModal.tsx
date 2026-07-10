@@ -130,10 +130,10 @@ export default function ReviewModal({
                 [droneId]: star,
               }));
             }}
-            className="text-yellow-400"
+            className="focus:outline-none"
           >
             <Star
-              className={`h-5 w-5 ${star <= currentRating ? "fill-current" : ""}`}
+              className={`h-5 w-5 ${star <= currentRating ? "fill-[#f5a623] text-[#f5a623]" : "text-dr-bd-4"}`}
             />
           </button>
         ))}

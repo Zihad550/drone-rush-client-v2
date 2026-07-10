@@ -14,8 +14,11 @@
   --font-dm-mono: var(--font-dm-mono);
   --color-dr-red: var(--dr-red);
   --color-dr-red-strong: var(--dr-red-strong);
+  --color-dr-red-soft: var(--dr-red-soft);
+  --color-dr-bg: var(--dr-bg);
   --color-dr-nav: var(--dr-nav);
   --color-dr-surface: var(--dr-surface);
+  --color-dr-elevated: var(--dr-elevated);
   --color-dr-field: var(--dr-field);
   --color-dr-text: var(--dr-text);
   --color-dr-text-2: var(--dr-text-2);
@@ -61,8 +64,8 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.96 0 0);
-  --foreground: oklch(0.1 0 0);
+  --background: #f4f3f7;
+  --foreground: #17131c;
   --card: oklch(0.96 0 0);
   --card-foreground: oklch(0.1 0 0);
   --popover: oklch(0.96 0 0);
@@ -102,12 +105,15 @@
   /* DroneRush v2 design tokens — light theme */
   --dr-red: #d81f39;
   --dr-red-strong: #c31832;
+  --dr-red-soft: #d81f39;
+  --dr-bg: #f4f3f7;
   --dr-nav: rgba(250, 249, 252, 0.85);
   --dr-surface: #ffffff;
+  --dr-elevated: #ffffff;
   --dr-field: #ffffff;
   --dr-text: #17131c;
-  --dr-text-2: #3a3642;
-  --dr-text-3: #55515e;
+  --dr-text-2: #4a4650;
+  --dr-text-3: #6c6875;
   --dr-bd-1: rgba(20, 16, 28, 0.07);
   --dr-bd-2: rgba(20, 16, 28, 0.1);
   --dr-bd-3: rgba(20, 16, 28, 0.13);
@@ -115,8 +121,8 @@
 }
 
 .dark {
-  --background: oklch(0.2 0 0);
-  --foreground: oklch(0.96 0 0);
+  --background: #0c0b0d;
+  --foreground: #eceaef;
   --card: oklch(0.25 0 0);
   --card-foreground: oklch(0.96 0 0);
   --popover: oklch(0.2 0 0);
@@ -156,12 +162,15 @@
   /* DroneRush v2 design tokens — dark theme */
   --dr-red: #ef2b45;
   --dr-red-strong: #c31832;
+  --dr-red-soft: #f4788a;
+  --dr-bg: #0c0b0d;
   --dr-nav: rgba(12, 11, 13, 0.82);
   --dr-surface: #171519;
+  --dr-elevated: #1c1a1f;
   --dr-field: #0c0b0d;
   --dr-text: #eceaef;
-  --dr-text-2: #d4d1da;
-  --dr-text-3: #b3b0ba;
+  --dr-text-2: #c9c6cf;
+  --dr-text-3: #a3a0a9;
   --dr-bd-1: rgba(255, 255, 255, 0.06);
   --dr-bd-2: rgba(255, 255, 255, 0.09);
   --dr-bd-3: rgba(255, 255, 255, 0.14);
@@ -173,7 +182,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     /* Slightly heavier baseline so DM Sans body copy (descriptions, footer
        links, muted text) reads solid rather than thin. Headings and UI set
        their own weight and are unaffected. */
@@ -261,8 +270,11 @@
 .dr-ambient-glow {
   background:
     radial-gradient(circle at 82% -8%, rgba(216, 31, 57, 0.08), transparent 44%),
-    radial-gradient(circle at 6% 108%, rgba(47, 107, 255, 0.06), transparent 42%),
-    #f5f2f7;
+    radial-gradient(
+      circle at 6% 108%,
+      rgba(47, 107, 255, 0.06),
+      transparent 42%
+    ), #f5f2f7;
 }
 
 :root.dark .dr-ambient-glow {

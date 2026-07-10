@@ -177,7 +177,7 @@ export default function AdminHeader({ onMenuClick }: AdminHeaderProps) {
                 className="fixed inset-0 z-40 cursor-default"
                 onClick={() => setNotifOpen(false)}
               />
-              <div className="absolute right-0 top-[52px] z-50 w-[388px] max-w-[92vw] overflow-hidden rounded-[16px] border border-dr-bd-2 bg-dr-surface shadow-[0_24px_60px_rgba(0,0,0,.4)]">
+              <div className="absolute right-0 top-[52px] z-50 w-[388px] max-w-[92vw] overflow-hidden rounded-[18px] border border-dr-bd-2 bg-dr-surface shadow-[0_24px_60px_rgba(0,0,0,.4)]">
                 <div className="flex items-center justify-between px-[18px] pb-3 pt-4">
                   <div className="flex items-center gap-2.5">
                     <h3 className="font-poppins text-[15px] font-bold text-dr-text">

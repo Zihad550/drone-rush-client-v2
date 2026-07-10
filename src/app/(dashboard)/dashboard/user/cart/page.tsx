@@ -94,7 +94,7 @@ export default function CartPage() {
           {cart.map((item) => (
             <div
               key={item._id}
-              className="rounded-[16px] border border-dr-bd-1 bg-dr-surface p-4 transition-colors hover:border-dr-red/25"
+              className="rounded-[18px] border border-dr-bd-1 bg-dr-surface p-4 transition-colors hover:border-dr-red/25"
             >
               <div className="flex gap-4">
                 <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-[12px] border border-dr-bd-1 bg-dr-field">
@@ -161,7 +161,7 @@ export default function CartPage() {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="sticky top-24 rounded-[16px] border border-dr-bd-1 bg-dr-surface p-5">
+          <div className="sticky top-24 rounded-[18px] border border-dr-bd-1 bg-dr-surface p-5">
             <div className="mb-4 flex items-center gap-2">
               <span className="h-[2px] w-5 rounded-sm bg-dr-red" />
               <h3 className="font-poppins text-sm font-semibold text-dr-text">

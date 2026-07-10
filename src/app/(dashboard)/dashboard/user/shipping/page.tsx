@@ -313,7 +313,7 @@ const ShippingPage = () => {
       />
 
       {shippingInfo.length > 0 && (
-        <div className="rounded-[16px] border border-dr-bd-1 bg-dr-surface p-5">
+        <div className="rounded-[18px] border border-dr-bd-1 bg-dr-surface p-5">
           <div className="mb-4 flex items-center gap-2">
             <span className="h-[2px] w-5 rounded-sm bg-dr-red" />
             <h3 className="font-poppins text-sm font-semibold text-dr-text">
@@ -372,7 +372,7 @@ const ShippingPage = () => {
         </div>
       )}
 
-      <div className="overflow-hidden rounded-[16px] border border-dr-bd-1 bg-dr-surface">
+      <div className="overflow-hidden rounded-[18px] border border-dr-bd-1 bg-dr-surface">
         {loading ? (
           <div className="flex justify-center py-16">
             <Loader2 className="h-8 w-8 animate-spin text-dr-red" />
