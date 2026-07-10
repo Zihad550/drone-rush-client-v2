@@ -1,2 +1,26 @@
 [tools]
-node = "25"
+node = "24"
+
+[tasks.dev]
+run = "npm run dev"
+
+[tasks.build]
+run = "npm run build"
+
+[tasks.start]
+run = "npm run start"
+
+[tasks.lint]
+run = "npm run check"
+
+[tasks.format]
+run = "npm run format"
+
+[tasks.lint-format]
+run = "npm run lint:format"
+
+[tasks.update-browsers]
+description = "Update browserslist DB (fix stale baseline-browser-mapping warning)"
+run = "pnpm dlx update-browserslist-db@latest"
+
+
