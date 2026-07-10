@@ -2,13 +2,14 @@
 
 import {
   KeyRound,
+  Loader2,
   MoreVertical,
   Plus,
   Search,
   Shield,
   Users,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {
   AVATAR_GRADIENTS,
@@ -18,94 +19,72 @@ import {
   STATUS_STYLES,
 } from "@/components/shared/admin/admin-ui";
 import { cn } from "@/lib/utils";
+import { getAdminUsers } from "@/services/admin/admin.service";
+import type { TUserRole, TUserStatus } from "@/types/user.type";
 
-type UserRoleLabel = "Superadmin" | "Admin" | "Support" | "Customer";
+type UserRoleLabel = "Superadmin" | "Admin" | "Customer";
 
 interface AdminUserRow {
+  id: string;
   name: string;
   email: string;
   role: UserRoleLabel;
-  status: "Active" | "Suspended" | "Invited";
+  status: "Active" | "Suspended";
   orders: string;
   spent: string;
 }
 
-// NOTE: mock roster — the admin user directory endpoint (GET /admin/users) is
-// not implemented yet. Documented in ../drone-rush-server/REQUIRED_ENDPOINTS.md.
-const USERS: AdminUserRow[] = [
-  {
-    name: "Alex Chen",
-    email: "alex@dronerush.com",
-    role: "Superadmin",
-    status: "Active",
-    orders: "—",
-    spent: "—",
-  },
-  {
-    name: "Mara Devlin",
-    email: "mara@dronerush.com",
-    role: "Admin",
-    status: "Active",
-    orders: "—",
-    spent: "—",
-  },
-  {
-    name: "Wesley Cole",
-    email: "wes@dronerush.com",
-    role: "Support",
-    status: "Active",
-    orders: "—",
-    spent: "—",
-  },
-  {
-    name: "Jordan Reyes",
-    email: "jordan.reyes@skymail.com",
-    role: "Customer",
-    status: "Active",
-    orders: "12",
-    spent: "$4,208",
-  },
-  {
-    name: "Priya Nair",
-    email: "priya.n@fastmail.com",
-    role: "Customer",
-    status: "Suspended",
-    orders: "3",
-    spent: "$1,058",
-  },
-  {
-    name: "Tomás Ibarra",
-    email: "tomas.i@outmail.com",
-    role: "Customer",
-    status: "Active",
-    orders: "5",
-    spent: "$2,940",
-  },
-  {
-    name: "Grace Liu",
-    email: "grace.liu@skymail.com",
-    role: "Customer",
-    status: "Active",
-    orders: "8",
-    spent: "$3,612",
-  },
-  {
-    name: "Devon Hart",
-    email: "devon.h@mailbox.io",
-    role: "Customer",
-    status: "Invited",
-    orders: "0",
-    spent: "$0",
-  },
-  {
-    name: "Lena Okafor",
-    email: "lena.o@skymail.com",
-    role: "Customer",
-    status: "Active",
-    orders: "2",
-    spent: "$759",
-  },
-];
+// Raw user record returned by GET /admin/users (matches server `IUser` +
+// order aggregates). Documented in ../drone-rush-server/REQUIRED_ENDPOINTS.md.
+interface AdminUserDto {
+  _id: string;
+  name: string;
+  email: string;
+  role: TUserRole;
+  status: TUserStatus;
+  ordersCount?: number;
+  totalSpent?: number;
+}
+
+interface PageMeta {
+  page: number;
+  limit: number;
+  total: number;
+  total_page: number;
+}
+
+const PAGE_LIMIT = 10;
+
+const ROLE_LABEL: Record<TUserRole, UserRoleLabel> = {
+  superAdmin: "Superadmin",
+  admin: "Admin",
+  user: "Customer",
+};
+
+// Reverse map for the server `role` query param.
+const ROLE_QUERY: Record<UserRoleLabel, TUserRole> = {
+  Superadmin: "superAdmin",
+  Admin: "admin",
+  Customer: "user",
+};
+
+const currencyFmt = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  maximumFractionDigits: 0,
+});
+
+function toRow(u: AdminUserDto): AdminUserRow {
+  return {
+    id: u._id,
+    name: u.name,
+    email: u.email,
+    role: ROLE_LABEL[u.role] ?? "Customer",
+    status: u.status === "blocked" ? "Suspended" : "Active",
+    orders: String(u.ordersCount ?? 0),
+    spent: currencyFmt.format(u.totalSpent ?? 0),
+  };
+}
 
 const ROLE_STYLE: Record<
   UserRoleLabel,
@@ -116,7 +95,6 @@ const ROLE_STYLE: Record<
 > = {
   Superadmin: { style: STATUS_STYLES.red, icon: Shield },
   Admin: { style: STATUS_STYLES.blue, icon: KeyRound },
-  Support: { style: STATUS_STYLES.amber, icon: Users },
   Customer: { style: STATUS_STYLES.grey, icon: Users },
 };
 
@@ -125,26 +103,64 @@ const ROLE_TABS: ("All" | UserRoleLabel)[] = [
   "Customer",
   "Admin",
   "Superadmin",
-  "Support",
 ];
 
 function statusColor(s: AdminUserRow["status"]): string {
-  return s === "Active" ? "#1f9d5c" : s === "Suspended" ? "#ef2b45" : "#f5a623";
+  return s === "Active" ? "#1f9d5c" : "#ef2b45";
 }
 
 export default function AdminUsers() {
   const [search, setSearch] = useState("");
   const [role, setRole] = useState<"All" | UserRoleLabel>("All");
+  const [page, setPage] = useState(1);
+  const [rows, setRows] = useState<AdminUserRow[]>([]);
+  const [meta, setMeta] = useState<PageMeta | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const filtered = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    return USERS.filter((u) => role === "All" || u.role === role).filter(
-      (u) =>
-        !q ||
-        u.name.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q),
-    );
-  }, [search, role]);
+  // Debounce the search box so we don't refetch on every keystroke.
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(search.trim()), 350);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // Reset to the first page whenever the filters change.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: reset page on filter change only
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch, role]);
+
+  const fetchUsers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await getAdminUsers({
+        page,
+        limit: PAGE_LIMIT,
+        search: debouncedSearch,
+        role: role === "All" ? "" : ROLE_QUERY[role],
+      });
+      if (res?.success) {
+        setRows((res.data as AdminUserDto[]).map(toRow));
+        setMeta(res.meta as PageMeta);
+      } else {
+        setRows([]);
+        setMeta(null);
+        toast.error(res?.message || "Failed to load users");
+      }
+    } catch {
+      setRows([]);
+      setMeta(null);
+      toast.error("Failed to load users");
+    } finally {
+      setLoading(false);
+    }
+  }, [page, debouncedSearch, role]);
+
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  const totalPages = meta?.total_page ?? 1;
 
   return (
     <div className="flex flex-col gap-[18px]">
@@ -198,17 +214,21 @@ export default function AdminUsers() {
           <span>Spent</span>
           <span />
         </div>
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center py-12">
+            <Loader2 className="h-6 w-6 animate-spin text-dr-red" />
+          </div>
+        ) : rows.length === 0 ? (
           <div className="px-[22px] py-12 text-center text-[13.5px] text-dr-text-3">
             No users match your search.
           </div>
         ) : (
-          filtered.map((u, i) => {
+          rows.map((u, i) => {
             const rs = ROLE_STYLE[u.role];
             const RoleIcon = rs.icon;
             return (
               <div
-                key={u.email}
+                key={u.id}
                 className="grid grid-cols-[1fr_40px] items-center gap-3.5 border-b border-dr-bd-1 px-[22px] py-3.5 last:border-0 hover:bg-dr-bd-1/50 md:grid-cols-[2fr_1fr_.9fr_.7fr_1fr_40px]"
               >
                 <div className="flex min-w-0 items-center gap-3">
@@ -269,6 +289,32 @@ export default function AdminUsers() {
           })
         )}
       </div>
+
+      {meta && totalPages > 1 && (
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-[12.5px] text-dr-text-3">
+            Page {meta.page} of {totalPages} · {meta.total} users
+          </span>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              disabled={loading || page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="rounded-[9px] border border-dr-bd-2 bg-dr-field px-3.5 py-2 font-poppins text-[12.5px] font-semibold text-dr-text-2 transition-colors hover:border-dr-red/40 hover:text-dr-text disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              disabled={loading || page >= totalPages}
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              className="rounded-[9px] border border-dr-bd-2 bg-dr-field px-3.5 py-2 font-poppins text-[12.5px] font-semibold text-dr-text-2 transition-colors hover:border-dr-red/40 hover:text-dr-text disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

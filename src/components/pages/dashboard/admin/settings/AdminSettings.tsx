@@ -19,12 +19,23 @@ import {
 } from "@/components/shared/admin/admin-ui";
 import { cn } from "@/lib/utils";
 import {
+  getAdminSettings,
+  updateAdminSettings,
+} from "@/services/admin/admin.service";
+import {
   deleteInvite,
   getInvites,
   getMyProfile,
   sendInvite,
 } from "@/services/user/user.service";
 import type { TUserRole } from "@/types/user.type";
+
+type StoreToggles = {
+  maintenanceMode: boolean;
+  guestCheckout: boolean;
+  lowStockAlerts: boolean;
+  newOrderNotifications: boolean;
+};
 
 interface Invite {
   _id: string;
@@ -75,9 +86,8 @@ const ROLE_CARDS: {
   },
 ];
 
-// Store-level toggles. NOTE: no persistence endpoint exists yet — documented in
-// ../drone-rush-server/REQUIRED_ENDPOINTS.md (GET/PATCH /admin/settings).
-const DEFAULT_TOGGLES = {
+// Store-level toggles — fallback used until GET /admin/settings resolves.
+const DEFAULT_TOGGLES: StoreToggles = {
   maintenanceMode: false,
   guestCheckout: true,
   lowStockAlerts: true,
@@ -145,7 +155,8 @@ export default function AdminSettings() {
   const [sending, setSending] = useState(false);
   const [invites, setInvites] = useState<Invite[]>([]);
   const [loadingInvites, setLoadingInvites] = useState(true);
-  const [toggles, setToggles] = useState(DEFAULT_TOGGLES);
+  const [toggles, setToggles] = useState<StoreToggles>(DEFAULT_TOGGLES);
+  const [savingSettings, setSavingSettings] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -158,6 +169,38 @@ export default function AdminSettings() {
       active = false;
     };
   }, []);
+
+  // Load persisted store settings; keep defaults on failure.
+  useEffect(() => {
+    let active = true;
+    getAdminSettings()
+      .then((res: { success?: boolean; data?: Partial<StoreToggles> }) => {
+        if (active && res?.success && res.data) {
+          setToggles((t) => ({ ...t, ...res.data }));
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const handleSaveSettings = async () => {
+    setSavingSettings(true);
+    try {
+      const res = await updateAdminSettings(toggles);
+      if (res?.success) {
+        if (res.data) setToggles((t) => ({ ...t, ...res.data }));
+        toast.success(res.message || "Store settings saved");
+      } else {
+        toast.error(res?.message || "Failed to save settings");
+      }
+    } catch {
+      toast.error("Failed to save settings");
+    } finally {
+      setSavingSettings(false);
+    }
+  };
 
   const fetchInvites = useCallback(async () => {
     try {
@@ -429,9 +472,11 @@ export default function AdminSettings() {
         <div className="flex justify-end">
           <button
             type="button"
-            onClick={() => toast.success("Store settings saved")}
-            className={adminPrimaryBtnClass}
+            disabled={savingSettings}
+            onClick={handleSaveSettings}
+            className={cn(adminPrimaryBtnClass, "disabled:opacity-60")}
           >
+            {savingSettings && <Loader2 className="h-4 w-4 animate-spin" />}
             Save changes
           </button>
         </div>
